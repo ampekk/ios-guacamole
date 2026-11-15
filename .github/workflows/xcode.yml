@@ -1,0 +1,11 @@
+name: xcodetest
+on: workflow_dispatch
+jobs:
+  t:
+    runs-on: macos-latest
+    steps:
+      - run: |
+          sw_vers
+          ls -d /Applications/Xcode*.app
+          xcodebuild -version
+          xcrun --find iig
