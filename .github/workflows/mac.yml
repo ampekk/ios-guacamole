@@ -1,0 +1,11 @@
+name: mactest
+on: workflow_dispatch
+jobs:
+  t:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-13, macos-14, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: uname -a && sw_vers || true
