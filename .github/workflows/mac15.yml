@@ -1,0 +1,13 @@
+name: mac15test
+on: workflow_dispatch
+jobs:
+  t:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-15-intel, macos-13]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: |
+          sw_vers
+          ls -d /Applications/Xcode*.app || true
