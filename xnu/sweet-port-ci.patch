@@ -11724,6 +11724,27 @@ diff -ruN ci-base/bsd/kern/kern_mib.c ci-sweet/bsd/kern/kern_mib.c
  	/* The following two are kludged for backward
  	 * compatibility. Use hw.product/hw.target for something
  	 * consistent instead. */
+diff -ruN ci-base/bsd/kern/kern_proc.c ci-sweet/bsd/kern/kern_proc.c
+--- a/bsd/kern/kern_proc.c	2026-06-18 01:28:50.000000000 +0200
++++ b/bsd/kern/kern_proc.c	2026-11-21 00:52:13.371044918 +0100
+@@ -6687,7 +6687,7 @@
+ 	return error;
+ }
+ 
+-#if !XNU_TARGET_OS_OSX
++#if !XNU_TARGET_OS_OSX || defined(ARM64_BOARD_CONFIG_SWEET)
+ /*
+  * Freeze the specified process (provided in args->pid), or find and freeze a PID.
+  * When a process is specified, this call is blocking, otherwise we wake up the
+@@ -6760,7 +6760,7 @@
+ 	*ret = error;
+ 	return error;
+ }
+-#endif /* !XNU_TARGET_OS_OSX */
++#endif /* !XNU_TARGET_OS_OSX || SWEET */
+ 
+ #if SOCKETS
+ 
 diff -ruN ci-base/bsd/kern/kern_trustcache.c ci-sweet/bsd/kern/kern_trustcache.c
 --- a/bsd/kern/kern_trustcache.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/bsd/kern/kern_trustcache.c	2026-11-20 22:23:44.925155755 +0100
