@@ -160636,93 +160636,92 @@ diff -ruN ci-base/osfmk/kern/exclaves.c ci-sweet/osfmk/kern/exclaves.c
  
 diff -ruN ci-base/osfmk/kern/sched_prim.c ci-sweet/osfmk/kern/sched_prim.c
 --- a/osfmk/kern/sched_prim.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/sched_prim.c	2026-11-20 23:21:18.369796411 +0100
-@@ -5355,85 +5355,6 @@
- }
- #endif /* !CONFIG_SCHED_SMT */
++++ b/osfmk/kern/sched_prim.c	2026-11-20 23:54:16.093560747 +0100
+@@ -5357,6 +5357,72 @@
  
--
--
--/*
-- * Default implementation of SCHED(choose_node)()
-- * for single node systems
-- */
--pset_node_t
--sched_choose_node(__unused thread_t thread)
--{
--	return sched_boot_pset_node;
--}
--
--/*
-- *	choose_starting_pset:
-- *
-- *	Choose a starting processor set for the thread.
-- *	May return a processor hint within the pset.
-- *
-- *	Returns a starting processor set, to be used by
-- *      choose_processor.
-- *
-- *	The thread must be locked.  The resulting pset is unlocked on return,
-- *      and is chosen without taking any pset locks.
-- */
--processor_set_t
--choose_starting_pset(pset_node_t node, thread_t thread, processor_t *processor_hint)
--{
--	processor_set_t pset;
--	processor_t processor = PROCESSOR_NULL;
--
--	if (thread->affinity_set != AFFINITY_SET_NULL) {
--		/*
--		 * Use affinity set policy hint.
--		 */
--		pset = thread->affinity_set->aset_pset;
--	} else if (thread->last_processor != PROCESSOR_NULL) {
--		/*
--		 *	Simple (last processor) affinity case.
--		 */
--		processor = thread->last_processor;
--		pset = processor->processor_set;
--	} else {
--		/*
--		 *	No Affinity case:
--		 *
--		 *	Utilitize a per task hint to spread threads
--		 *	among the available processor sets.
--		 * NRG this seems like the wrong thing to do.
--		 * See also task->pset_hint = pset in thread_setrun()
--		 */
--		pset = get_threadtask(thread)->pset_hint;
--		if (pset == PROCESSOR_SET_NULL) {
--			pset = current_processor()->processor_set;
--		}
--
--		pset = choose_next_pset(pset);
--	}
--
--	if (!bit_test(node->pset_map, pset->pset_id)) {
--		/* pset is not from this node so choose one that is */
--		pset = pset_for_id((pset_id_t)lsb_first(node->pset_map));
--	}
--
--	if (bit_count(node->pset_map) == 1) {
--		/* Only a single pset in this node */
--		goto out;
--	}
--
--	bool avoid_cpu0 = false;
--
--#if defined(__x86_64__)
--	if ((thread->sched_pri >= BASEPRI_RTQUEUES) && sched_avoid_cpu0) {
--		/* Avoid the pset containing cpu0 */
--		avoid_cpu0 = true;
--		/* Assert that cpu0 is in pset 0.  I expect this to be true on __x86_64__ */
--		assert(bit_test(pset_for_id(0)->cpu_bitmask, 0));
--	}
--#endif
--
- 	if (thread->sched_pri >= BASEPRI_RTQUEUES) {
- 		pset_map_t rt_target_map;
- #if CONFIG_SCHED_SMT
+ 
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <pexpert/pexpert.h>
++/*
++ * 0156: core placement on SM8150 (guacamole). This kernel runs the SMP Clutch scheduler, one pset: the ADT gives every
++ * CPU cluster-type 0 (tools/mkadt.py), there is no AMP/Edge scheduler, and choose_processor() takes the lowest idle
++ * CPU, so a woken thread lands on a Cortex-A55 (cpu 0-3, 1.79 GHz) whenever one is idle, the A76s (cpu 4-6 2.42 GHz,
++ * 7 2.96 GHz) only when all four are busy. backboardd's render thread, busy ~26 ms a frame (mtl2 run 15), was among
++ * them. Only which idle CPU is taken changes: a perf thread (realtime, or a user thread at base priority
++ * BASEPRI_USER_INITIATED and up: QoS user-initiated/interactive, foreground main threads, the render server) takes an
++ * idle A76 first, any other an idle A55 first; with none of its kind idle it takes any idle CPU, as before.
++ * The same as iOSPlus10's 0395 placement on SM8450 (akshaynexus/iOSPlus10), written for this kernel.
++ * Boot-arg sweetplace=0 keeps the old rule.
++ */
++static cpumap_t sweet_sched_pmask = 0xf0;               /* cpu 4-7 */
++static int sweet_sched_place = -1;
++
++static inline cpumap_t
++sweet_sched_big(void)
++{
++	if (sweet_sched_place < 0) {
++		int on = 1;
++		(void)PE_parse_boot_argn("sweetplace", &on, sizeof(on));
++		sweet_sched_place = on ? 1 : 0;
++	}
++	return sweet_sched_place ? sweet_sched_pmask : 0;
++}
++
++static inline bool
++sweet_thread_wants_big(thread_t thread)
++{
++	if (get_threadtask(thread) == kernel_task) {
++		return false;
++	}
++	return thread->sched_pri >= BASEPRI_RTQUEUES || thread->base_pri >= BASEPRI_USER_INITIATED;
++}
++
++/* The CPU of map this thread takes: its kind first, else any; -1 when map is empty */
++static int
++sweet_pick_cpu(thread_t thread, cpumap_t map)
++{
++	cpumap_t big = sweet_sched_big();
++	if (big == 0 || map == 0) {
++		return lsb_first(map);
++	}
++	cpumap_t pref = sweet_thread_wants_big(thread) ? (map & big) : (map & ~big);
++	return lsb_first(pref ? pref : map);
++}
++
++/* An idle hint (the thread's last CPU) of the wrong kind gives way to an idle CPU of the right kind */
++static processor_t
++sweet_check_idle_hint(processor_set_t pset, processor_t hint, thread_t thread)
++{
++	cpumap_t big = sweet_sched_big();
++	if (big == 0) {
++		return hint;
++	}
++	bool want_big = sweet_thread_wants_big(thread);
++	if (bit_test(big, hint->cpu_id) == want_big) {
++		return hint;
++	}
++	cpumap_t idle = pset_available_cpumap(pset) & pset->cpu_state_map[PROCESSOR_IDLE];
++	cpumap_t pref = want_big ? (idle & big) : (idle & ~big);
++	return pref ? processor_array[lsb_first(pref)] : hint;
++}
++#endif /* ARM64_BOARD_CONFIG_SWEET */
++
+ /*
+  * Default implementation of SCHED(choose_node)()
+  * for single node systems
+@@ -5431,6 +5497,11 @@
+ 		avoid_cpu0 = true;
+ 		/* Assert that cpu0 is in pset 0.  I expect this to be true on __x86_64__ */
+ 		assert(bit_test(pset_for_id(0)->cpu_bitmask, 0));
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++				if (thread->sched_pri < BASEPRI_RTQUEUES) {
++					return sweet_check_idle_hint(pset, processor, thread);     /* 0156 */
++				}
++#endif
+ 	}
+ #endif
+ 
 diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 --- a/osfmk/prng/entropy.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/osfmk/prng/entropy.c	2026-11-20 22:24:22.745599192 +0100
