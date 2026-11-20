@@ -3,12 +3,13 @@
 
   python3 tools/mktripleboot.py STOCK_boot.img SHIM.Image IOS16_boot.img IOS27_boot.img OUT.img
 
-IOS16_boot.img / IOS27_boot.img are ordinary boot images as tools/guac-mkboot.sh makes them (iOS 16:
-the one on boot_b now, ufsroot=ios; iOS 27: e.g. outputs/guacamole-ios27a-*.img, ufsroot=ios26). Their
-ramdisks are the SWEETXNU payloads (kernel + ADT + boot-args); they go into one ramdisk, iOS 16 first,
-each starting on a 4 KiB boundary (shim/loader.c payload_at). SHIM.Image must be built from a shim with
-loader_boot_n (BOARD=guacamole shim/build.sh): the menu then offers iOS 27 / iOS 16 / Android. An older
-shim simply boots the first payload (iOS 16). Writes nothing to the phone.
+IOS16_boot.img / IOS27_boot.img are ordinary boot images as tools/guac-mkboot.sh (BOARD=guacamole) or
+tools/hotdog-mkboot.sh makes them (iOS 16: the one on boot_b now, ufsroot=ios; iOS 27: e.g.
+outputs/hotdog-ios27a-*.img, ufsroot=ios26). Their ramdisks are the SWEETXNU payloads (kernel + ADT +
+boot-args); they go into one ramdisk, iOS 16 first, each starting on a 4 KiB boundary
+(shim/loader.c payload_at). SHIM.Image must be built from a shim with loader_boot_n
+(BOARD=guacamole or BOARD=hotdog shim/build.sh): the menu then offers iOS 27 / iOS 16 / Android. An
+older shim simply boots the first payload (iOS 16). Writes nothing to the phone.
 """
 import os, struct, subprocess, sys, tempfile
 

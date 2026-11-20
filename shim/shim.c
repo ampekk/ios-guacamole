@@ -391,9 +391,11 @@ void shim_main(uint64_t dtb)
 	con_str("SHIM", "sweet milestone 4: xnu loader");
 	con_str("BOARD", BOARD_NAME);
 	con_skip();
-#if defined(BOARD_GUACAMOLE)
+#if defined(BOARD_GUACAMOLE) || defined(BOARD_HOTDOG)
 	/*
 	 * Boot menu (menu.c): iOS 27 / iOS 16 / Android, volume keys to move, power to start.
+	 * Both OnePlus SM8150 boards use the triple-boot selector; hotdog's Alert
+	 * Slider and volume-key wiring match guacamole's.
 	 * The Alert Slider picks the default like the menu reads, top to bottom (2026-11-17): top iOS 27,
 	 * middle iOS 16, bottom Android (unknown: iOS 16), which
 	 * starts after 5 s unless a key is pressed. If Android cannot be started the reason

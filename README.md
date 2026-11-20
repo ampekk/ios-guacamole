@@ -1,8 +1,15 @@
-# iOS 27.2 on OnePlus 7 Pro (guacamole)
+# iOS 27.2 on OnePlus 7 Pro (guacamole) / OnePlus 7T Pro (hotdog)
 
-This branch ports the **iOS 27.2 (24B119) userland for iPhone 14 Pro (iPhone15,2 / D73AP)** to the OnePlus 7 Pro (`guacamole`, Qualcomm SM8150 / Snapdragon 855, Adreno 640, 8 GB RAM). The device tree presents the D73 identity while the custom XNU kernel and userland drivers adapt the phone's hardware.
+This branch ports the **iOS 27.2 (24B119) userland for iPhone 14 Pro (iPhone15,2 / D73AP)** to the OnePlus 7 Pro (`guacamole`, Qualcomm SM8150 / Snapdragon 855, Adreno 640, 8 GB RAM), with a code-level adaptation for the OnePlus 7T Pro (`hotdog`, SM8150-AC / Snapdragon 855+). The device tree presents the D73 identity while the custom XNU kernel and userland drivers adapt the phone's hardware.
 
 This is an experimental bring-up, not a daily-use phone OS. Many hardware features are incomplete, performance and graphics are unreliable, and the port disables or replaces parts of Apple's normal security and device stack. The iOS 16 port is maintained on a separate branch; this README describes the iOS 27 branch only.
+
+## Device support
+
+| Device | Codename | Board setting | Status |
+| --- | --- | --- | --- |
+| OnePlus 7 Pro (GM191x) | `guacamole` | `BOARD=guacamole` / `mkadt.py --guacamole` | Bring-up target; runtime results below are from this phone |
+| OnePlus 7T Pro (HD191x) | `hotdog` | `BOARD=hotdog` / `mkadt.py --hotdog` | **Code-level support only — not boot-tested.** Most hardware is shared with guacamole; see [`docs/hotdog.md`](docs/hotdog.md) for the differences, the build workflow and the on-device validation checklist. |
 
 ## Current status
 
@@ -52,12 +59,15 @@ Use the combined triple-boot image and select iOS 27 from the shim menu. The Ale
 
 The existing data partition is named `ios26`, so iOS 27 boot arguments commonly contain `ufsroot=ios26`. That is the partition label, not the OS version. See [`docs/dualboot.md`](docs/dualboot.md) for the image layout and selector workflow. The phone's Android installation and partition backups should be preserved when building or booting test images.
 
+On hotdog, build the selector with `BOARD=hotdog sh shim/build.sh` and the payloads with `tools/hotdog-mkboot.sh`; the stock `boot.img` passed to `tools/mkhotdogboot.py` / `tools/mktripleboot.py` must come from the 7T Pro. Note that T-series devices use a dynamic `super` partition, but iOS still lives in the standalone `userdata` partition. See [`docs/hotdog.md`](docs/hotdog.md).
+
 ## Build and project layout
 
 - **iOS 27 kernel:** the tree at `work/xnu-12377` is not in this repository; each change made to it is kept as a diff in [`xnu/ios27/`](xnu/ios27/README.md).
 - **Metal plugin:** source/build work is in the separate Git repository at `work/UniXNU`; it is not included in commits to this repository.
 - **Root filesystem:** `tools/mkios27root-mac.sh` builds the iOS 27.2 root image on macOS from the prepared IPSW contents.
-- **Device tree and payload:** `tools/mkadt.py`, `tools/mkpayload.py`, and the shim build create the ADT and kernel payload used by the boot image.
+- **Device tree and payload:** `tools/mkadt.py`, `tools/mkpayload.py`, and the shim build create the ADT and kernel payload used by the boot image. Use `--guacamole` or `--hotdog` (both require `--highmem`); the two boards share the SM8150 tree, firmware nodes and framebuffer size.
+- **Boot image:** `tools/mkguacboot.py` wraps the shim using the DTB and header of a phone's own stock `boot.img` (board-agnostic; `tools/mkhotdogboot.py` is an alias). `tools/guac-mkboot.sh` / `tools/hotdog-mkboot.sh` build an iOS payload for a board.
 - **Triple-boot image:** `tools/mktripleboot.py` combines the stock boot image, selector shim, iOS 16 payload, and iOS 27 payload. See `docs/dualboot.md` for required inputs.
 - **Userland tools and drivers:** `userland/` contains Wi-Fi, Bluetooth, audio, display, haptics, GPU and diagnostic code, including the phone-side diagnostics `ptop` (CPU, memory and process churn), `tsample` (sampling profiler), `tprobe` (clocks, timed waits, thread policies) and `rebootbl` (reboot to fastboot) in `userland/jb/`.
 - **launchd jobs:** `tools/launchd-add-job.py` and `tools/launchd-drop-job.py` add and remove jobs in iOS's launchd plist (the `adspd` boot job, the removed `PerfPowerServices`).

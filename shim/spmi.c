@@ -5,7 +5,8 @@
  *   -> PM8150 (SID0) PON_SOFT_RB_SPARE[7:1] = 2
  * PS_HOLD is already in warm-reset mode after ABL (ctl=0x01, ctl2=0x80),
  * so PSCI SYSTEM_RESET afterwards lands in fastboot. Verified on guacamole
- * with guac-probe v5.
+ * with guac-probe v5; inherited unchanged for hotdog (same PM8150/ABL path,
+ * needs an on-device fastboot-roundtrip check).
  *
  * Layout (Linux drivers/spmi/spmi-pmic-arb.c, v5):
  *   core  + 0x900 + 4*apid : APID -> PPID map ([19:8] = sid<<8 | periph)

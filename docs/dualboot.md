@@ -1,4 +1,7 @@
-# Dual boot: Android and iOS on one OnePlus 7 Pro (guacamole)
+# Dual boot: Android and iOS on one OnePlus SM8150 phone (guacamole / hotdog)
+
+Guacamole is the tested device; the `BOARD=hotdog` selector builds the same
+menu but is not boot-tested. See [`docs/hotdog.md`](hotdog.md) first.
 
 A boot menu picks the operating system at power-on (`shim/menu.c`): iOS 27, iOS 16, Android. Volume up
 and down move the selection, power starts it. The Alert Slider picks the default, which starts after 5 s
@@ -71,8 +74,9 @@ Requirements: unlocked bootloader, Android on slot A (`boot_a`), the iOS root on
 `ios`, TWRP for log pulls and partition work.
 
 1. Build the shim and an iOS boot image as usual (`docs/guacamole.md`, Workflow): `BOARD=guacamole
-   shim/build.sh` builds the selector into `shim/out/Image`; `tools/guac-mkboot.sh` /
-   `tools/mkguacboot.py` wrap it with the payload.
+   shim/build.sh` (`BOARD=hotdog` on a 7T Pro) builds the selector into `shim/out/Image`;
+   `tools/guac-mkboot.sh` / `tools/hotdog-mkboot.sh` and `tools/mkguacboot.py` wrap it with the
+   payload. Use that phone's own stock `boot.img`.
 2. Test tethered, nothing flashed: `fastboot boot IMAGE` with the slider at the bottom (Android) and at
    the top or middle (iOS).
 3. Make `dtbo_b` equal `dtbo_a` (ABL applies the active slot's dtbo; Android needs its own):
@@ -94,7 +98,7 @@ Requirements: unlocked bootloader, Android on slot A (`boot_a`), the iOS root on
 One boot image carries both iOS payloads in its ramdisk, iOS 16 first, each on a 4 KiB boundary
 (`shim/loader.c` `payload_at`, `loader_count`, `loader_boot_n`); the menu enables "iOS 27" when a
 second payload is there. Build both iOS boot images as usual (their own kernel, ADT and boot-args,
-`ufsroot=ios` / `ufsroot=ios26`), rebuild the shim (`BOARD=guacamole shim/build.sh`), then:
+`ufsroot=ios` / `ufsroot=ios26`), rebuild the shim (`BOARD=guacamole` or `BOARD=hotdog`), then:
 
 ```
 python3 tools/mktripleboot.py dtb/android-boot_b.img shim/out/Image IOS16.img IOS27.img OUT.img
@@ -110,7 +114,7 @@ Same as before, with the selector shim:
 
 ```
 tools/xnu-local-build.sh                                   # kernel with any new xnu/patches
-BOARD=guacamole shim/build.sh                               # shim/out/Image = selector shim
+BOARD=guacamole shim/build.sh                               # BOARD=hotdog on a 7T Pro; shim/out/Image = selector shim
 CPUS=8 TOUCH=1 KEYS=1 USB=1 tools/guac-mkboot.sh KERNEL dtb/android-boot_b.img shim/out/Image OUT.img "BOOT-ARGS"
 ```
 

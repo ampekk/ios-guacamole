@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""mkguacboot.py - wrap a shim Image into an Android boot image v2 for the
-OnePlus 7 Pro (guacamole), reusing the DTB section and header fields
-(addresses, os_version/patch level) of the phone's own stock boot image.
+"""mkguacboot.py - wrap a shim Image into an Android boot image v2 for an
+OnePlus SM8150 phone (guacamole / hotdog), reusing the DTB section and header
+fields (addresses, os_version/patch level) of that phone's own stock boot image.
 
-  python3 mkguacboot.py STOCK_boot.img guac-probe.Image OUT.img [--ramdisk FILE]
+  python3 mkguacboot.py STOCK_boot.img SHIM.Image OUT.img [--ramdisk FILE]
+
+The name is historical; the tool reads no board-specific constants. Use the
+stock boot.img of the phone you are booting. tools/mkhotdogboot.py is an alias
+for the hotdog workflow.
 
 Only Python 3 standard library; runs on macOS/Linux. Writes nothing to the phone.
 """

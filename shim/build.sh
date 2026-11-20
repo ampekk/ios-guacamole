@@ -5,11 +5,14 @@ cd "$(dirname "$0")"
 CC=aarch64-linux-gnu-gcc
 OBJCOPY=aarch64-linux-gnu-objcopy
 CFLAGS="-O2 -ffreestanding -nostdlib -fno-pic -fno-jump-tables -mgeneral-regs-only -mstrict-align -fno-stack-protector -Wall -Wextra"
-# BOARD=guacamole ./build.sh  -> OnePlus 7 Pro (see board.h); default sweet.
+# BOARD=guacamole ./build.sh -> OnePlus 7 Pro; BOARD=hotdog -> OnePlus 7T Pro
+# (see board.h); default sweet. Both OnePlus boards need the stock boot.img's
+# DTB section, so neither uses the built-in mkbootimg path below.
 BOARD=${BOARD:-sweet}
 case "$BOARD" in
 sweet) ;;
 guacamole) CFLAGS="$CFLAGS -DBOARD_GUACAMOLE" ;;
+hotdog) CFLAGS="$CFLAGS -DBOARD_HOTDOG" ;;
 *) echo "unknown BOARD=$BOARD" >&2; exit 1 ;;
 esac
 mkdir -p out
@@ -33,10 +36,12 @@ if [ -n "${1:-}" ]; then
 else
 	(cd out && rm -rf rd && mkdir rd && cd rd && find . | cpio -o -H newc --quiet | gzip -9 > ../ramdisk.bin)
 fi
-if [ "$BOARD" = guacamole ]; then
+if [ "$BOARD" = guacamole ] || [ "$BOARD" = hotdog ]; then
 	# The DTB section must come from the phone's own stock boot.img:
 	#   python3 ../tools/mkguacboot.py STOCK_boot.img out/Image shim-boot.img [--ramdisk out/ramdisk.bin]
-	echo "guacamole: Image built; pack it with tools/mkguacboot.py and your stock boot.img"
+	# (mkguacboot.py is board-agnostic: it copies the DTB and header fields out
+	# of any header-v2 OnePlus boot image. mkhotdogboot.py is an alias.)
+	echo "$BOARD: Image built; pack it with tools/mkguacboot.py and your stock boot.img"
 	ls -l out/Image out/ramdisk.bin
 	exit 0
 fi

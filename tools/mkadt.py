@@ -2,7 +2,12 @@
 """Build the minimal Apple Device Tree that the SWEET xnu needs to boot.
 
 Only what the early boot path actually reads (see NOTES.md); every MMIO
-address comes from the sweet live FDT. Usage:  mkadt.py OUT.adt [--dump] [--qemu] [--highmem] [--guacamole] [--scale2] [--ram5g]
+address comes from the sweet live FDT. Usage:  mkadt.py OUT.adt [--dump] [--qemu] [--highmem] [--guacamole|--hotdog] [--scale2] [--ram5g]
+
+--guacamole and --hotdog select the two OnePlus SM8150 phones this port runs
+on. They share the SoC-level addresses, panel size, firmware blobs and ADT
+nodes; PHONE below is true for either. See docs/hotdog.md for the hardware
+facts that still need on-device validation on a 7T Pro.
 """
 import hashlib, os, struct, sys
 
@@ -36,11 +41,22 @@ FB_W, FB_H, FB_STRIDE = 1080, 2400, 1080 * 4
 # Its DDR is 0x80000000-0xbbb00000 + 0xc0000000-0x280000000 (8 GB): the
 # --highmem window 0x100000000+0xfcc00000 is RAM with no fixed carve-outs, but
 # the low PHYS_BASE window crosses the 0xbbb00000 hole, so use --highmem.
+# --hotdog: OnePlus 7T Pro (SM8150-AC, HD1911/HD1913). Same SM8150 addresses,
+# same 1440x3120 DSI/DSC panel, S6SY761 touch, WCN3990 Wi-Fi, AW8697 haptics
+# and Adreno 640 firmware as guacamole, so everything guarded by PHONE is
+# shared. DDR extent, GPU OPPs and the Wi-Fi board-id file are the values to
+# confirm on the device (docs/hotdog.md). The 12 GB variant still fits the
+# fixed --ram5g window inside its first 8 GB.
 GUACAMOLE = '--guacamole' in sys.argv
+HOTDOG = '--hotdog' in sys.argv
+if GUACAMOLE and HOTDOG:
+    sys.exit('choose one board: --guacamole or --hotdog')
+PHONE = GUACAMOLE or HOTDOG
+BOARD = 'hotdog' if HOTDOG else 'guacamole' if GUACAMOLE else 'sweet'
 # --scale2: present an @2x screen, 828x1792 (414x896 points, the iPhone XR / 11 screen; 375x812 @2x has no UIKit
 # status bar layout), with kernel boot-arg sweetfb_scale=2 (xnu 0240 + 0241): 1.85x fewer pixels to draw. MobileGestalt caches the screen: move its cache aside after switching.
 SCALE2 = '--scale2' in sys.argv
-# --ram5g (guacamole, 2026-11-17): XNU's window grows upward to 5 GiB, 0x100000000-0x240000000 (was 0xfcc00000 =
+# --ram5g (OnePlus SM8150 phones, 2026-11-17): XNU's window grows upward to 5 GiB, 0x100000000-0x240000000 (was 0xfcc00000 =
 # 3.95 GiB, a size inherited from sweet's memory node). DDR runs on to 0x280000000. Take 1 (window from 0xc0000000)
 # went to QUALCOMM CrashDump about a minute into the boot: 0xc0000000-0xffffffff holds fixed buffers of ours that XNU
 # must not hand out (wland's radio pool 0xe0000000, adspd's FastRPC heap/buffers/PCM 0xfd800000-0xfe9xxxxx, which it
@@ -50,7 +66,7 @@ SCALE2 = '--scale2' in sys.argv
 RAM5G = '--ram5g' in sys.argv
 if RAM5G:
     HIGH_PHYS_BASE, HIGH_MEM_SIZE = 0x100000000, 0x140000000
-if GUACAMOLE:
+if PHONE:
     FB_W, FB_H, FB_STRIDE = 1440, 3120, 1440 * 4
     FB_SIZE = 0x1200000
 # Internal UFS host (ufshc@1d84000 "ufs_mem"); QEMU virt has none
@@ -124,8 +140,10 @@ def node(name, props=(), children=()):
     return n
 
 
-# --guacamole: Adreno 640 firmware for the kernel's GPU bring-up (sweet_gpu.c,
-# ADT /sweet-gpu), pulled from the phone's /vendor/firmware (not in git).
+# OnePlus SM8150 phones: Adreno 640 firmware for the kernel's GPU bring-up
+# (sweet_gpu.c, ADT /sweet-gpu), pulled from the phone's /vendor/firmware (not
+# in git). hotdog (855+) runs the same A640 firmware; only its OPP table is
+# faster, which is read from cmd-db at runtime, not from this ADT.
 GPU_FW_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../research/gpu/fw')
 
 
@@ -152,8 +170,10 @@ def guac_gpu_node(ph):
     return [node('sweet-gpu', props)]
 
 
-# --guacamole: the AW8697 haptics driver's RAM waveforms (bsd/dev/sweet_haptic.c, ADT /sweet-haptic), from the
-# phone's /vendor/firmware (OnePlus; not in git): the set for this motor's resonance (f0 168.9 Hz -> _168).
+# OnePlus SM8150 phones: the AW8697 haptics driver's RAM waveforms
+# (bsd/dev/sweet_haptic.c, ADT /sweet-haptic), from the phone's /vendor/firmware
+# (OnePlus; not in git): the set for this motor's resonance (f0 168.9 Hz -> _168).
+# hotdog ships the same AW8697; copy its waveform blob from that phone.
 HAPTIC_RAM = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../dtb/haptics/aw8697_haptic_168.bin')
 
 
@@ -293,16 +313,17 @@ def build(seed=None, qemu=False, highmem=False):
         # otherwise crashes trying to set the PMU boot stage (customer builds
         # ignore the -wdt_no_pmu boot-arg).
         node('wdt', [ph(), ('no-pmu', u32(1))])] + ([
-        # --guacamole: launchd starts wifid only when the device tree has a
+        # OnePlus SM8150 phones: launchd starts wifid only when the device tree has a
         # "wlan" node (com.apple.wifid _LimitLoadToDeviceTree = wlan,
         # marconi-wifi); the kernel's en0 + Apple80211 (0139, flame_wlan.c)
         # answer it. As ios-flame's mkadt.py. Phone wifi27: no wifid without it.
+        # The compatible string is the board's own; matching is on device_type.
         node('wlan', [
             ph(),
             ('device_type', cstr('wlan')),
-            ('compatible', cstr('guacamole,wcn3990')),
+            ('compatible', cstr(f'{BOARD},wcn3990')),
         ]),
-        # --guacamole: retain the D73/iPhone 14 Pro product identity, but publish the UART Bluetooth service
+        # OnePlus SM8150 phones: retain the D73/iPhone 14 Pro product identity, but publish the UART Bluetooth service
         # at the D22 path that bluetoothd/Marconi looks for: /arm-io/uart1/bluetooth. The live iOS 27.2 tree
         # previously exposed a standalone /arm-io/bluetooth nub; ioreg showed that nub registered, while
         # bluetoothd still logged "Unable to match bluetooth service in device tree". The WCN3998 is behind
@@ -323,7 +344,7 @@ def build(seed=None, qemu=False, highmem=False):
             ('product-id', u32(0x12a0)),
             ('coex', u32(2)),
             ('local-mac-address', bytes([0x02, 0x53, 0x57, 0x45, 0x45, 0x02])),
-        ])])] if GUACAMOLE else []) + [
+        ])])] if PHONE else []) + [
         # Main display: IOMobileFramebuffer.framework counts /arm-io children
         # with this device_type and reads the canvas size from the node
         # (the presented iPhone X size, see SweetFramebuffer.cpp);
@@ -374,7 +395,7 @@ def build(seed=None, qemu=False, highmem=False):
     ])
 
     product_props = d22ap_product()
-    if product_props and GUACAMOLE:
+    if product_props and PHONE:
         # The panel is 8-bit sRGB and backboardd's GL path draws BGRA only. With the
         # iPhone X's P3 answer WebKit asks for 10-bit 'w30r' / 'b3a8' page tiles, which its
         # GPU process never fills here (Safari black, jb1/jb2: "CGImageCreate: invalid
@@ -391,10 +412,10 @@ def build(seed=None, qemu=False, highmem=False):
     # VirtualAudioDevice_Actuator (it needs DeviceSupportsHaptics). Before HakiosAudio this node was left out (VibeSynth
     # had no device then). mkadt option --no-product-haptics restores that.
     product_children = []
-    audio_props = d22ap_product_child('audio') if GUACAMOLE else None
+    audio_props = d22ap_product_child('audio') if PHONE else None
     if audio_props is not None:
         product_children.append(node('audio', [ph()] + audio_props))
-    haptics_props = d22ap_product_child('haptics') if GUACAMOLE and '--no-product-haptics' not in sys.argv else None
+    haptics_props = d22ap_product_child('haptics') if PHONE and '--no-product-haptics' not in sys.argv else None
     if haptics_props is not None:
         product_children.append(node('haptics', [ph()] + haptics_props))
     product = [node('product', [ph()] + product_props, product_children)] if product_props else []
@@ -407,23 +428,26 @@ def build(seed=None, qemu=False, highmem=False):
     # hw.model/hw.target (D22AP), model is hw.machine/hw.product
     # (iPhone10,3). 'xiaomi,sweet' stays for SweetPlatformExpert matching.
     IDENT = ('D73AP', 'iPhone15,2', 'D73') if IDENTITY == 'd73' else ('D22AP', 'iPhone10,3', 'D22')
+    # Keep the historical 'xiaomi,sweet' / 'qcom,sm7150' entries for the kernel's
+    # SweetPlatformExpert match; add the real SoC for the OnePlus boards.
+    soc = cstr('qcom,sm8150') if PHONE else b''
     if product_props:
         print(f'/product ({IDENTITY}): ' + ' '.join(k for k, v in product_props), file=sys.stderr)
     return node('device-tree', [
         ph(),
-        ('compatible', cstr(IDENT[0]) + cstr(IDENT[1]) + cstr('xiaomi,sweet') + cstr('qcom,sm7150') + cstr('AppleARM')),
+        ('compatible', cstr(IDENT[0]) + cstr(IDENT[1]) + cstr('xiaomi,sweet') + cstr('qcom,sm7150') + soc + cstr('AppleARM')),
         ('model', cstr(IDENT[1])),
         ('target-type', cstr(IDENT[2])),
         ('target-sub-type', cstr(IDENT[0])),
         ('manufacturer', cstr('Apple Inc.')),
         ('#address-cells', u32(2)),
         ('#size-cells', u32(2)),
-    ], [chosen, defaults, cpus, arm_io, fbcon, buttons, pram] + (guac_gpu_node(ph) + guac_haptic_node(ph) if GUACAMOLE and not qemu else []) + product + ([] if qemu else [ufs]))
+    ], [chosen, defaults, cpus, arm_io, fbcon, buttons, pram] + (guac_gpu_node(ph) + guac_haptic_node(ph) if PHONE and not qemu else []) + product + ([] if qemu else [ufs]))
 
 
 if __name__ == '__main__':
-    if GUACAMOLE and '--highmem' not in sys.argv:
-        sys.exit('--guacamole needs --highmem (the low window crosses a DDR hole)')
+    if PHONE and '--highmem' not in sys.argv:
+        sys.exit(f'--{BOARD} needs --highmem (the low window crosses a DDR hole)')
     root = build(qemu='--qemu' in sys.argv, highmem='--highmem' in sys.argv)
     blob = adt.serialize(root)
     open(sys.argv[1], 'wb').write(blob)

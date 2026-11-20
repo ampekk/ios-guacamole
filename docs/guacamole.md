@@ -1,5 +1,10 @@
 # guacamole: ios-sweet on the OnePlus 7 Pro (SM8150)
 
+For the OnePlus 7T Pro (`hotdog`) adaptation of this port, see
+[`docs/hotdog.md`](hotdog.md). It reuses the SM8150 facts below but has its own
+build flags and an on-device validation checklist; no hotdog hardware results
+are recorded here.
+
 Port of ios-sweet (iOS 16.7.16 userland + XNU 8796) to the OnePlus 7 Pro
 (guacamole, SM8150, 8 GB, 256 GB UFS).
 Branch `guacamole`. Everything here was measured on the phone unless marked

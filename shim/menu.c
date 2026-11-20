@@ -1,5 +1,6 @@
 /*
- * Boot menu (guacamole): three entries, volume up/down to move, power to boot.
+ * Boot menu (OnePlus SM8150 boards): three entries, volume up/down to move,
+ * power to boot. Used by both guacamole and hotdog builds.
  *
  * Keys are read from the PM8150 over the SPMI PMIC arbiter (read only, the same
  * observer-channel EXT_READL the kernel's sweet_keys.c uses):

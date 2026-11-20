@@ -1,8 +1,12 @@
 #!/bin/bash
-# Build a OnePlus 7 Pro (guacamole) boot image: CI kernel + ADT + shim.
+# Build a OnePlus SM8150 (guacamole / hotdog) boot image: CI kernel + ADT + shim.
 # Runs on macOS/Linux with python3 and gh; nothing is written to the phone.
 #
 #   tools/guac-mkboot.sh RUN_ID STOCK_boot.img SHIM.Image OUT.img ["extra boot-args"]
+#
+# BOARD=guacamole (default) or BOARD=hotdog; tools/hotdog-mkboot.sh sets it for
+# you. The board only changes the mkadt.py flag and the intermediate filenames:
+# both phones use the same boot-image format and the same safe first-boot args.
 #
 # RUN_ID: the `xnu` Actions run of this fork (gh run list -w xnu), or the path
 # of a kernel file (tools/xnu-local-build.sh builds one on this Mac).
@@ -13,7 +17,7 @@
 # KEYS=0/1 (default 1, PM8150 keys from 0084), TOUCH=0/1 and USB=0/1/2
 # (default 0: still sweet hardware) set sweetkeys/sweettouch/sweetusb.
 set -euo pipefail
-[ $# -ge 4 ] || { sed -n '2,11p' "$0"; exit 1; }
+[ $# -ge 4 ] || { sed -n '2,15p' "$0"; exit 1; }
 # Resolve paths against the caller's directory BEFORE changing into the repo.
 abs() { case "$1" in /*) echo "$1" ;; *) echo "$PWD/$1" ;; esac; }
 RUN=$1 LOCALK=""
@@ -22,16 +26,23 @@ STOCK=$(abs "$2") SHIM=$(abs "$3") OUT=$(abs "$4") EXTRA=${5:-}
 [ -f "$STOCK" ] || { echo "stock boot image not found: $STOCK"; exit 1; }
 [ -f "$SHIM" ] || { echo "shim Image not found: $SHIM"; exit 1; }
 cd "$(dirname "$0")/.."
+BOARD=${BOARD:-guacamole}
+case "$BOARD" in
+guacamole) ADT_FLAG=--guacamole; ADT_BASE=guac; BIN_BASE=guac ;;
+hotdog)    ADT_FLAG=--hotdog;    ADT_BASE=htd;  BIN_BASE=htd ;;
+*) echo "unknown BOARD=$BOARD (expected guacamole or hotdog)" >&2; exit 1 ;;
+esac
 K=${LOCALK:-xnu/out-$RUN/kernel.development.sweet}
 if [ -z "$LOCALK" ] && [ ! -f "$K" ]; then
 	gh run download "$RUN" -n xnu-kernel -D "xnu/out-$RUN"
 fi
 [ -f "$K" ] || { echo "no $K in the artifact"; ls "xnu/out-$RUN"; exit 1; }
 mkdir -p shim/out
-python3 tools/mkadt.py shim/out/guac-hi.adt --highmem --guacamole
+python3 tools/mkadt.py "shim/out/${ADT_BASE}-hi.adt" --highmem "$ADT_FLAG"
 # sweettime: this machine's clock now, for the PM8150 RTC's offset (xnu 0133)
 ARGS="debug=0xc serial=3 cpus=${CPUS:-1} keepsyms=1 -enable_kprintf_spam -noprogress sweettouch=${TOUCH:-0} sweetkeys=${KEYS:-1} sweetusb=${USB:-0} wdt=-1 sweettime=$(date +%s) $EXTRA"
-python3 tools/mkpayload.py "$K" shim/out/guac-hi.adt shim/out/payload-guac.bin --cmdline "$ARGS"
-python3 tools/mkguacboot.py "$STOCK" "$SHIM" "$OUT" --ramdisk shim/out/payload-guac.bin
+python3 tools/mkpayload.py "$K" "shim/out/${ADT_BASE}-hi.adt" "shim/out/payload-${BIN_BASE}.bin" --cmdline "$ARGS"
+python3 tools/mkguacboot.py "$STOCK" "$SHIM" "$OUT" --ramdisk "shim/out/payload-${BIN_BASE}.bin"
+echo "board: $BOARD"
 echo "boot-args: $ARGS"
 echo "next: fastboot boot $OUT"
