@@ -1,3 +1,34 @@
+# Handoff — hotdog boot menu and iOS 16 kernel reached "waiting for root device" on HD1911 (2026-11-20, OpenCode)
+- OBSERVED ON HARDWARE (HD1911, serial 8754d85f, Android 17 / LineageOS, bootloader `unlocked: yes`,
+  `verifiedbootstate=orange`, active slot `_b`): `fastboot boot out/hotdog-ios16-test.img` loaded the
+  hotdog shim, displayed the boot menu (iOS 27 / iOS 16 / Android), and after Volume Down + Power on
+  **iOS 16** the framebuffer console printed kernel text and stopped at **"waiting for root device"**.
+  No early panic. The user watched the screen; the phone was not flashed.
+- Image: `out/hotdog-ios16-test.img` (21,442,560 B, SHA-256
+  `1a3937cbac9613c575160e8b70a52a27f993835e3bfd0ee7c6f89a8b5e84aed0`), built with
+  `BOARD=hotdog sh tools/hotdog-mkboot.sh /tmp/xnu15/art/kernel.development.sweet <hotdog stock boot.img>
+  shim/out/Image ...`; shim `shim/out/Image` SHA-256
+  `9550d4f5b5fbd6788a3b025eb4c11220ac75377820cf21c450373a820b09cdd7`, ADT `shim/out/htd-hi.adt`
+  11,912 B SHA-256 `cd0229f923e7c7d5854a3cbd74b1038ec2fdcfe59ac3ddafe457d3313ba81213`.
+  The kernel was the **iOS 16** CI artifact (`xnu-8796.141.3`, `kernel.development.sweet`,
+  17,573,448 B, SHA-256 `c2a3ccde45c85d9bdcd6699d17736f97cf630dfe1adca006672c436353ed9df7`, from
+  `ampekk/ios-guacamole` run 43694237314), not iOS 27. The ADT lacks `/product`, `/sweet-gpu` and
+  `/sweet-haptic` because the Apple/hardware blobs under `research/` are absent; the kernel still reached
+  the root wait.
+- What this validates on hotdog: ABL accepts the v2 image made from the hotdog stock boot.img; the shim
+  runs at the ABL load address; the 1440x3120 splash framebuffer at 0x9c000000 works for the menu; the
+  PM8150 keys and the menu input work; the hotdog DTB is accepted; XNU starts and the framebuffer console
+  works; the hotdog ADT's memory map/`--highmem` is accepted far enough to reach the root wait.
+- NOT yet validated: iOS 27 kernel (xnu-12377) on hotdog, root/UFS mount, touch, Wi-Fi, GPU, audio,
+  haptics, reboot-to-fastboot, 12 GB DDR window. The "waiting for root" boot had no `ufsroot=` and no
+  root partition, so the UFS root path was not exercised.
+- Control: `fastboot boot` of the stock O.25 boot.img also returned to the bootloader (its Android
+  system is not the installed LineageOS), so returning to fastboot is not evidence about the shim.
+- Missing build inputs (checked on this Linux box): no `work/xnu-12377` kernel tree, no `work/UniXNU`,
+  no `research/ios27.2` root tars/overlays, no macOS. The repo only keeps the incremental iOS 27 diffs
+  (`xnu/ios27/`); the iOS 27 kernel/root still have to be obtained or reconstructed. The iOS 16 kernel
+  above is useful only for the boot-path/hardware validation.
+
 # Handoff — hotdog (OnePlus 7T Pro) board support added, hardware unverified (2026-11-20, OpenCode)
 - Commit `618ef7b` on branch `hotdog` (off `ios27`): added `BOARD=hotdog` / `mkadt.py --hotdog` as a sibling
   of guacamole, plus `tools/hotdog-mkboot.sh`, `tools/mkhotdogboot.py`, README device-support table and
