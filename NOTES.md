@@ -1,3 +1,16 @@
+# Handoff — SWEET port down to ~20 errors; near-clean compile (2026-11-20, OpenCode)
+- CI iterations 4-7 (runs 44815736652 → 44828277471): staged BearSSL/HFS/libpthread sources directly in the
+  patch (the staging `.sh` scripts are gated to macOS 13.5 and never ran in the xnu-12377 CI), fixed header
+  moves (`vm_kern_xnu.h`, `vm_shared_region_xnu.h`), misapplied fuzz hunks (serial_console.c, sched_prim.c,
+  kern_trustcache.c, arm_init.c), API changes (sha256_ctx→ccdigest_ctx, SERIAL_SWEET_FBCON,
+  ml_interrupt_masked_debug_*, mach_msg_option64_t), duplicate asm symbols, and HFS stubs for functions removed
+  from open-source xnu-12377. Error count: 920 → 171 → 28 → 20 → 13 (last run, all in sched_prim.c).
+- Iteration 8 (commit a66c6b1, run 44832770183 in progress): restored the accidentally deleted
+  `choose_starting_pset()` region in sched_prim.c from clean xnu-12377; kept SWEET big-core helpers with
+  `pset_available_cpumap()` instead of removed `pset->primary_map`. Patch 326 files / 5.5 MB.
+- Reminder: a clean kernel compile is step 1 only. The 52 incremental `xnu/ios27/*.diff` changes and the iOS 27
+  root image are still missing, and xnu-12377 still dies before the console on hotdog (see breadcrumb test).
+
 # Handoff — SWEET port: 920 → 171 compile errors, fixing remaining root causes (2026-11-20, OpenCode)
 - CI iteration 2 (run 44806353779): patch applied (after regenerating against the exact CI tree state —
   DXB skips `link_kdk.patch` / `remove_applefeatures_include.patch`, so the first patch was skipped at
