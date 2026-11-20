@@ -6,6 +6,8 @@ name: sweet-port
 # kernel API; the build tree and log are uploaded for local iteration.
 
 on:
+  push:
+    branches: [sweet-port]
   workflow_dispatch:
     inputs:
       keep_going:
