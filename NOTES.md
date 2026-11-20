@@ -8,6 +8,12 @@
   missing machine config + framebuffer console: 15 applied (0002/0011/0018 already covered or optional).
   Final combined tree: **175 files, 2.0 MB** patch `xnu/sweet-port-ci.patch`, regenerated against the exact
   tree that `darwin-xnu-build` produces (DXB's own 7 patches applied first) so `git apply --check` passes.
+- CI run 44803914640 (first attempt): FAILED — DXB skipped `zz9-sweet-port-ci.patch` at
+  `makedefs/MakeInc.def:1155`. Cause: my local base had DXB's `link_kdk.patch` applied with fuzz, but CI
+  *skips* that patch, so MakeInc.def context differed. Regenerated the patch against the exact CI state
+  (only the 6 DXB patches CI actually applies: add_iboot_header, define_esr_ec_pac_fail, disable_bti_vmapple,
+  dsymutil_no_process_substitution, guard_sptm_user_pointer_ops_with_pac, simplify_san_lipo); new patch has
+  175 files and passes `git apply --check` against that base. Commit eaa69a9, **run 44806353779 in progress**.
 - CI: new branch `sweet-port` on fork `ampekk/ios-guacamole` (commits 101dd57, 7ce1b50) with
   `.github/workflows/sweet-port.yml`: DXB pinned SHA 6639065, `MACOS_VERSION=26.5`, `MACHINE_CONFIG=SWEET`,
   macos-15-intel, applies `zz9-sweet-port-ci.patch` last, `make -k` to collect all compile errors, uploads
