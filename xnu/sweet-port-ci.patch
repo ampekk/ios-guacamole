@@ -160410,8 +160410,8 @@ diff -ruN ci-base/osfmk/kern/debug.c ci-sweet/osfmk/kern/debug.c
  #endif
 diff -ruN ci-base/osfmk/kern/exception.c ci-sweet/osfmk/kern/exception.c
 --- a/osfmk/kern/exception.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/exception.c	2026-11-20 22:23:44.917155661 +0100
-@@ -960,6 +960,229 @@
++++ b/osfmk/kern/exception.c	2026-11-20 23:21:18.369796411 +0100
+@@ -960,6 +960,210 @@
  	return exception_triage_thread(exception, code, codeCnt, thread);
  }
  
@@ -160469,25 +160469,6 @@ diff -ruN ci-base/osfmk/kern/exception.c ci-sweet/osfmk/kern/exception.c
 +	}
 +	printf("%s\n", line);
 +
-+	if (sig == 11 || sig == 10) {
-+		/* Which mapping the faulting address is in, or which two it falls between. */
-+		uint64_t far = (uint64_t)saved_state64(ss)->far;
-+		vm_map_t map = current_map();
-+		vm_map_entry_t entry;
-+		vm_map_lock_read(map);
-+		bool inside = vm_map_lookup_entry(map, (vm_map_offset_t)far, &entry);
-+		for (int i = 0; i < 2 && entry != vm_map_to_entry(map); i++) {
-+			printf("CRASH %s map%s 0x%llx-0x%llx prot %d/%d tag %d\n", name,
-+			    inside && i == 0 ? " (far inside)" : (i == 0 ? " before far" : " after far"),
-+			    (uint64_t)entry->vme_start, (uint64_t)entry->vme_end, entry->protection,
-+			    entry->max_protection, (int)VME_ALIAS(entry));
-+			if (inside) {
-+				break;
-+			}
-+			entry = entry->vme_next;
-+		}
-+		vm_map_unlock_read(map);
-+	}
 +	if (sig == 6 || sig == 5) {
 +		sweet_crash_strings(name);
 +	}
@@ -160655,11 +160636,13 @@ diff -ruN ci-base/osfmk/kern/exclaves.c ci-sweet/osfmk/kern/exclaves.c
  
 diff -ruN ci-base/osfmk/kern/sched_prim.c ci-sweet/osfmk/kern/sched_prim.c
 --- a/osfmk/kern/sched_prim.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/sched_prim.c	2026-11-20 22:23:44.925155755 +0100
-@@ -5357,80 +5357,6 @@
++++ b/osfmk/kern/sched_prim.c	2026-11-20 23:21:18.369796411 +0100
+@@ -5355,85 +5355,6 @@
+ }
+ #endif /* !CONFIG_SCHED_SMT */
  
- 
- 
+-
+-
 -/*
 - * Default implementation of SCHED(choose_node)()
 - * for single node systems
@@ -160734,9 +160717,12 @@ diff -ruN ci-base/osfmk/kern/sched_prim.c ci-sweet/osfmk/kern/sched_prim.c
 -		avoid_cpu0 = true;
 -		/* Assert that cpu0 is in pset 0.  I expect this to be true on __x86_64__ */
 -		assert(bit_test(pset_for_id(0)->cpu_bitmask, 0));
- 	}
- #endif
- 
+-	}
+-#endif
+-
+ 	if (thread->sched_pri >= BASEPRI_RTQUEUES) {
+ 		pset_map_t rt_target_map;
+ #if CONFIG_SCHED_SMT
 diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 --- a/osfmk/prng/entropy.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/osfmk/prng/entropy.c	2026-11-20 22:24:22.745599192 +0100
