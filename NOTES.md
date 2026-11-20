@@ -1,3 +1,22 @@
+# Handoff — SWEET port onto xnu-12377 attempted in CI (2026-11-20, OpenCode)
+- USER DIRECTION (2026-11-20): "Try the SWEET port" — attempt to port the xnu-8796 SWEET platform code onto
+  xnu-12377 to produce a self-built iOS 27 kernel, since the original Mac build tree is unavailable.
+- LOCAL METHOD (no macOS needed): copied clean xnu-12377.121.6, applied all 220 `xnu/patches/*.patch` in
+  order with `patch --fuzz=3`: **196 applied, 21 skipped** (mostly build fixes already upstream in 12377:
+  0001/0002/0004 etc.). Generated a consolidated diff vs. the clean tree (165 files, 1.9 MB, applies clean
+  with `patch -p1`). Then applied RubenSavytskyi's 18 clean xnu-12377 SWEET patches on top to supply the
+  missing machine config + framebuffer console: 15 applied (0002/0011/0018 already covered or optional).
+  Final combined tree: **175 files, 2.0 MB** patch `xnu/sweet-port-ci.patch`, regenerated against the exact
+  tree that `darwin-xnu-build` produces (DXB's own 7 patches applied first) so `git apply --check` passes.
+- CI: new branch `sweet-port` on fork `ampekk/ios-guacamole` (commits 101dd57, 7ce1b50) with
+  `.github/workflows/sweet-port.yml`: DXB pinned SHA 6639065, `MACOS_VERSION=26.5`, `MACHINE_CONFIG=SWEET`,
+  macos-15-intel, applies `zz9-sweet-port-ci.patch` last, `make -k` to collect all compile errors, uploads
+  kernel + build.log + buildtree.tgz. **Run 44803914640 in progress** (triggered by push; workflow_dispatch
+  API needs the file on default branch `main`, so a push trigger was used). Expect compile errors where
+  8796-era SWEET code meets 12377 APIs; the log + build tree will be used to fix them locally and re-run.
+- NOTE: a clean compile would still not equal a working iOS 27 userland kernel — the 52 `xnu/ios27/*.diff`
+  incremental changes and the root image are separate. This is the first step (kernel compile).
+
 # Handoff — xnu-12377 boots to SCTLR check on hotdog, dies before console (2026-11-20, OpenCode)
 - HARDWARE TEST: `fastboot boot out/hotdog-ios27-xnu12377-test.img` (28,225,536 B, SHA-256
   `c008121b3e73aefffc4e43b2abc3fb22a913060301b22922dd7e445cf54441cc`) loaded the **xnu-12377.121.6**
