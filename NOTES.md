@@ -1,3 +1,28 @@
+# Handoff — xnu-12377 boots to SCTLR check on hotdog, dies before console (2026-11-20, OpenCode)
+- HARDWARE TEST: `fastboot boot out/hotdog-ios27-xnu12377-test.img` (28,225,536 B, SHA-256
+  `c008121b3e73aefffc4e43b2abc3fb22a913060301b22922dd7e445cf54441cc`) loaded the **xnu-12377.121.6**
+  kernel from `RubenSavytskyi/guacamole-xnu` CI run 44578208127 (`kernel.development.sweet`, SHA-256
+  `8c895f2c73a665897aac5abd645bf94c37553fee067e31a172b9c4fec2107552`, plain arm64, framebuffer console
+  + breadcrumb patches 0015/0016/0017). Boot menu appeared; with one payload in the ramdisk the menu's
+  "iOS 27" entry is greyed out (`npay >= 2` in `shim/shim.c:414`), so "iOS 16" was selected — it boots
+  payload 0, i.e. the xnu-12377 kernel. **Observation:** colored breadcrumbs appeared on the splash FB:
+  blue (CPU bootstrap), yellow (tables done), white (before MMU), magenta (after MMU), and a fifth
+  white/cyan block (SCTLR readback check passed); the first green block is likely clipped by the panel's
+  rounded corner. **No console text; screen static.** So xnu-12377 runs on hotdog's SM8150 through MMU
+  enable and the SCTLR check, then dies before `PE_create_console()` — the same silent-death point the
+  upstream SM8150 effort is still debugging. This is the first xnu-12377 (iOS 27 kernel family) execution
+  on hotdog. No flashing; `fastboot boot` only.
+- UniXNU alternative RULED OUT (subagent, 2026-11-20): its Linux `build kernel` hard-prelinks against a
+  pinned iPadOS 27 24A446 IPSW kernelcache and a symbol-bearing LTO fileset reference; it requires a
+  Mu-Silicium UEFI firmware volume even when packed in a boot.img; it ships no non-E-GOP display driver,
+  no SM8150 UFS driver, and zero SWEET code (`SweetFramebuffer.cpp` / `sweet_ufs.c` absent). Its only
+  hotdog device record is a link to `ampekk/UniXNU-hotdog` with no board values. It cannot substitute
+  for the ios-guacamole SWEET kernel.
+- Realistic remaining path to iOS 27 on hotdog (all large, none quick): (1) get xnu-12377 to boot fully
+  on SM8150 (upstream effort ongoing); (2) port the ~78 SWEET driver files + 86 modified files from
+  xnu-8796 to xnu-12377; (3) obtain/build the iOS 27 root image; (4) reapply the 52 incremental iOS 27
+  diffs; (5) validate hotdog board values. Without the original Mac build tree these cannot be short-circuited.
+
 # Handoff — iOS 27 kernel unobtainable; assessing alternate build paths (2026-11-20, OpenCode)
 - CONFIRMED BLOCKER: there is no iOS 27 kernel anywhere accessible. All 48 `coreycusick/ios-guacamole`
   CI artifacts and the `ampekk/ios-guacamole` artifacts are xnu-8796.141.3 / Darwin 22.6.0 (iOS 16);
