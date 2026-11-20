@@ -1,3 +1,19 @@
+# Handoff — iOS 27 kernel unobtainable; assessing alternate build paths (2026-11-20, OpenCode)
+- CONFIRMED BLOCKER: there is no iOS 27 kernel anywhere accessible. All 48 `coreycusick/ios-guacamole`
+  CI artifacts and the `ampekk/ios-guacamole` artifacts are xnu-8796.141.3 / Darwin 22.6.0 (iOS 16);
+  `xnu.yml` builds xnu-8796. The 52 files in `xnu/ios27/*.diff` are incremental edits against the private
+  `work/xnu-12377` tree (xnu-12377 + SWEET port) and contain no base SWEET port, so the iOS 27 kernel cannot
+  be reconstructed from this repo. The user confirmed (2026-11-20) they **cannot provide** the kernel binary
+  from their Mac.
+- SWEET port scope: diffing clean xnu-8796 against the patched xnu-8796 buildtree shows **78 added files**
+  (SweetFramebuffer.cpp, sweet_ufs.c, sweet_gpu.c, SweetKeyStore.cpp, ...) and **86 modified files**
+  (pmap.c, sleh.c, machine_routines.c, vfs_subr.c, ...) — porting all of that from xnu-8796 to xnu-12377
+  by hand is not realistic. `RubenSavytskyi/guacamole-xnu`'s xnu-12377 tree has only the SWEET *machine
+  config* (SWEET.h, Private.SWEET.exports) and no platform drivers.
+- The user was asked whether they can supply the kernel; they answered they cannot. Next: assess UniXNU's
+  Linux xnu-12377 build path (subagent running) and report a realistic go/no-go to the user. No flashing
+  has been performed; only `fastboot boot` was used.
+
 # Handoff — hotdog boot menu and iOS 16 kernel reached "waiting for root device" on HD1911 (2026-11-20, OpenCode)
 - OBSERVED ON HARDWARE (HD1911, serial 8754d85f, Android 17 / LineageOS, bootloader `unlocked: yes`,
   `verifiedbootstate=orange`, active slot `_b`): `fastboot boot out/hotdog-ios16-test.img` loaded the
