@@ -1,6 +1,6 @@
-diff -ruN dxb-base/bsd/conf/Makefile.template dxb-tree/bsd/conf/Makefile.template
+diff -ruN ci-base/bsd/conf/Makefile.template ci-sweet/bsd/conf/Makefile.template
 --- a/bsd/conf/Makefile.template	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/conf/Makefile.template	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/conf/Makefile.template	2026-11-20 20:53:28.555093896 +0100
 @@ -44,6 +44,24 @@
          -Warray-bounds-pointer-arithmetic
  SFLAGS+= -include meta_features.h
@@ -26,9 +26,9 @@ diff -ruN dxb-base/bsd/conf/Makefile.template dxb-tree/bsd/conf/Makefile.templat
  #
  # Directories for mig generated files
  #
-diff -ruN dxb-base/bsd/conf/files dxb-tree/bsd/conf/files
+diff -ruN ci-base/bsd/conf/files ci-sweet/bsd/conf/files
 --- a/bsd/conf/files	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/conf/files	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/conf/files	2026-11-20 20:53:28.555093896 +0100
 @@ -103,6 +103,25 @@
  bsd/dev/random/randomdev.c		standard
  
@@ -116,9 +116,9 @@ diff -ruN dxb-base/bsd/conf/files dxb-tree/bsd/conf/files
  bsd/kern/kern_csr.c			optional config_csr
  bsd/kern/kern_debug.c			standard
  bsd/kern/kern_symfile.c			standard
-diff -ruN dxb-base/bsd/dev/flame_sta.c dxb-tree/bsd/dev/flame_sta.c
+diff -ruN ci-base/bsd/dev/flame_sta.c ci-sweet/bsd/dev/flame_sta.c
 --- a/bsd/dev/flame_sta.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/flame_sta.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/flame_sta.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,242 @@
 +/*
 + * flame: the station side of sys/redwood_sta.h (ios-topaz 0900's topaz_sta.c) over the WCN3990 radio,
@@ -362,9 +362,9 @@ diff -ruN dxb-base/bsd/dev/flame_sta.c dxb-tree/bsd/dev/flame_sta.c
 +	MiniIONetworkStackStart();              /* configd waits for it before it calls the registry quiet */
 +	flame_wlan_ready_hook = sta_ready;
 +}
-diff -ruN dxb-base/bsd/dev/flame_wlan.c dxb-tree/bsd/dev/flame_wlan.c
+diff -ruN ci-base/bsd/dev/flame_wlan.c ci-sweet/bsd/dev/flame_wlan.c
 --- a/bsd/dev/flame_wlan.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/flame_wlan.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/flame_wlan.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,453 @@
 +/*
 + * flame: the WCN3990 radio for the kernel's Wi-Fi station. bsd/dev/flame_sta.c (ios-topaz 0900's topaz_sta.c)
@@ -819,9 +819,9 @@ diff -ruN dxb-base/bsd/dev/flame_wlan.c dxb-tree/bsd/dev/flame_wlan.c
 +	printf("flame wlan: /dev/wlan ready (major %d)\n", major);
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/mem.c dxb-tree/bsd/dev/mem.c
+diff -ruN ci-base/bsd/dev/mem.c ci-sweet/bsd/dev/mem.c
 --- a/bsd/dev/mem.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/dev/mem.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/mem.c	2026-11-20 20:53:28.555093896 +0100
 @@ -153,6 +153,44 @@
  	return 0;
  }
@@ -890,9 +890,9 @@ diff -ruN dxb-base/bsd/dev/mem.c dxb-tree/bsd/dev/mem.c
  			c = uio_curriovlen(uio);
  
  			error = 0; /* Always succeeds, always consumes all input */
-diff -ruN dxb-base/bsd/dev/redwood_apple80211.c dxb-tree/bsd/dev/redwood_apple80211.c
+diff -ruN ci-base/bsd/dev/redwood_apple80211.c ci-sweet/bsd/dev/redwood_apple80211.c
 --- a/bsd/dev/redwood_apple80211.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/redwood_apple80211.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/redwood_apple80211.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,739 @@
 +/*
 + * Darwin-on-redwood: Apple80211, answered in the kernel.
@@ -1633,9 +1633,9 @@ diff -ruN dxb-base/bsd/dev/redwood_apple80211.c dxb-tree/bsd/dev/redwood_apple80
 +	}
 +	return error;
 +}
-diff -ruN dxb-base/bsd/dev/redwood_net.c dxb-tree/bsd/dev/redwood_net.c
+diff -ruN ci-base/bsd/dev/redwood_net.c ci-sweet/bsd/dev/redwood_net.c
 --- a/bsd/dev/redwood_net.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/redwood_net.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/redwood_net.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,376 @@
 +/*
 + * en0: a network interface that is Ethernet as far as the rest of the kernel and iOS can tell.
@@ -2013,9 +2013,9 @@ diff -ruN dxb-base/bsd/dev/redwood_net.c dxb-tree/bsd/dev/redwood_net.c
 +	PE_parse_boot_argn("net_trace", &net_trace, sizeof(net_trace));
 +	PE_parse_boot_argn("net_names", &net_names, sizeof(net_names));
 +}
-diff -ruN dxb-base/bsd/dev/redwood_sta.c dxb-tree/bsd/dev/redwood_sta.c
+diff -ruN ci-base/bsd/dev/redwood_sta.c ci-sweet/bsd/dev/redwood_sta.c
 --- a/bsd/dev/redwood_sta.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/redwood_sta.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/redwood_sta.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,371 @@
 +/*
 + * Darwin-on-redwood: what stands between the two sides of the station boundary
@@ -2388,9 +2388,9 @@ diff -ruN dxb-base/bsd/dev/redwood_sta.c dxb-tree/bsd/dev/redwood_sta.c
 +	}
 +	return ops != NULL;
 +}
-diff -ruN dxb-base/bsd/dev/sweet_btuart.c dxb-tree/bsd/dev/sweet_btuart.c
+diff -ruN ci-base/bsd/dev/sweet_btuart.c ci-sweet/bsd/dev/sweet_btuart.c
 --- a/bsd/dev/sweet_btuart.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_btuart.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_btuart.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,533 @@
 +/*
 + * GUACAMOLE Bluetooth transport (0220): the kernel control socket iOS's Bluetooth stack opens for an iPhone X's
@@ -2925,9 +2925,9 @@ diff -ruN dxb-base/bsd/dev/sweet_btuart.c dxb-tree/bsd/dev/sweet_btuart.c
 +	    "com.sweet.bt.host (%d)\n", e1, e3, e2);
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_cpufreq.c dxb-tree/bsd/dev/sweet_cpufreq.c
+diff -ruN ci-base/bsd/dev/sweet_cpufreq.c ci-sweet/bsd/dev/sweet_cpufreq.c
 --- a/bsd/dev/sweet_cpufreq.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_cpufreq.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_cpufreq.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,95 @@
 +/*
 + * SWEET (guacamole, SM8150) CPU clocks: the OSM (operating state manager) of each CPU domain.
@@ -3024,9 +3024,9 @@ diff -ruN dxb-base/bsd/dev/sweet_cpufreq.c dxb-tree/bsd/dev/sweet_cpufreq.c
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_gpu.c dxb-tree/bsd/dev/sweet_gpu.c
+diff -ruN ci-base/bsd/dev/sweet_gpu.c ci-sweet/bsd/dev/sweet_gpu.c
 --- a/bsd/dev/sweet_gpu.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_gpu.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_gpu.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,2953 @@
 +/*
 + * GUACAMOLE (OnePlus 7 Pro, SM8150): Adreno 640 bring-up, stage 1.
@@ -5981,9 +5981,9 @@ diff -ruN dxb-base/bsd/dev/sweet_gpu.c dxb-tree/bsd/dev/sweet_gpu.c
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_haptic.c dxb-tree/bsd/dev/sweet_haptic.c
+diff -ruN ci-base/bsd/dev/sweet_haptic.c ci-sweet/bsd/dev/sweet_haptic.c
 --- a/bsd/dev/sweet_haptic.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_haptic.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_haptic.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,1100 @@
 +/*
 + * GUACAMOLE (OnePlus 7 Pro, SM8150) vibration motor: an Awinic AW8697 LRA driver at I2C 0x5a on QUP wrapper 0
@@ -7085,9 +7085,9 @@ diff -ruN dxb-base/bsd/dev/sweet_haptic.c dxb-tree/bsd/dev/sweet_haptic.c
 +	}
 +}
 +#endif
-diff -ruN dxb-base/bsd/dev/sweet_keys.c dxb-tree/bsd/dev/sweet_keys.c
+diff -ruN ci-base/bsd/dev/sweet_keys.c ci-sweet/bsd/dev/sweet_keys.c
 --- a/bsd/dev/sweet_keys.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_keys.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_keys.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,298 @@
 +/*
 + * Minimal polled SWEET keys. Call once after the scheduler is running.
@@ -7387,9 +7387,9 @@ diff -ruN dxb-base/bsd/dev/sweet_keys.c dxb-tree/bsd/dev/sweet_keys.c
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_mailbox.c dxb-tree/bsd/dev/sweet_mailbox.c
+diff -ruN ci-base/bsd/dev/sweet_mailbox.c ci-sweet/bsd/dev/sweet_mailbox.c
 --- a/bsd/dev/sweet_mailbox.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_mailbox.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_mailbox.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,299 @@
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +/*
@@ -7690,9 +7690,9 @@ diff -ruN dxb-base/bsd/dev/sweet_mailbox.c dxb-tree/bsd/dev/sweet_mailbox.c
 +		thread_deallocate(t);
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_pmem.c dxb-tree/bsd/dev/sweet_pmem.c
+diff -ruN ci-base/bsd/dev/sweet_pmem.c ci-sweet/bsd/dev/sweet_pmem.c
 --- a/bsd/dev/sweet_pmem.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_pmem.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_pmem.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,387 @@
 +/*
 + * /dev/pmem: physical memory for userland hardware experiments (the GPU
@@ -8081,9 +8081,9 @@ diff -ruN dxb-base/bsd/dev/sweet_pmem.c dxb-tree/bsd/dev/sweet_pmem.c
 +	printf("SWEET PMEM: /dev/pmem ready (major %d)\n", major);
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_rpmh.c dxb-tree/bsd/dev/sweet_rpmh.c
+diff -ruN ci-base/bsd/dev/sweet_rpmh.c ci-sweet/bsd/dev/sweet_rpmh.c
 --- a/bsd/dev/sweet_rpmh.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_rpmh.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_rpmh.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,451 @@
 +/*
 + * SWEET PM6150L L11C bring-up; see report.md for DT and source evidence.
@@ -8536,9 +8536,9 @@ diff -ruN dxb-base/bsd/dev/sweet_rpmh.c dxb-tree/bsd/dev/sweet_rpmh.c
 +	return error;
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_rtc.c dxb-tree/bsd/dev/sweet_rtc.c
+diff -ruN ci-base/bsd/dev/sweet_rtc.c ci-sweet/bsd/dev/sweet_rtc.c
 --- a/bsd/dev/sweet_rtc.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_rtc.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_rtc.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,136 @@
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +/*
@@ -8676,9 +8676,9 @@ diff -ruN dxb-base/bsd/dev/sweet_rtc.c dxb-tree/bsd/dev/sweet_rtc.c
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_sample.c dxb-tree/bsd/dev/sweet_sample.c
+diff -ruN ci-base/bsd/dev/sweet_sample.c ci-sweet/bsd/dev/sweet_sample.c
 --- a/bsd/dev/sweet_sample.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_sample.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_sample.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,88 @@
 +/*
 + * SWEET process sampler: where is a daemon stuck?
@@ -8768,9 +8768,9 @@ diff -ruN dxb-base/bsd/dev/sweet_sample.c dxb-tree/bsd/dev/sweet_sample.c
 +		thread_deallocate(thread);
 +	}
 +}
-diff -ruN dxb-base/bsd/dev/sweet_spmi.c dxb-tree/bsd/dev/sweet_spmi.c
+diff -ruN ci-base/bsd/dev/sweet_spmi.c ci-sweet/bsd/dev/sweet_spmi.c
 --- a/bsd/dev/sweet_spmi.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_spmi.c	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_spmi.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,178 @@
 +/*
 + * Battery-only adaptation of input/sweet_keys.c, observer EXT_READL.
@@ -8950,9 +8950,9 @@ diff -ruN dxb-base/bsd/dev/sweet_spmi.c dxb-tree/bsd/dev/sweet_spmi.c
 +	return -1;
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_spmi.h dxb-tree/bsd/dev/sweet_spmi.h
+diff -ruN ci-base/bsd/dev/sweet_spmi.h ci-sweet/bsd/dev/sweet_spmi.h
 --- a/bsd/dev/sweet_spmi.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_spmi.h	2026-11-20 20:36:38.835164830 +0100
++++ b/bsd/dev/sweet_spmi.h	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,19 @@
 +/* Shared C/C++ interface. Init once, on the SweetBattery start thread. */
 +#ifndef SWEET_BATTERY_SPMI_H
@@ -8973,9 +8973,9 @@ diff -ruN dxb-base/bsd/dev/sweet_spmi.h dxb-tree/bsd/dev/sweet_spmi.h
 +}
 +#endif
 +#endif
-diff -ruN dxb-base/bsd/dev/sweet_touch.c dxb-tree/bsd/dev/sweet_touch.c
+diff -ruN ci-base/bsd/dev/sweet_touch.c ci-sweet/bsd/dev/sweet_touch.c
 --- a/bsd/dev/sweet_touch.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_touch.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/dev/sweet_touch.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,673 @@
 +/*
 + * GUACAMOLE (OnePlus 7 Pro, SM8150) touch: Samsung S6SY761 at 0x48 on the
@@ -9650,9 +9650,9 @@ diff -ruN dxb-base/bsd/dev/sweet_touch.c dxb-tree/bsd/dev/sweet_touch.c
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_ufs.c dxb-tree/bsd/dev/sweet_ufs.c
+diff -ruN ci-base/bsd/dev/sweet_ufs.c ci-sweet/bsd/dev/sweet_ufs.c
 --- a/bsd/dev/sweet_ufs.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_ufs.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/dev/sweet_ufs.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,914 @@
 +/*
 + * SWEET internal UFS root device.
@@ -10568,9 +10568,9 @@ diff -ruN dxb-base/bsd/dev/sweet_ufs.c dxb-tree/bsd/dev/sweet_ufs.c
 +	return 0;
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/dev/sweet_usb.c dxb-tree/bsd/dev/sweet_usb.c
+diff -ruN ci-base/bsd/dev/sweet_usb.c ci-sweet/bsd/dev/sweet_usb.c
 --- a/bsd/dev/sweet_usb.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_usb.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/dev/sweet_usb.c	2026-11-20 20:53:28.555093896 +0100
 @@ -0,0 +1,931 @@
 +/*
 + * SWEET: USB bring-up, step 1 - read-only state probe.
@@ -11503,9 +11503,9 @@ diff -ruN dxb-base/bsd/dev/sweet_usb.c dxb-tree/bsd/dev/sweet_usb.c
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/kern/bsd_init.c dxb-tree/bsd/kern/bsd_init.c
+diff -ruN ci-base/bsd/kern/bsd_init.c ci-sweet/bsd/kern/bsd_init.c
 --- a/bsd/kern/bsd_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/bsd_init.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/bsd_init.c	2026-11-20 20:53:28.555093896 +0100
 @@ -701,6 +701,18 @@
  	bsd_init_kprintf("calling vfsinit\n");
  	vfsinit();
@@ -11564,9 +11564,9 @@ diff -ruN dxb-base/bsd/kern/bsd_init.c dxb-tree/bsd/kern/bsd_init.c
  
  #if CONFIG_NETBOOT
  	if (netboot) {
-diff -ruN dxb-base/bsd/kern/kern_core.c dxb-tree/bsd/kern/kern_core.c
+diff -ruN ci-base/bsd/kern/kern_core.c ci-sweet/bsd/kern/kern_core.c
 --- a/bsd/kern/kern_core.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_core.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_core.c	2026-11-20 20:53:28.555093896 +0100
 @@ -34,6 +34,7 @@
   */
  #if CONFIG_COREDUMP || CONFIG_UCOREDUMP
@@ -11589,9 +11589,9 @@ diff -ruN dxb-base/bsd/kern/kern_core.c dxb-tree/bsd/kern/kern_core.c
  __XNU_PRIVATE_EXTERN int do_coredump = 0;       /* default: don't dump cores */
  #else
  __XNU_PRIVATE_EXTERN int do_coredump = 1;       /* default: dump cores */
-diff -ruN dxb-base/bsd/kern/kern_cs.c dxb-tree/bsd/kern/kern_cs.c
+diff -ruN ci-base/bsd/kern/kern_cs.c ci-sweet/bsd/kern/kern_cs.c
 --- a/bsd/kern/kern_cs.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_cs.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_cs.c	2026-11-20 20:53:28.555093896 +0100
 @@ -284,6 +284,32 @@
  		retval = 1;
  		proc_csflags_update(p, flags);
@@ -11625,9 +11625,9 @@ diff -ruN dxb-base/bsd/kern/kern_cs.c dxb-tree/bsd/kern/kern_cs.c
  		if (flags & CS_VALID) {
  			flags &= ~CS_VALID;
  			cs_procs_invalidated++;
-diff -ruN dxb-base/bsd/kern/kern_exec.c dxb-tree/bsd/kern/kern_exec.c
+diff -ruN ci-base/bsd/kern/kern_exec.c ci-sweet/bsd/kern/kern_exec.c
 --- a/bsd/kern/kern_exec.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_exec.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_exec.c	2026-11-20 20:53:28.555093896 +0100
 @@ -8658,9 +8658,14 @@
  				error = EACCES;
  				goto done;
@@ -11643,9 +11643,9 @@ diff -ruN dxb-base/bsd/kern/kern_exec.c dxb-tree/bsd/kern/kern_exec.c
  		} else if (psa->psa_platform != PLATFORM_IOS) {
  			/* Simulator binary spawned with wrong platform */
  			signature_failure_reason = os_reason_create(OS_REASON_EXEC,
-diff -ruN dxb-base/bsd/kern/kern_exit.c dxb-tree/bsd/kern/kern_exit.c
+diff -ruN ci-base/bsd/kern/kern_exit.c ci-sweet/bsd/kern/kern_exit.c
 --- a/bsd/kern/kern_exit.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_exit.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_exit.c	2026-11-20 20:53:28.559093963 +0100
 @@ -2084,6 +2084,20 @@
  		subcode = ut->uu_subcode;
  		etype = ut->uu_exception;
@@ -11667,9 +11667,9 @@ diff -ruN dxb-base/bsd/kern/kern_exit.c dxb-tree/bsd/kern/kern_exit.c
  		/* Defualt to EXC_CRASH if the exception is not an EXC_RESOURCE or EXC_GUARD */
  		if (etype != EXC_RESOURCE && etype != EXC_GUARD) {
  			etype = EXC_CRASH;
-diff -ruN dxb-base/bsd/kern/kern_memorystatus.c dxb-tree/bsd/kern/kern_memorystatus.c
+diff -ruN ci-base/bsd/kern/kern_memorystatus.c ci-sweet/bsd/kern/kern_memorystatus.c
 --- a/bsd/kern/kern_memorystatus.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_memorystatus.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_memorystatus.c	2026-11-20 20:53:28.559093963 +0100
 @@ -5146,6 +5146,34 @@
  	}
  #endif /* VM_PRESSURE_EVENTS */
@@ -11705,9 +11705,9 @@ diff -ruN dxb-base/bsd/kern/kern_memorystatus.c dxb-tree/bsd/kern/kern_memorysta
  	if (memlimit_is_fatal) {
  		/*
  		 * If this process has no high watermark or has a fatal task limit, then we have been invoked because the task
-diff -ruN dxb-base/bsd/kern/kern_mib.c dxb-tree/bsd/kern/kern_mib.c
+diff -ruN ci-base/bsd/kern/kern_mib.c ci-sweet/bsd/kern/kern_mib.c
 --- a/bsd/kern/kern_mib.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_mib.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_mib.c	2026-11-20 20:53:28.559093963 +0100
 @@ -542,7 +542,9 @@
  		 * Deprecated variables.  We still support these for
  		 * backwards compatibility purposes only.
@@ -11719,9 +11719,9 @@ diff -ruN dxb-base/bsd/kern/kern_mib.c dxb-tree/bsd/kern/kern_mib.c
  	/* The following two are kludged for backward
  	 * compatibility. Use hw.product/hw.target for something
  	 * consistent instead. */
-diff -ruN dxb-base/bsd/kern/kern_trustcache.c dxb-tree/bsd/kern/kern_trustcache.c
+diff -ruN ci-base/bsd/kern/kern_trustcache.c ci-sweet/bsd/kern/kern_trustcache.c
 --- a/bsd/kern/kern_trustcache.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_trustcache.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/kern_trustcache.c	2026-11-20 20:53:28.559093963 +0100
 @@ -579,6 +579,21 @@
  	allow_legacy_caches = true;
  #endif
@@ -11812,9 +11812,9 @@ diff -ruN dxb-base/bsd/kern/kern_trustcache.c dxb-tree/bsd/kern/kern_trustcache.
  	/* Ensure static trust caches have been initialized */
  	if (trust_cache_static_init == false) {
  		panic("attempted to query static trust cache capabilities without init");
-diff -ruN dxb-base/bsd/kern/sweet_amfi.c dxb-tree/bsd/kern/sweet_amfi.c
+diff -ruN ci-base/bsd/kern/sweet_amfi.c ci-sweet/bsd/kern/sweet_amfi.c
 --- a/bsd/kern/sweet_amfi.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/kern/sweet_amfi.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/sweet_amfi.c	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,758 @@
 +/*
 + * Built-in AMFI interface for SWEET.
@@ -12574,9 +12574,9 @@ diff -ruN dxb-base/bsd/kern/sweet_amfi.c dxb-tree/bsd/kern/sweet_amfi.c
 +	    error ? "NOT registered" : "registered", error);
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/kern/syscalls.master dxb-tree/bsd/kern/syscalls.master
+diff -ruN ci-base/bsd/kern/syscalls.master ci-sweet/bsd/kern/syscalls.master
 --- a/bsd/kern/syscalls.master	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/syscalls.master	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/kern/syscalls.master	2026-11-20 20:53:28.559093963 +0100
 @@ -650,7 +650,7 @@
  432	AUE_NULL	ALL	{ int audit_session_port(au_asid_t asid, user_addr_t portnamep); }
  433	AUE_NULL	ALL	{ int pid_suspend(int pid); }
@@ -12586,9 +12586,9 @@ diff -ruN dxb-base/bsd/kern/syscalls.master dxb-tree/bsd/kern/syscalls.master
  435	AUE_NULL	ALL	{ int pid_hibernate(int pid); }
  #else
  435     AUE_NULL        ALL     { int nosys(void); }
-diff -ruN dxb-base/bsd/miscfs/mockfs/mockfs_fsnode.c dxb-tree/bsd/miscfs/mockfs/mockfs_fsnode.c
+diff -ruN ci-base/bsd/miscfs/mockfs/mockfs_fsnode.c ci-sweet/bsd/miscfs/mockfs/mockfs_fsnode.c
 --- a/bsd/miscfs/mockfs/mockfs_fsnode.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/miscfs/mockfs/mockfs_fsnode.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/miscfs/mockfs/mockfs_fsnode.c	2026-11-20 20:53:28.559093963 +0100
 @@ -85,7 +85,7 @@
  		goto done;
  	}
@@ -12617,9 +12617,9 @@ diff -ruN dxb-base/bsd/miscfs/mockfs/mockfs_fsnode.c dxb-tree/bsd/miscfs/mockfs/
  
  			if (rvalue) {
  				panic("mockfs_fsnode_vnode failed to create fictitious pages for a memory-backed device; rvalue = %d", rvalue);
-diff -ruN dxb-base/bsd/miscfs/mockfs/mockfs_vfsops.c dxb-tree/bsd/miscfs/mockfs/mockfs_vfsops.c
+diff -ruN ci-base/bsd/miscfs/mockfs/mockfs_vfsops.c ci-sweet/bsd/miscfs/mockfs/mockfs_vfsops.c
 --- a/bsd/miscfs/mockfs/mockfs_vfsops.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/miscfs/mockfs/mockfs_vfsops.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/miscfs/mockfs/mockfs_vfsops.c	2026-11-20 20:53:28.559093963 +0100
 @@ -38,6 +38,9 @@
  #include <sys/malloc.h>
  #include <sys/mount_internal.h>
@@ -12703,9 +12703,9 @@ diff -ruN dxb-base/bsd/miscfs/mockfs/mockfs_vfsops.c dxb-tree/bsd/miscfs/mockfs/
  			mockfs_mount_data->mockfs_physical_memory = memdev_info.mi_phys;
  			mockfs_mount_data->mockfs_memdev_base = memdev_info.mi_base;
  			mockfs_mount_data->mockfs_memdev_size = memdev_info.mi_size;
-diff -ruN dxb-base/bsd/net/rtsock.c dxb-tree/bsd/net/rtsock.c
+diff -ruN ci-base/bsd/net/rtsock.c ci-sweet/bsd/net/rtsock.c
 --- a/bsd/net/rtsock.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/net/rtsock.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/net/rtsock.c	2026-11-20 20:53:28.559093963 +0100
 @@ -510,6 +510,25 @@
  	if (ifscope != IFSCOPE_NONE) {
  		unsigned int intcoproc_scope = 0;
@@ -12732,9 +12732,9 @@ diff -ruN dxb-base/bsd/net/rtsock.c dxb-tree/bsd/net/rtsock.c
  		TAILQ_FOREACH(ifp, &ifnet_head, if_link) {
  			if (IFNET_IS_INTCOPROC(ifp)) {
  				intcoproc_scope = ifp->if_index;
-diff -ruN dxb-base/bsd/netinet/in.c dxb-tree/bsd/netinet/in.c
+diff -ruN ci-base/bsd/netinet/in.c ci-sweet/bsd/netinet/in.c
 --- a/bsd/netinet/in.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/netinet/in.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/netinet/in.c	2026-11-20 20:53:28.559093963 +0100
 @@ -1136,6 +1136,20 @@
  	/* In case it's NULL, make sure it came from the kernel */
  	VERIFY(so != NULL || p == kernproc);
@@ -12756,9 +12756,9 @@ diff -ruN dxb-base/bsd/netinet/in.c dxb-tree/bsd/netinet/in.c
  	/*
  	 * ioctls which don't require ifp, but require socket.
  	 */
-diff -ruN dxb-base/bsd/pthread/sweet_pthread_compat.h dxb-tree/bsd/pthread/sweet_pthread_compat.h
+diff -ruN ci-base/bsd/pthread/sweet_pthread_compat.h ci-sweet/bsd/pthread/sweet_pthread_compat.h
 --- a/bsd/pthread/sweet_pthread_compat.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/pthread/sweet_pthread_compat.h	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/pthread/sweet_pthread_compat.h	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,25 @@
 +/*
 + * Compile the matching libpthread provider with its kext view of BSD headers.
@@ -12785,9 +12785,9 @@ diff -ruN dxb-base/bsd/pthread/sweet_pthread_compat.h dxb-tree/bsd/pthread/sweet
 +extern void *sweet_pthread_log_image __asm("__mh_execute_header");
 +#define __dso_handle sweet_pthread_log_image
 +#endif
-diff -ruN dxb-base/bsd/pthread/sweet_pthread_init.c dxb-tree/bsd/pthread/sweet_pthread_init.c
+diff -ruN ci-base/bsd/pthread/sweet_pthread_init.c ci-sweet/bsd/pthread/sweet_pthread_init.c
 --- a/bsd/pthread/sweet_pthread_init.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/pthread/sweet_pthread_init.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/pthread/sweet_pthread_init.c	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,26 @@
 +/* Built-in provider: Apple libpthread-514.100.2, paired with xnu-8796.141.3. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
@@ -12815,27 +12815,27 @@ diff -ruN dxb-base/bsd/pthread/sweet_pthread_init.c dxb-tree/bsd/pthread/sweet_p
 +}
 +STARTUP(EARLY_BOOT, STARTUP_RANK_SECOND, sweet_pthread_register);
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/pthread/sweet_pthread_support.c dxb-tree/bsd/pthread/sweet_pthread_support.c
+diff -ruN ci-base/bsd/pthread/sweet_pthread_support.c ci-sweet/bsd/pthread/sweet_pthread_support.c
 --- a/bsd/pthread/sweet_pthread_support.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/pthread/sweet_pthread_support.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/pthread/sweet_pthread_support.c	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,5 @@
 +/* Built-in provider: Apple libpthread-514.100.2, paired with xnu-8796.141.3. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_pthread_compat.h"
 +#include "sweet_libpthread/kern/kern_support.c"
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/pthread/sweet_pthread_synch.c dxb-tree/bsd/pthread/sweet_pthread_synch.c
+diff -ruN ci-base/bsd/pthread/sweet_pthread_synch.c ci-sweet/bsd/pthread/sweet_pthread_synch.c
 --- a/bsd/pthread/sweet_pthread_synch.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/pthread/sweet_pthread_synch.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/pthread/sweet_pthread_synch.c	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,5 @@
 +/* Built-in provider: Apple libpthread-514.100.2, paired with xnu-8796.141.3. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_pthread_compat.h"
 +#include "sweet_libpthread/kern/kern_synch.c"
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/bsd/sweet_hfs/sweet_hfs_compat.h dxb-tree/bsd/sweet_hfs/sweet_hfs_compat.h
+diff -ruN ci-base/bsd/sweet_hfs/sweet_hfs_compat.h ci-sweet/bsd/sweet_hfs/sweet_hfs_compat.h
 --- a/bsd/sweet_hfs/sweet_hfs_compat.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sweet_hfs/sweet_hfs_compat.h	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/sweet_hfs/sweet_hfs_compat.h	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,26 @@
 +/*
 + * Compile Apple's HFS kext sources inside SWEET the way the kext is built:
@@ -12863,9 +12863,9 @@ diff -ruN dxb-base/bsd/sweet_hfs/sweet_hfs_compat.h dxb-tree/bsd/sweet_hfs/sweet
 +/* Built in, not a loadable kext (see sweet_hfs_iokit.c). */
 +#define OSKextGetCurrentLoadTag sweet_hfs_current_load_tag
 +#endif
-diff -ruN dxb-base/bsd/sweet_hfs/sweet_hfs_iokit.c dxb-tree/bsd/sweet_hfs/sweet_hfs_iokit.c
+diff -ruN ci-base/bsd/sweet_hfs/sweet_hfs_iokit.c ci-sweet/bsd/sweet_hfs/sweet_hfs_iokit.c
 --- a/bsd/sweet_hfs/sweet_hfs_iokit.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sweet_hfs/sweet_hfs_iokit.c	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/sweet_hfs/sweet_hfs_iokit.c	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,132 @@
 +/*
 + * Built-in replacement for HFS's IOKit glue (core/hfs_iokit.cpp and
@@ -12999,9 +12999,9 @@ diff -ruN dxb-base/bsd/sweet_hfs/sweet_hfs_iokit.c dxb-tree/bsd/sweet_hfs/sweet_
 +	serial_number_str[0] = '\0';
 +	return KERN_NOT_SUPPORTED;
 +}
-diff -ruN dxb-base/bsd/sys/flame_wlan.h dxb-tree/bsd/sys/flame_wlan.h
+diff -ruN ci-base/bsd/sys/flame_wlan.h ci-sweet/bsd/sys/flame_wlan.h
 --- a/bsd/sys/flame_wlan.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sys/flame_wlan.h	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/sys/flame_wlan.h	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,69 @@
 +/*
 + * /dev/wlan: the kernel's Wi-Fi station (bsd/dev/flame_wlan.c, under en0 and wifid's Apple80211 requests,
@@ -13072,9 +13072,9 @@ diff -ruN dxb-base/bsd/sys/flame_wlan.h dxb-tree/bsd/sys/flame_wlan.h
 +};
 +
 +#endif
-diff -ruN dxb-base/bsd/sys/pthread_internal.h dxb-tree/bsd/sys/pthread_internal.h
+diff -ruN ci-base/bsd/sys/pthread_internal.h ci-sweet/bsd/sys/pthread_internal.h
 --- a/bsd/sys/pthread_internal.h	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/sys/pthread_internal.h	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/sys/pthread_internal.h	2026-11-20 20:53:28.559093963 +0100
 @@ -34,7 +34,12 @@
  
  struct ksyn_waitq_element {
@@ -13088,18 +13088,18 @@ diff -ruN dxb-base/bsd/sys/pthread_internal.h dxb-tree/bsd/sys/pthread_internal.
  #else
  	char opaque[32];
  #endif
-diff -ruN dxb-base/bsd/sys/redwood_input.h dxb-tree/bsd/sys/redwood_input.h
+diff -ruN ci-base/bsd/sys/redwood_input.h ci-sweet/bsd/sys/redwood_input.h
 --- a/bsd/sys/redwood_input.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sys/redwood_input.h	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/sys/redwood_input.h	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,5 @@
 +/* topaz: the one thing the station files take from redwood_input.h */
 +#ifndef _SYS_REDWOOD_INPUT_H_
 +#define _SYS_REDWOOD_INPUT_H_
 +#define redwood_wifi_tell(...) printf(__VA_ARGS__)
 +#endif
-diff -ruN dxb-base/bsd/sys/redwood_net.h dxb-tree/bsd/sys/redwood_net.h
+diff -ruN ci-base/bsd/sys/redwood_net.h ci-sweet/bsd/sys/redwood_net.h
 --- a/bsd/sys/redwood_net.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sys/redwood_net.h	2026-11-20 20:36:38.839164867 +0100
++++ b/bsd/sys/redwood_net.h	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,63 @@
 +/*
 + * en0, and what stands behind it.
@@ -13164,9 +13164,9 @@ diff -ruN dxb-base/bsd/sys/redwood_net.h dxb-tree/bsd/sys/redwood_net.h
 +#endif /* KERNEL */
 +
 +#endif /* _SYS_REDWOOD_NET_H_ */
-diff -ruN dxb-base/bsd/sys/redwood_sta.h dxb-tree/bsd/sys/redwood_sta.h
+diff -ruN ci-base/bsd/sys/redwood_sta.h ci-sweet/bsd/sys/redwood_sta.h
 --- a/bsd/sys/redwood_sta.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sys/redwood_sta.h	2026-11-20 20:36:38.843164904 +0100
++++ b/bsd/sys/redwood_sta.h	2026-11-20 20:53:28.559093963 +0100
 @@ -0,0 +1,122 @@
 +/*
 + * Darwin-on-redwood: the station boundary.
@@ -13290,9 +13290,9 @@ diff -ruN dxb-base/bsd/sys/redwood_sta.h dxb-tree/bsd/sys/redwood_sta.h
 +#endif
 +
 +#endif
-diff -ruN dxb-base/bsd/sys/uio_internal.h dxb-tree/bsd/sys/uio_internal.h
+diff -ruN ci-base/bsd/sys/uio_internal.h ci-sweet/bsd/sys/uio_internal.h
 --- a/bsd/sys/uio_internal.h	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/sys/uio_internal.h	2026-11-20 20:36:38.843164904 +0100
++++ b/bsd/sys/uio_internal.h	2026-11-20 20:53:28.559093963 +0100
 @@ -208,6 +208,14 @@
  	uint64_t name[P2ROUNDUP(UIO_SIZEOF(niov), sizeof(uint64_t)) \
  	    / sizeof(uint64_t)]
@@ -13308,9 +13308,9 @@ diff -ruN dxb-base/bsd/sys/uio_internal.h dxb-tree/bsd/sys/uio_internal.h
  #define UIO_IS_USER_SPACE32( a_uio_t )  \
  	( (1 << (a_uio_t)->uio_segflg) & (UIOF_USERSPACE32 | UIOF_PHYS_USERSPACE32 | UIOF_USERISPACE32))
  #define UIO_IS_USER_SPACE64( a_uio_t )  \
-diff -ruN dxb-base/bsd/vfs/kpi_vfs.c dxb-tree/bsd/vfs/kpi_vfs.c
+diff -ruN ci-base/bsd/vfs/kpi_vfs.c ci-sweet/bsd/vfs/kpi_vfs.c
 --- a/bsd/vfs/kpi_vfs.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/vfs/kpi_vfs.c	2026-11-20 20:36:38.843164904 +0100
++++ b/bsd/vfs/kpi_vfs.c	2026-11-20 20:53:28.559093963 +0100
 @@ -4150,6 +4150,36 @@
  
  	_err = (*vp->v_op[vnop_ioctl_desc.vdesc_offset])(&a);
@@ -13369,9 +13369,9 @@ diff -ruN dxb-base/bsd/vfs/kpi_vfs.c dxb-tree/bsd/vfs/kpi_vfs.c
  		} else {
  			_err = VNOP_RENAME(fdvp, *fvpp, fcnp, tdvp, *tvpp, tcnp, ctx);
  		}
-diff -ruN dxb-base/bsd/vfs/vfs_subr.c dxb-tree/bsd/vfs/vfs_subr.c
+diff -ruN ci-base/bsd/vfs/vfs_subr.c ci-sweet/bsd/vfs/vfs_subr.c
 --- a/bsd/vfs/vfs_subr.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/vfs/vfs_subr.c	2026-11-20 20:36:38.843164904 +0100
++++ b/bsd/vfs/vfs_subr.c	2026-11-20 20:53:28.559093963 +0100
 @@ -1250,6 +1250,18 @@
  
  		mp = vfs_rootmountalloc_internal(vfsp, "root_device");
@@ -13391,9 +13391,9 @@ diff -ruN dxb-base/bsd/vfs/vfs_subr.c dxb-tree/bsd/vfs/vfs_subr.c
  
  		if (vfsp->vfc_mountroot) {
  			error = (*vfsp->vfc_mountroot)(mp, rootvp, ctx);
-diff -ruN dxb-base/bsd/vfs/vfs_syscalls.c dxb-tree/bsd/vfs/vfs_syscalls.c
+diff -ruN ci-base/bsd/vfs/vfs_syscalls.c ci-sweet/bsd/vfs/vfs_syscalls.c
 --- a/bsd/vfs/vfs_syscalls.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/vfs/vfs_syscalls.c	2026-11-20 20:36:38.843164904 +0100
++++ b/bsd/vfs/vfs_syscalls.c	2026-11-20 20:53:28.563094029 +0100
 @@ -13380,6 +13380,113 @@
  #define SET_PACKAGE_EXTENSION_ENTITLEMENT \
  	"com.apple.private.kernel.set-package-extensions"
@@ -13534,9 +13534,9 @@ diff -ruN dxb-base/bsd/vfs/vfs_syscalls.c dxb-tree/bsd/vfs/vfs_syscalls.c
  	}
  	} /* end switch stmt */
  
-diff -ruN dxb-base/config/MASTER dxb-tree/config/MASTER
+diff -ruN ci-base/config/MASTER ci-sweet/config/MASTER
 --- a/config/MASTER	2026-06-18 01:28:50.000000000 +0200
-+++ b/config/MASTER	2026-11-20 20:36:38.843164904 +0100
++++ b/config/MASTER	2026-11-20 20:53:28.563094029 +0100
 @@ -112,6 +112,7 @@
  #	4.4 filesystems
  #
@@ -13554,9 +13554,9 @@ diff -ruN dxb-base/config/MASTER dxb-tree/config/MASTER
  options   NOS_ARM_ASM			# <nos_arm_asm>
  options   NOS_ARM_PMAP			# <nos_arm_pmap>
  
-diff -ruN dxb-base/config/MASTER.arm64.MacOSX dxb-tree/config/MASTER.arm64.MacOSX
+diff -ruN ci-base/config/MASTER.arm64.MacOSX ci-sweet/config/MASTER.arm64.MacOSX
 --- a/config/MASTER.arm64.MacOSX	2026-06-18 01:28:50.000000000 +0200
-+++ b/config/MASTER.arm64.MacOSX	2026-11-20 20:36:38.843164904 +0100
++++ b/config/MASTER.arm64.MacOSX	2026-11-20 20:53:28.563094029 +0100
 @@ -21,7 +21,12 @@
  #else
  #  ARM_EXTRAS_BASE = [ config_pmap_ppl ]
@@ -13571,9 +13571,9 @@ diff -ruN dxb-base/config/MASTER.arm64.MacOSX dxb-tree/config/MASTER.arm64.MacOS
  #  KERNEL_RELEASE = [ KERNEL_BASE release ]
  #  KERNEL_DEV =     [ KERNEL_BASE development mach_assert config_xnupost proc_ref_debug config_proc_resource_limits config_ext_paniclog ]
  #  KERNEL_DEBUG =   [ KERNEL_BASE debug mach_assert config_xnupost config_waitq_stats config_workloop_debug config_proc_resource_limits config_ext_paniclog ]
-diff -ruN dxb-base/config/MASTER.arm64.sweet dxb-tree/config/MASTER.arm64.sweet
+diff -ruN ci-base/config/MASTER.arm64.sweet ci-sweet/config/MASTER.arm64.sweet
 --- a/config/MASTER.arm64.sweet	1970-01-01 01:00:00.000000000 +0100
-+++ b/config/MASTER.arm64.sweet	2026-11-20 20:36:38.843164904 +0100
++++ b/config/MASTER.arm64.sweet	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,115 @@
 +#
 +# sweet (Redmi Note 10 Pro, SM7150): MASTER.arm64.MacOSX plus the open-source
@@ -13690,9 +13690,9 @@ diff -ruN dxb-base/config/MASTER.arm64.sweet dxb-tree/config/MASTER.arm64.sweet
 +
 +options   CONFIG_RESLIDE_SHARED_CACHE		# <reslide_shared_cache>
 +options   CONFIG_KERNEL_TBI		# <kernel_tbi>
-diff -ruN dxb-base/config/Makefile dxb-tree/config/Makefile
+diff -ruN ci-base/config/Makefile ci-sweet/config/Makefile
 --- a/config/Makefile	2026-06-18 01:28:50.000000000 +0200
-+++ b/config/Makefile	2026-11-20 20:36:38.843164904 +0100
++++ b/config/Makefile	2026-11-20 20:53:28.563094029 +0100
 @@ -46,11 +46,14 @@
  endif
  
@@ -13738,14 +13738,14 @@ diff -ruN dxb-base/config/Makefile dxb-tree/config/Makefile
  
  $(OBJPATH)/$(MD_SUPPORTED_KPI_FILENAME): $(EXPORTS_FILES)
  	@$(LOG_SUPPORTED_KPI) "$(CURRENT_ARCH_CONFIG_LC)"
-diff -ruN dxb-base/config/Private.SWEET.exports dxb-tree/config/Private.SWEET.exports
+diff -ruN ci-base/config/Private.SWEET.exports ci-sweet/config/Private.SWEET.exports
 --- a/config/Private.SWEET.exports	1970-01-01 01:00:00.000000000 +0100
-+++ b/config/Private.SWEET.exports	2026-11-20 20:36:38.843164904 +0100
++++ b/config/Private.SWEET.exports	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1 @@
 +# SWEET provides no Apple-only private exports.
-diff -ruN dxb-base/config/Private.exports dxb-tree/config/Private.exports
+diff -ruN ci-base/config/Private.exports ci-sweet/config/Private.exports
 --- a/config/Private.exports	2026-06-18 01:28:50.000000000 +0200
-+++ b/config/Private.exports	2026-11-20 20:36:38.843164904 +0100
++++ b/config/Private.exports	2026-11-20 20:53:28.563094029 +0100
 @@ -915,11 +915,9 @@
  _pmap_claim_reserved_ppl_page
  _pmap_free_reserved_ppl_page
@@ -13758,9 +13758,9 @@ diff -ruN dxb-base/config/Private.exports dxb-tree/config/Private.exports
  _port_name_to_task:_port_name_to_task_external
  _port_name_to_thread
  _post_sys_powersource
-diff -ruN dxb-base/iokit/Kernel/IOService.cpp dxb-tree/iokit/Kernel/IOService.cpp
+diff -ruN ci-base/iokit/Kernel/IOService.cpp ci-sweet/iokit/Kernel/IOService.cpp
 --- a/iokit/Kernel/IOService.cpp	2026-06-18 01:28:50.000000000 +0200
-+++ b/iokit/Kernel/IOService.cpp	2026-11-20 20:36:38.843164904 +0100
++++ b/iokit/Kernel/IOService.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -1234,7 +1234,9 @@
  	}
  	IOServiceTrace(IOSERVICE_KEXTD_READY, 0, 0, 0, 0);
@@ -13813,9 +13813,9 @@ diff -ruN dxb-base/iokit/Kernel/IOService.cpp dxb-tree/iokit/Kernel/IOService.cp
  
  	while (root) {
  		if (root->metaCast(ioblockstoragedriverClass)) {
-diff -ruN dxb-base/iokit/Kernel/IOStartIOKit.cpp dxb-tree/iokit/Kernel/IOStartIOKit.cpp
+diff -ruN ci-base/iokit/Kernel/IOStartIOKit.cpp ci-sweet/iokit/Kernel/IOStartIOKit.cpp
 --- a/iokit/Kernel/IOStartIOKit.cpp	2026-06-18 01:28:50.000000000 +0200
-+++ b/iokit/Kernel/IOStartIOKit.cpp	2026-11-20 20:36:38.843164904 +0100
++++ b/iokit/Kernel/IOStartIOKit.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -185,7 +185,17 @@
  	}
  
@@ -13834,9 +13834,9 @@ diff -ruN dxb-base/iokit/Kernel/IOStartIOKit.cpp dxb-tree/iokit/Kernel/IOStartIO
  		/* Add a busy count to keep the registry busy until the IOKit daemon has
  		 * completely finished launching. This is decremented when the IOKit daemon
  		 * messages the kernel after the in-kernel linker has been
-diff -ruN dxb-base/iokit/Kernel/IOUserClient.cpp dxb-tree/iokit/Kernel/IOUserClient.cpp
+diff -ruN ci-base/iokit/Kernel/IOUserClient.cpp ci-sweet/iokit/Kernel/IOUserClient.cpp
 --- a/iokit/Kernel/IOUserClient.cpp	2026-06-18 01:28:50.000000000 +0200
-+++ b/iokit/Kernel/IOUserClient.cpp	2026-11-20 20:36:38.843164904 +0100
++++ b/iokit/Kernel/IOUserClient.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -2728,7 +2728,62 @@
  	return internal_io_service_match_property_table(service, matching, matchingCnt, matches);
  }
@@ -14002,9 +14002,9 @@ diff -ruN dxb-base/iokit/Kernel/IOUserClient.cpp dxb-tree/iokit/Kernel/IOUserCli
  
  		if (propertiesDict) {
  			propertiesDict->release();
-diff -ruN dxb-base/iokit/Kernel/arm/MiniIONetworkStack.cpp dxb-tree/iokit/Kernel/arm/MiniIONetworkStack.cpp
+diff -ruN ci-base/iokit/Kernel/arm/MiniIONetworkStack.cpp ci-sweet/iokit/Kernel/arm/MiniIONetworkStack.cpp
 --- a/iokit/Kernel/arm/MiniIONetworkStack.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/MiniIONetworkStack.cpp	2026-11-20 20:36:38.843164904 +0100
++++ b/iokit/Kernel/arm/MiniIONetworkStack.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,114 @@
 +/*
 + * MiniIONetworkStack: a stand-in for IONetworkStack of Apple's IONetworkingFamily, as seen by
@@ -14120,9 +14120,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/MiniIONetworkStack.cpp dxb-tree/iokit/Kernel
 +	}
 +	stack->release();
 +}
-diff -ruN dxb-base/iokit/Kernel/arm/RedwoodGPU.cpp dxb-tree/iokit/Kernel/arm/RedwoodGPU.cpp
+diff -ruN ci-base/iokit/Kernel/arm/RedwoodGPU.cpp ci-sweet/iokit/Kernel/arm/RedwoodGPU.cpp
 --- a/iokit/Kernel/arm/RedwoodGPU.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/RedwoodGPU.cpp	2026-11-20 20:36:38.843164904 +0100
++++ b/iokit/Kernel/arm/RedwoodGPU.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,1235 @@
 +/*
 + * From vcvkk/darwin-redwood (HackiOS), reused with the author's permission; topaz: the
@@ -15359,9 +15359,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/RedwoodGPU.cpp dxb-tree/iokit/Kernel/arm/Red
 +	return ret;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/RedwoodWLAN.cpp dxb-tree/iokit/Kernel/arm/RedwoodWLAN.cpp
+diff -ruN ci-base/iokit/Kernel/arm/RedwoodWLAN.cpp ci-sweet/iokit/Kernel/arm/RedwoodWLAN.cpp
 --- a/iokit/Kernel/arm/RedwoodWLAN.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/RedwoodWLAN.cpp	2026-11-20 20:36:38.843164904 +0100
++++ b/iokit/Kernel/arm/RedwoodWLAN.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,137 @@
 +/*
 + * RedwoodWLAN: the registry entries by which iOS finds the Wi-Fi interface.
@@ -15500,9 +15500,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/RedwoodWLAN.cpp dxb-tree/iokit/Kernel/arm/Re
 +	}
 +	controller->release();
 +}
-diff -ruN dxb-base/iokit/Kernel/arm/SweetAMFI.cpp dxb-tree/iokit/Kernel/arm/SweetAMFI.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetAMFI.cpp ci-sweet/iokit/Kernel/arm/SweetAMFI.cpp
 --- a/iokit/Kernel/arm/SweetAMFI.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetAMFI.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetAMFI.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,97 @@
 +/*
 + * A stand-in for AppleMobileFileIntegrity's IOService, which this kernel
@@ -15601,9 +15601,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetAMFI.cpp dxb-tree/iokit/Kernel/arm/Swee
 +	return kIOReturnUnsupported;
 +}
 +#endif
-diff -ruN dxb-base/iokit/Kernel/arm/SweetAccelerator.cpp dxb-tree/iokit/Kernel/arm/SweetAccelerator.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetAccelerator.cpp ci-sweet/iokit/Kernel/arm/SweetAccelerator.cpp
 --- a/iokit/Kernel/arm/SweetAccelerator.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetAccelerator.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetAccelerator.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,722 @@
 +/*
 + * 0144: the GPU user client Turnip's darwin backend speaks (userland/turnip: Mesa + UniXNU's
@@ -16327,9 +16327,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetAccelerator.cpp dxb-tree/iokit/Kernel/a
 +#undef V2_OUT
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetAudio.cpp dxb-tree/iokit/Kernel/arm/SweetAudio.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetAudio.cpp ci-sweet/iokit/Kernel/arm/SweetAudio.cpp
 --- a/iokit/Kernel/arm/SweetAudio.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetAudio.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetAudio.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,604 @@
 +/*
 + * Built-in IOAudio2 stand-in for SWEET (0226): a silent "IOAudio2Device" so CoreAudio has a built-in device.
@@ -16935,9 +16935,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetAudio.cpp dxb-tree/iokit/Kernel/arm/Swe
 +	return kIOReturnSuccess;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetBacklight.cpp dxb-tree/iokit/Kernel/arm/SweetBacklight.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetBacklight.cpp ci-sweet/iokit/Kernel/arm/SweetBacklight.cpp
 --- a/iokit/Kernel/arm/SweetBacklight.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetBacklight.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetBacklight.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,389 @@
 +/*
 + * 0197: AppleARMBacklight for SWEET (guacamole): the service iOS's brightness system looks for.
@@ -17328,9 +17328,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetBacklight.cpp dxb-tree/iokit/Kernel/arm
 +	return kIOReturnSuccess;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetBattery.cpp dxb-tree/iokit/Kernel/arm/SweetBattery.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetBattery.cpp ci-sweet/iokit/Kernel/arm/SweetBattery.cpp
 --- a/iokit/Kernel/arm/SweetBattery.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetBattery.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetBattery.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,482 @@
 +/*
 + * Built-in iOS battery bring-up service. Default: 100%, AC, not charging.
@@ -17814,9 +17814,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetBattery.cpp dxb-tree/iokit/Kernel/arm/S
 +	IOPMPowerSource::free();
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetCPU.cpp dxb-tree/iokit/Kernel/arm/SweetCPU.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetCPU.cpp ci-sweet/iokit/Kernel/arm/SweetCPU.cpp
 --- a/iokit/Kernel/arm/SweetCPU.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetCPU.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetCPU.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,271 @@
 +/*
 + * A55 SMP bring-up for sweet using XNU's legacy IOCPU interface and PSCI.
@@ -18089,9 +18089,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetCPU.cpp dxb-tree/iokit/Kernel/arm/Sweet
 +	return cpuName;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetEntitlements.cpp dxb-tree/iokit/Kernel/arm/SweetEntitlements.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetEntitlements.cpp ci-sweet/iokit/Kernel/arm/SweetEntitlements.cpp
 --- a/iokit/Kernel/arm/SweetEntitlements.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetEntitlements.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetEntitlements.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,184 @@
 +/*
 + * Entitlements for the SWEET built-in AMFI interface (bsd/kern/sweet_amfi.c).
@@ -18277,9 +18277,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetEntitlements.cpp dxb-tree/iokit/Kernel/
 +}
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetFramebuffer.cpp dxb-tree/iokit/Kernel/arm/SweetFramebuffer.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetFramebuffer.cpp ci-sweet/iokit/Kernel/arm/SweetFramebuffer.cpp
 --- a/iokit/Kernel/arm/SweetFramebuffer.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetFramebuffer.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,2392 @@
 +/*
 + * Built-in IOMobileFramebuffer for SWEET: the ABL's continuous-splash
@@ -20673,9 +20673,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetFramebuffer.cpp dxb-tree/iokit/Kernel/a
 +	return ret;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetGPUABI.h dxb-tree/iokit/Kernel/arm/SweetGPUABI.h
+diff -ruN ci-base/iokit/Kernel/arm/SweetGPUABI.h ci-sweet/iokit/Kernel/arm/SweetGPUABI.h
 --- a/iokit/Kernel/arm/SweetGPUABI.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetGPUABI.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetGPUABI.h	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,165 @@
 +/* SPDX-License-Identifier: MIT */
 +#ifndef NATIVE_ADRENO_ABI_H
@@ -20842,9 +20842,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetGPUABI.h dxb-tree/iokit/Kernel/arm/Swee
 +static_assert(sizeof(NativeAdrenoAbiStatus) == 16, "ABI status layout");
 +#endif
 +#endif
-diff -ruN dxb-base/iokit/Kernel/arm/SweetIPAppender.cpp dxb-tree/iokit/Kernel/arm/SweetIPAppender.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetIPAppender.cpp ci-sweet/iokit/Kernel/arm/SweetIPAppender.cpp
 --- a/iokit/Kernel/arm/SweetIPAppender.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetIPAppender.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetIPAppender.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,92 @@
 +/*
 + * 0253: a stand-in AppleIPAppender for CommCenter (research/commcenter).
@@ -20938,9 +20938,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetIPAppender.cpp dxb-tree/iokit/Kernel/ar
 +	return kIOReturnSuccess;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetKeyStore.cpp dxb-tree/iokit/Kernel/arm/SweetKeyStore.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetKeyStore.cpp ci-sweet/iokit/Kernel/arm/SweetKeyStore.cpp
 --- a/iokit/Kernel/arm/SweetKeyStore.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetKeyStore.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetKeyStore.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,284 @@
 +/*
 + * Built-in AppleKeyStore for SWEET: a device without a passcode whose
@@ -21226,9 +21226,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetKeyStore.cpp dxb-tree/iokit/Kernel/arm/
 +	return ret;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetM2Scaler.cpp dxb-tree/iokit/Kernel/arm/SweetM2Scaler.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetM2Scaler.cpp ci-sweet/iokit/Kernel/arm/SweetM2Scaler.cpp
 --- a/iokit/Kernel/arm/SweetM2Scaler.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetM2Scaler.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetM2Scaler.cpp	2026-11-20 20:53:28.563094029 +0100
 @@ -0,0 +1,206 @@
 +/*
 + * CPU stand-in for Apple's AppleM2ScalerCSCDriver / IOSurfaceAccelerator.
@@ -21436,9 +21436,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetM2Scaler.cpp dxb-tree/iokit/Kernel/arm/
 +    return ok ? kIOReturnSuccess : kIOReturnUnsupported;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetPlatformExpert.cpp dxb-tree/iokit/Kernel/arm/SweetPlatformExpert.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetPlatformExpert.cpp ci-sweet/iokit/Kernel/arm/SweetPlatformExpert.cpp
 --- a/iokit/Kernel/arm/SweetPlatformExpert.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetPlatformExpert.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetPlatformExpert.cpp	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,82 @@
 +/*
 + * Minimal device-tree platform expert for Redmi Note 10 Pro (sweet).
@@ -21522,9 +21522,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetPlatformExpert.cpp dxb-tree/iokit/Kerne
 + * is what the iPhone userland (MobileGestalt) expects.
 + */
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetSurface.cpp dxb-tree/iokit/Kernel/arm/SweetSurface.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetSurface.cpp ci-sweet/iokit/Kernel/arm/SweetSurface.cpp
 --- a/iokit/Kernel/arm/SweetSurface.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetSurface.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetSurface.cpp	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,1272 @@
 +/*
 + * Built-in IOSurface for SWEET.
@@ -22798,9 +22798,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetSurface.cpp dxb-tree/iokit/Kernel/arm/S
 +	return &sweet_surface_traps[index];
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetSurface.h dxb-tree/iokit/Kernel/arm/SweetSurface.h
+diff -ruN ci-base/iokit/Kernel/arm/SweetSurface.h ci-sweet/iokit/Kernel/arm/SweetSurface.h
 --- a/iokit/Kernel/arm/SweetSurface.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetSurface.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetSurface.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,69 @@
 +/*
 + * Built-in IOSurface for SWEET (see SweetSurface.cpp).
@@ -22871,9 +22871,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetSurface.h dxb-tree/iokit/Kernel/arm/Swe
 +
 +#endif /* SWEET */
 +#endif /* _SWEET_SURFACE_H */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetVibrator.cpp dxb-tree/iokit/Kernel/arm/SweetVibrator.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetVibrator.cpp ci-sweet/iokit/Kernel/arm/SweetVibrator.cpp
 --- a/iokit/Kernel/arm/SweetVibrator.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetVibrator.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetVibrator.cpp	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,224 @@
 +/*
 + * 0249: the IOKit "vibrator" iOS's legacy vibration path drives, on the AW8697 motor (bsd/dev/sweet_haptic.c, 0248).
@@ -23099,9 +23099,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetVibrator.cpp dxb-tree/iokit/Kernel/arm/
 +	}
 +}
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/SweetWatchdog.cpp dxb-tree/iokit/Kernel/arm/SweetWatchdog.cpp
+diff -ruN ci-base/iokit/Kernel/arm/SweetWatchdog.cpp ci-sweet/iokit/Kernel/arm/SweetWatchdog.cpp
 --- a/iokit/Kernel/arm/SweetWatchdog.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetWatchdog.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/SweetWatchdog.cpp	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,107 @@
 +/*
 + * Built-in IOWatchdog for SWEET.
@@ -23210,9 +23210,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/SweetWatchdog.cpp dxb-tree/iokit/Kernel/arm/
 +	return kIOReturnSuccess;
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/AppleHIDUsageTables.h dxb-tree/iokit/Kernel/arm/hid/AppleHIDUsageTables.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/AppleHIDUsageTables.h ci-sweet/iokit/Kernel/arm/hid/AppleHIDUsageTables.h
 --- a/iokit/Kernel/arm/hid/AppleHIDUsageTables.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/AppleHIDUsageTables.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/AppleHIDUsageTables.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,22 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -23236,9 +23236,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/AppleHIDUsageTables.h dxb-tree/iokit/Ker
 + * 
 + * @APPLE_LICENSE_HEADER_END@
 + */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOGraphicsTypes.h dxb-tree/iokit/Kernel/arm/hid/IOGraphicsTypes.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOGraphicsTypes.h ci-sweet/iokit/Kernel/arm/hid/IOGraphicsTypes.h
 --- a/iokit/Kernel/arm/hid/IOGraphicsTypes.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOGraphicsTypes.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOGraphicsTypes.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,22 @@
 +/*
 + * SWEET: the two IOGraphics types the HID headers use (IOGraphicsFamily
@@ -23262,9 +23262,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOGraphicsTypes.h dxb-tree/iokit/Kernel/
 +} IOGBounds;
 +
 +#endif /* _IOKIT_IOGRAPHICSTYPES_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDDebug.h dxb-tree/iokit/Kernel/arm/hid/IOHIDDebug.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDDebug.h ci-sweet/iokit/Kernel/arm/hid/IOHIDDebug.h
 --- a/iokit/Kernel/arm/hid/IOHIDDebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDDebug.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDDebug.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,31 @@
 +//
 +//  IOHIDDebug.h
@@ -23297,9 +23297,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDDebug.h dxb-tree/iokit/Kernel/arm/h
 +
 +#endif /* IOHIDDebug_h */
 +
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h dxb-tree/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h ci-sweet/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h
 --- a/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,228 @@
 +/*
 + *
@@ -23529,9 +23529,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h dxb-tree/iokit/Kernel/
 +#define kIOHIDPhysicalDeviceUniqueIDKey "PhysicalDeviceUniqueID"
 +
 +#endif /* IOHIDDeviceKeys_h */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h dxb-tree/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h ci-sweet/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h
 --- a/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,311 @@
 +/*
 + *
@@ -23844,9 +23844,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h dxb-tree/iokit/Kernel
 +#define kIOHIDDeviceMaxAsyncRequestTimeout     1200000ULL
 +
 +#endif /* IOHIDDeviceTypes_h */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEvent.cpp dxb-tree/iokit/Kernel/arm/hid/IOHIDEvent.cpp
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEvent.cpp ci-sweet/iokit/Kernel/arm/hid/IOHIDEvent.cpp
 --- a/iokit/Kernel/arm/hid/IOHIDEvent.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEvent.cpp	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEvent.cpp	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,1814 @@
 +/*
 + *
@@ -25662,9 +25662,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEvent.cpp dxb-tree/iokit/Kernel/arm
 +
 +    return ns / scaleFactor;
 +}
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEvent.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEvent.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEvent.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEvent.h
 --- a/iokit/Kernel/arm/hid/IOHIDEvent.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEvent.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEvent.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,483 @@
 +/*
 + *
@@ -26149,9 +26149,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEvent.h dxb-tree/iokit/Kernel/arm/h
 +};
 +
 +#endif /* _IOKIT_IOHIDEVENT_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventData.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventData.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventData.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventData.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventData.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventData.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventData.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,254 @@
 +/*
 + *
@@ -26407,9 +26407,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventData.h dxb-tree/iokit/Kernel/a
 +#endif
 +
 +#endif /* _IOKIT_HID_IOHIDEVENTDATA_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h	2026-11-20 20:36:38.847164941 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,324 @@
 +/*
 +*
@@ -26735,9 +26735,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h dxb-tree/iokit/Ker
 +static const IOHIDEventField kIOHIDEventFieldPointerButtonMask                                 =  (kIOHIDEventFieldPointerBase | 3);
 +
 +#endif
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,8571 @@
 +/*
 +*
@@ -35310,9 +35310,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h dxb-tree/iokit/Ker
 +
 +
 +#endif
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventService.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventService.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventService.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventService.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventService.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventService.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventService.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,75 @@
 +/*
 + * SWEET: minimal IOHIDEventService.
@@ -35389,9 +35389,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventService.h dxb-tree/iokit/Kerne
 +};
 +
 +#endif /* _IOKIT_HID_IOHIDEVENTSERVICE_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,144 @@
 +/*
 + *
@@ -35537,9 +35537,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h dxb-tree/iokit/K
 +#define kIOHIDEventDriverHandlesReport "IOHIDEventDriverHandlesReport"
 +
 +#endif /* IOHIDDeviceTypes_h */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h	2026-11-20 20:53:28.567094095 +0100
 @@ -0,0 +1,330 @@
 +/*
 + *
@@ -35871,9 +35871,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h dxb-tree
 +#define kIOHIDLegacyKeyModifierMapKey "LegacyKeyMaps"
 +
 +#endif /* IOHIDEventServiceKeys_Private_h */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,298 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -36173,9 +36173,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp dxb-tree/ioki
 +    }
 +    return ret;
 +}
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,74 @@
 +/*
 + *
@@ -36251,9 +36251,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h dxb-tree/iokit/
 +
 +//---------------------------------------------------------------------------
 +#endif /* !_IOKIT_HID_IOHIDEVENTSERVICEQUEUE_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,74 @@
 +/*
 + *
@@ -36329,9 +36329,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h dxb-tree/iokit/
 +} IOHIDScrollEventOptions;
 +
 +#endif /* IOHIDEventServiceTypes_h */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,706 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -37039,9 +37039,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp dxb-tree
 +exit:
 +    return result;
 +}
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,148 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -37191,9 +37191,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h dxb-tree/i
 +#endif /* KERNEL */
 +
 +#endif /* _IOKIT_IOHIDEVENTSERVICEUSERCLIENT_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,811 @@
 +/*
 +*
@@ -38006,9 +38006,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h dxb-tree/iokit/Ke
 +} __IOHIDPointerEventData;
 +
 +#endif
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventTypes.h dxb-tree/iokit/Kernel/arm/hid/IOHIDEventTypes.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDEventTypes.h ci-sweet/iokit/Kernel/arm/hid/IOHIDEventTypes.h
 --- a/iokit/Kernel/arm/hid/IOHIDEventTypes.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDEventTypes.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDEventTypes.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,799 @@
 +/*
 + *
@@ -38809,9 +38809,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDEventTypes.h dxb-tree/iokit/Kernel/
 +};
 +
 +#endif /* _IOKIT_HID_IOHIDEVENTTYPES_H } */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h dxb-tree/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h ci-sweet/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h
 --- a/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,72 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -38885,9 +38885,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h dxb-tree/iokit/Kernel
 +};
 +
 +#endif // _IOKIT_HID_IOHIDFAMILYTRACE_H }
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDKeys.h dxb-tree/iokit/Kernel/arm/hid/IOHIDKeys.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDKeys.h ci-sweet/iokit/Kernel/arm/hid/IOHIDKeys.h
 --- a/iokit/Kernel/arm/hid/IOHIDKeys.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDKeys.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDKeys.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,466 @@
 +/*
 + *
@@ -39355,9 +39355,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDKeys.h dxb-tree/iokit/Kernel/arm/hi
 +__END_DECLS
 +
 +#endif /* !_IOKIT_HID_IOHIDKEYS_H_ */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDParameter.h dxb-tree/iokit/Kernel/arm/hid/IOHIDParameter.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDParameter.h ci-sweet/iokit/Kernel/arm/hid/IOHIDParameter.h
 --- a/iokit/Kernel/arm/hid/IOHIDParameter.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDParameter.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDParameter.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,350 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -39709,9 +39709,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDParameter.h dxb-tree/iokit/Kernel/a
 +};
 +
 +#endif /* !_DEV_EVSIO_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h dxb-tree/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h ci-sweet/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h
 --- a/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,212 @@
 +/*
 + *
@@ -39925,9 +39925,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h dxb-tree/iokit/Kernel
 +__END_DECLS
 +
 +#endif /* !_IOKIT_HID_IOHIDPRIVATEKEYS_H_ */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDProperties.h dxb-tree/iokit/Kernel/arm/hid/IOHIDProperties.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDProperties.h ci-sweet/iokit/Kernel/arm/hid/IOHIDProperties.h
 --- a/iokit/Kernel/arm/hid/IOHIDProperties.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDProperties.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDProperties.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,105 @@
 +/*
 + * Copyright (c) 2016 Apple Computer, Inc. All rights reserved.
@@ -40034,9 +40034,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDProperties.h dxb-tree/iokit/Kernel/
 +#define kIOHIDServiceCapsLockStateKey                "HIDCapsLockState"
 +
 +#endif /* IOHIDProperties_h */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDShared.h dxb-tree/iokit/Kernel/arm/hid/IOHIDShared.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDShared.h ci-sweet/iokit/Kernel/arm/hid/IOHIDShared.h
 --- a/iokit/Kernel/arm/hid/IOHIDShared.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDShared.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDShared.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,291 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -40329,9 +40329,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDShared.h dxb-tree/iokit/Kernel/arm/
 +
 +
 +#endif /* !_DEV_EVIO_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDTypes.h dxb-tree/iokit/Kernel/arm/hid/IOHIDTypes.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDTypes.h ci-sweet/iokit/Kernel/arm/hid/IOHIDTypes.h
 --- a/iokit/Kernel/arm/hid/IOHIDTypes.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDTypes.h	2026-11-20 20:36:38.851164979 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDTypes.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,182 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -40515,9 +40515,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDTypes.h dxb-tree/iokit/Kernel/arm/h
 +
 +#endif /* !_DEV_EV_TYPES_H */
 +
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDUsageTables.h dxb-tree/iokit/Kernel/arm/hid/IOHIDUsageTables.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOHIDUsageTables.h ci-sweet/iokit/Kernel/arm/hid/IOHIDUsageTables.h
 --- a/iokit/Kernel/arm/hid/IOHIDUsageTables.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOHIDUsageTables.h	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/Kernel/arm/hid/IOHIDUsageTables.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,2694 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -43213,9 +43213,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOHIDUsageTables.h dxb-tree/iokit/Kernel
 +};
 +
 +#endif /* _IOHIDUSAGETABLES_H */
-diff -ruN dxb-base/iokit/Kernel/arm/hid/IOLLEvent.h dxb-tree/iokit/Kernel/arm/hid/IOLLEvent.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/IOLLEvent.h ci-sweet/iokit/Kernel/arm/hid/IOLLEvent.h
 --- a/iokit/Kernel/arm/hid/IOLLEvent.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/IOLLEvent.h	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/Kernel/arm/hid/IOLLEvent.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,586 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -43803,9 +43803,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/IOLLEvent.h dxb-tree/iokit/Kernel/arm/hi
 +
 +#endif /* !_DEV_EVENT_H */
 +
-diff -ruN dxb-base/iokit/Kernel/arm/hid/SweetHID.cpp dxb-tree/iokit/Kernel/arm/hid/SweetHID.cpp
+diff -ruN ci-base/iokit/Kernel/arm/hid/SweetHID.cpp ci-sweet/iokit/Kernel/arm/hid/SweetHID.cpp
 --- a/iokit/Kernel/arm/hid/SweetHID.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/SweetHID.cpp	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/Kernel/arm/hid/SweetHID.cpp	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,590 @@
 +/*
 + * SWEET: HID event services for the iOS userland (backboardd's HID event
@@ -44397,9 +44397,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/SweetHID.cpp dxb-tree/iokit/Kernel/arm/h
 +		gSweetTouch->touch(finger, down != 0, x, y);
 +	}
 +}
-diff -ruN dxb-base/iokit/Kernel/arm/hid/ev_keymap.h dxb-tree/iokit/Kernel/arm/hid/ev_keymap.h
+diff -ruN ci-base/iokit/Kernel/arm/hid/ev_keymap.h ci-sweet/iokit/Kernel/arm/hid/ev_keymap.h
 --- a/iokit/Kernel/arm/hid/ev_keymap.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/hid/ev_keymap.h	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/Kernel/arm/hid/ev_keymap.h	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,171 @@
 +/*
 + * @APPLE_LICENSE_HEADER_START@
@@ -44572,9 +44572,9 @@ diff -ruN dxb-base/iokit/Kernel/arm/hid/ev_keymap.h dxb-tree/iokit/Kernel/arm/hi
 +} NXParsedKeyMapping;
 +
 +#endif /* !_DEV_EV_KEYMAP_H */
-diff -ruN dxb-base/iokit/KernelConfigTables.cpp dxb-tree/iokit/KernelConfigTables.cpp
+diff -ruN ci-base/iokit/KernelConfigTables.cpp ci-sweet/iokit/KernelConfigTables.cpp
 --- a/iokit/KernelConfigTables.cpp	2026-06-18 01:28:50.000000000 +0200
-+++ b/iokit/KernelConfigTables.cpp	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/KernelConfigTables.cpp	2026-11-20 20:53:28.571094162 +0100
 @@ -34,6 +34,80 @@
  
  const char * gIOKernelConfigTables =
@@ -44656,9 +44656,9 @@ diff -ruN dxb-base/iokit/KernelConfigTables.cpp dxb-tree/iokit/KernelConfigTable
      "   {"
      "     'IOClass'         = IOPanicPlatform;"
      "     'IOProviderClass' = IOPlatformExpertDevice;"
-diff -ruN dxb-base/iokit/bsddev/IOKitBSDInit.cpp dxb-tree/iokit/bsddev/IOKitBSDInit.cpp
+diff -ruN ci-base/iokit/bsddev/IOKitBSDInit.cpp ci-sweet/iokit/bsddev/IOKitBSDInit.cpp
 --- a/iokit/bsddev/IOKitBSDInit.cpp	2026-06-18 01:28:50.000000000 +0200
-+++ b/iokit/bsddev/IOKitBSDInit.cpp	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/bsddev/IOKitBSDInit.cpp	2026-11-20 20:53:28.571094162 +0100
 @@ -795,6 +795,24 @@
  		}
  	}
@@ -44684,9 +44684,9 @@ diff -ruN dxb-base/iokit/bsddev/IOKitBSDInit.cpp dxb-tree/iokit/bsddev/IOKitBSDI
  //
  //	Now check if we are trying to root on a memory device
  //
-diff -ruN dxb-base/iokit/conf/files.arm64 dxb-tree/iokit/conf/files.arm64
+diff -ruN ci-base/iokit/conf/files.arm64 ci-sweet/iokit/conf/files.arm64
 --- a/iokit/conf/files.arm64	2026-06-18 01:28:50.000000000 +0200
-+++ b/iokit/conf/files.arm64	2026-11-20 20:36:38.855165016 +0100
++++ b/iokit/conf/files.arm64	2026-11-20 20:53:28.571094162 +0100
 @@ -6,3 +6,28 @@
  # SMP
  iokit/Kernel/arm/AppleARMSMP.cpp    					optional iokitcpp
@@ -44716,9 +44716,9 @@ diff -ruN dxb-base/iokit/conf/files.arm64 dxb-tree/iokit/conf/files.arm64
 +iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp                  optional iokitcpp
 +iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp             optional iokitcpp
 +
-diff -ruN dxb-base/libkern/conf/Makefile.template dxb-tree/libkern/conf/Makefile.template
+diff -ruN ci-base/libkern/conf/Makefile.template ci-sweet/libkern/conf/Makefile.template
 --- a/libkern/conf/Makefile.template	2026-06-18 01:28:50.000000000 +0200
-+++ b/libkern/conf/Makefile.template	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/conf/Makefile.template	2026-11-20 20:53:28.571094162 +0100
 @@ -19,6 +19,51 @@
  CFLAGS+= -include meta_features.h -DLIBKERN_KERNEL_PRIVATE -DOSALLOCDEBUG=1
  SFLAGS+= -include meta_features.h
@@ -44771,9 +44771,9 @@ diff -ruN dxb-base/libkern/conf/Makefile.template dxb-tree/libkern/conf/Makefile
  # Runtime support functions don't interact well with LTO (9294679)
  stack_protector.o_CFLAGS_ADD += $(CFLAGS_NOLTO_FLAG)
  
-diff -ruN dxb-base/libkern/conf/files dxb-tree/libkern/conf/files
+diff -ruN ci-base/libkern/conf/files ci-sweet/libkern/conf/files
 --- a/libkern/conf/files	2026-06-18 01:28:50.000000000 +0200
-+++ b/libkern/conf/files	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/conf/files	2026-11-20 20:53:28.571094162 +0100
 @@ -97,6 +97,21 @@
  libkern/crypto/corecrypto_md5.c			optional crypto
  libkern/crypto/corecrypto_des.c			optional crypto
@@ -44796,9 +44796,9 @@ diff -ruN dxb-base/libkern/conf/files dxb-tree/libkern/conf/files
  libkern/crypto/corecrypto_aesxts.c		optional crypto
  libkern/crypto/corecrypto_rand.c		optional crypto
  libkern/crypto/corecrypto_rsa.c		    optional crypto
-diff -ruN dxb-base/libkern/crypto/corecrypto_aes.c dxb-tree/libkern/crypto/corecrypto_aes.c
+diff -ruN ci-base/libkern/crypto/corecrypto_aes.c ci-sweet/libkern/crypto/corecrypto_aes.c
 --- a/libkern/crypto/corecrypto_aes.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/libkern/crypto/corecrypto_aes.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/corecrypto_aes.c	2026-11-20 20:53:28.571094162 +0100
 @@ -32,10 +32,21 @@
  #include <corecrypto/ccaes.h>
  #include <kern/debug.h>
@@ -44849,9 +44849,9 @@ diff -ruN dxb-base/libkern/crypto/corecrypto_aes.c dxb-tree/libkern/crypto/corec
  	cccbc_iv_decl(cbc->block_size, ctx_iv);
  
  	int rc = cccbc_set_iv(cbc, ctx_iv, in_iv);
-diff -ruN dxb-base/libkern/crypto/corecrypto_md5.c dxb-tree/libkern/crypto/corecrypto_md5.c
+diff -ruN ci-base/libkern/crypto/corecrypto_md5.c ci-sweet/libkern/crypto/corecrypto_md5.c
 --- a/libkern/crypto/corecrypto_md5.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/libkern/crypto/corecrypto_md5.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/corecrypto_md5.c	2026-11-20 20:53:28.571094162 +0100
 @@ -17,6 +17,62 @@
  }
  
@@ -44921,9 +44921,9 @@ diff -ruN dxb-base/libkern/crypto/corecrypto_md5.c dxb-tree/libkern/crypto/corec
  }
 +
 +#endif /* !ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/libkern/crypto/corecrypto_sha1.c dxb-tree/libkern/crypto/corecrypto_sha1.c
+diff -ruN ci-base/libkern/crypto/corecrypto_sha1.c ci-sweet/libkern/crypto/corecrypto_sha1.c
 --- a/libkern/crypto/corecrypto_sha1.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/libkern/crypto/corecrypto_sha1.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/corecrypto_sha1.c	2026-11-20 20:53:28.571094162 +0100
 @@ -16,6 +16,62 @@
  	ctx->c.b64[0] = count;
  }
@@ -44996,9 +44996,9 @@ diff -ruN dxb-base/libkern/crypto/corecrypto_sha1.c dxb-tree/libkern/crypto/core
  /* This is not publicised in header, but exported in libkern.exports */
  void SHA1Final_r(SHA1_CTX *context, void *digest);
  void
-diff -ruN dxb-base/libkern/crypto/corecrypto_sha2.c dxb-tree/libkern/crypto/corecrypto_sha2.c
+diff -ruN ci-base/libkern/crypto/corecrypto_sha2.c ci-sweet/libkern/crypto/corecrypto_sha2.c
 --- a/libkern/crypto/corecrypto_sha2.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/libkern/crypto/corecrypto_sha2.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/corecrypto_sha2.c	2026-11-20 20:53:28.571094162 +0100
 @@ -34,38 +34,101 @@
  
  #if defined(CRYPTO_SHA2)
@@ -45115,9 +45115,9 @@ diff -ruN dxb-base/libkern/crypto/corecrypto_sha2.c dxb-tree/libkern/crypto/core
  #else
  
  /* As these are part of the KPI, we need to stub them out for any kernel configuration that does not support SHA2. */
-diff -ruN dxb-base/libkern/crypto/sweet_aes.c dxb-tree/libkern/crypto/sweet_aes.c
+diff -ruN ci-base/libkern/crypto/sweet_aes.c ci-sweet/libkern/crypto/sweet_aes.c
 --- a/libkern/crypto/sweet_aes.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_aes.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_aes.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,111 @@
 +/*
 + * SWEET legacy AES CBC/ECB provider backed by BearSSL's portable bitslice AES.
@@ -45230,121 +45230,121 @@ diff -ruN dxb-base/libkern/crypto/sweet_aes.c dxb-tree/libkern/crypto/sweet_aes.
 +    .cbc = sweet_aes_decrypt_cbc,
 +};
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
-diff -ruN dxb-base/libkern/crypto/sweet_aes_ct.c dxb-tree/libkern/crypto/sweet_aes_ct.c
+diff -ruN ci-base/libkern/crypto/sweet_aes_ct.c ci-sweet/libkern/crypto/sweet_aes_ct.c
 --- a/libkern/crypto/sweet_aes_ct.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_aes_ct.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_aes_ct.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/symcipher/aes_ct.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_aes_ct_cbcdec.c dxb-tree/libkern/crypto/sweet_aes_ct_cbcdec.c
+diff -ruN ci-base/libkern/crypto/sweet_aes_ct_cbcdec.c ci-sweet/libkern/crypto/sweet_aes_ct_cbcdec.c
 --- a/libkern/crypto/sweet_aes_ct_cbcdec.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_aes_ct_cbcdec.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_aes_ct_cbcdec.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/symcipher/aes_ct_cbcdec.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_aes_ct_cbcenc.c dxb-tree/libkern/crypto/sweet_aes_ct_cbcenc.c
+diff -ruN ci-base/libkern/crypto/sweet_aes_ct_cbcenc.c ci-sweet/libkern/crypto/sweet_aes_ct_cbcenc.c
 --- a/libkern/crypto/sweet_aes_ct_cbcenc.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_aes_ct_cbcenc.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_aes_ct_cbcenc.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/symcipher/aes_ct_cbcenc.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_aes_ct_dec.c dxb-tree/libkern/crypto/sweet_aes_ct_dec.c
+diff -ruN ci-base/libkern/crypto/sweet_aes_ct_dec.c ci-sweet/libkern/crypto/sweet_aes_ct_dec.c
 --- a/libkern/crypto/sweet_aes_ct_dec.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_aes_ct_dec.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_aes_ct_dec.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/symcipher/aes_ct_dec.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_aes_ct_enc.c dxb-tree/libkern/crypto/sweet_aes_ct_enc.c
+diff -ruN ci-base/libkern/crypto/sweet_aes_ct_enc.c ci-sweet/libkern/crypto/sweet_aes_ct_enc.c
 --- a/libkern/crypto/sweet_aes_ct_enc.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_aes_ct_enc.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_aes_ct_enc.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/symcipher/aes_ct_enc.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_dec32be.c dxb-tree/libkern/crypto/sweet_dec32be.c
+diff -ruN ci-base/libkern/crypto/sweet_dec32be.c ci-sweet/libkern/crypto/sweet_dec32be.c
 --- a/libkern/crypto/sweet_dec32be.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_dec32be.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_dec32be.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/codec/dec32be.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_dec32le.c dxb-tree/libkern/crypto/sweet_dec32le.c
+diff -ruN ci-base/libkern/crypto/sweet_dec32le.c ci-sweet/libkern/crypto/sweet_dec32le.c
 --- a/libkern/crypto/sweet_dec32le.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_dec32le.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_dec32le.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/codec/dec32le.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_dec64be.c dxb-tree/libkern/crypto/sweet_dec64be.c
+diff -ruN ci-base/libkern/crypto/sweet_dec64be.c ci-sweet/libkern/crypto/sweet_dec64be.c
 --- a/libkern/crypto/sweet_dec64be.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_dec64be.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_dec64be.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/codec/dec64be.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_enc32be.c dxb-tree/libkern/crypto/sweet_enc32be.c
+diff -ruN ci-base/libkern/crypto/sweet_enc32be.c ci-sweet/libkern/crypto/sweet_enc32be.c
 --- a/libkern/crypto/sweet_enc32be.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_enc32be.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_enc32be.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/codec/enc32be.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_enc32le.c dxb-tree/libkern/crypto/sweet_enc32le.c
+diff -ruN ci-base/libkern/crypto/sweet_enc32le.c ci-sweet/libkern/crypto/sweet_enc32le.c
 --- a/libkern/crypto/sweet_enc32le.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_enc32le.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_enc32le.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/codec/enc32le.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_enc64be.c dxb-tree/libkern/crypto/sweet_enc64be.c
+diff -ruN ci-base/libkern/crypto/sweet_enc64be.c ci-sweet/libkern/crypto/sweet_enc64be.c
 --- a/libkern/crypto/sweet_enc64be.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_enc64be.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_enc64be.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/codec/enc64be.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_md5.c dxb-tree/libkern/crypto/sweet_md5.c
+diff -ruN ci-base/libkern/crypto/sweet_md5.c ci-sweet/libkern/crypto/sweet_md5.c
 --- a/libkern/crypto/sweet_md5.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_md5.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_md5.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/hash/md5.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_sha1.c dxb-tree/libkern/crypto/sweet_sha1.c
+diff -ruN ci-base/libkern/crypto/sweet_sha1.c ci-sweet/libkern/crypto/sweet_sha1.c
 --- a/libkern/crypto/sweet_sha1.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_sha1.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_sha1.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/hash/sha1.c"
 +#endif
-diff -ruN dxb-base/libkern/crypto/sweet_sha2big.c dxb-tree/libkern/crypto/sweet_sha2big.c
+diff -ruN ci-base/libkern/crypto/sweet_sha2big.c ci-sweet/libkern/crypto/sweet_sha2big.c
 --- a/libkern/crypto/sweet_sha2big.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/libkern/crypto/sweet_sha2big.c	2026-11-20 20:36:38.855165016 +0100
++++ b/libkern/crypto/sweet_sha2big.c	2026-11-20 20:53:28.571094162 +0100
 @@ -0,0 +1,4 @@
 +/* BearSSL sources are fetched at an immutable commit by 0020-stage-bearssl.sh. */
 +#if defined(ARM64_BOARD_CONFIG_SWEET)
 +#include "sweet_bearssl/src/hash/sha2big.c"
 +#endif
-diff -ruN dxb-base/makedefs/MakeInc.def dxb-tree/makedefs/MakeInc.def
---- a/makedefs/MakeInc.def	2026-11-20 20:36:49.267261952 +0100
-+++ b/makedefs/MakeInc.def	2026-11-20 20:36:38.855165016 +0100
+diff -ruN ci-base/makedefs/MakeInc.def ci-sweet/makedefs/MakeInc.def
+--- a/makedefs/MakeInc.def	2026-06-18 01:28:50.000000000 +0200
++++ b/makedefs/MakeInc.def	2026-11-20 20:53:28.571094162 +0100
 @@ -29,7 +29,7 @@
  else ifneq ($(findstring _host,$(RC_ProjectName)),)
  SUPPORTED_ARM64_MACHINE_CONFIGS = NONE
@@ -45386,8 +45386,8 @@ diff -ruN dxb-base/makedefs/MakeInc.def dxb-tree/makedefs/MakeInc.def
  
  endif
  
-@@ -1155,7 +1164,7 @@
- endif
+@@ -1151,7 +1160,7 @@
+ LD_KERNEL_ARCHIVES = $(LDFLAGS_KERNEL_SDK) -lfirehose_kernel
  
  # Link binary support library
 -ifneq ($(CURRENT_MACHINE_CONFIG),NONE)
@@ -45395,1623 +45395,9 @@ diff -ruN dxb-base/makedefs/MakeInc.def dxb-tree/makedefs/MakeInc.def
          LDFLAGS_KERNEL_ONLY += -rdynamic -Wl,-force_load,$(KDKROOT)/System/Library/KernelSupport/lib$(CURRENT_MACHINE_CONFIG).os.$(CURRENT_KERNEL_CONFIG).a
  endif
  
-diff -ruN dxb-base/makedefs/MakeInc.def.orig dxb-tree/makedefs/MakeInc.def.orig
---- a/makedefs/MakeInc.def.orig	1970-01-01 01:00:00.000000000 +0100
-+++ b/makedefs/MakeInc.def.orig	2026-11-20 20:36:38.823164718 +0100
-@@ -0,0 +1,1610 @@
-+# -*- mode: makefile;-*-
-+#
-+# Copyright (C) 1999-2025 Apple Inc. All rights reserved.
-+#
-+# MakeInc.def contains global definitions for building,
-+# linking, and installing files.
-+#
-+
-+#
-+# Architecture Configuration options
-+#
-+SUPPORTED_ARCH_CONFIGS := X86_64 X86_64H ARM64
-+
-+#
-+# Kernel Configuration options
-+#
-+SUPPORTED_KERNEL_CONFIGS = RELEASE DEVELOPMENT DEBUG PROFILE KASAN SPTM
-+
-+
-+#
-+# Machine Configuration options
-+#
-+
-+SUPPORTED_X86_64_MACHINE_CONFIGS = NONE
-+SUPPORTED_X86_64H_MACHINE_CONFIGS = NONE
-+
-+ifneq ($(findstring _Sim,$(RC_ProjectName)),)
-+SUPPORTED_ARM64_MACHINE_CONFIGS = NONE
-+else ifneq ($(findstring _host,$(RC_ProjectName)),)
-+SUPPORTED_ARM64_MACHINE_CONFIGS = NONE
-+else
-+SUPPORTED_ARM64_MACHINE_CONFIGS = T6000 T6020 T6030 T6031 T6041 T6050 T8101 T8103 T8112 T8122 T8132 T8142 VMAPPLE
-+
-+SPTM_ENABLED_SOCS_MacOSX = t6000 t8112 t6020 t8122 t6030 t6031 t6041 t6050 t8132 t8142
-+EXCLAVES_ENABLED_SOCS_MacOSX = t8142 t6050
-+
-+
-+endif
-+
-+#
-+# Setup up *_LC variables during recursive invocations
-+#
-+
-+ifndef CURRENT_ARCH_CONFIG_LC
-+	export CURRENT_ARCH_CONFIG_LC	:= $(shell printf "%s" "$(CURRENT_ARCH_CONFIG)" | $(TR) A-Z a-z)
-+endif
-+
-+ifndef CURRENT_KERNEL_CONFIG_LC
-+	export CURRENT_KERNEL_CONFIG_LC := $(shell printf "%s" "$(CURRENT_KERNEL_CONFIG)" | $(TR) A-Z a-z)
-+endif
-+
-+ifndef CURRENT_MACHINE_CONFIG_LC
-+	export CURRENT_MACHINE_CONFIG_LC := $(shell printf "%s" "$(CURRENT_MACHINE_CONFIG)" | $(TR) A-Z a-z)
-+endif
-+
-+ARM64_EXTRA_BUILD_FLAGS =
-+
-+# Enable BTI by default for all ARM64 targets
-+BTI_BUILD = 1
-+
-+
-+# -mkernel contains BTI by default
-+ifeq ($(BTI_BUILD),1)
-+	ARM64_EXTRA_BUILD_FLAGS += -DXNU_BUILT_WITH_BTI
-+else
-+	ARM64_EXTRA_BUILD_FLAGS += -fno-branch-target-identification -UXNU_BUILT_WITH_BTI
-+endif
-+
-+MTE_SUPPORTED_SOCS = t8142 t6050
-+
-+ifneq ($(filter $(CURRENT_MACHINE_CONFIG_LC),$(MTE_SUPPORTED_SOCS)),)
-+	DOCONF_KERNEL_TAG := -tag
-+endif
-+
-+#
-+# Component List
-+#
-+COMPONENT_LIST	= osfmk bsd libkern iokit pexpert libsa security san
-+COMPONENT	= $(if $(word 2,$(subst /, ,$(RELATIVE_SOURCE_PATH))),$(word 2,$(subst /, ,$(RELATIVE_SOURCE_PATH))),$(firstword $(subst /, ,$(RELATIVE_SOURCE_PATH))))
-+COMPONENT_IMPORT_LIST = $(filter-out $(COMPONENT),$(COMPONENT_LIST))
-+
-+MACHINE_FLAGS_ARM64_T8101 = -DARM64_BOARD_CONFIG_T8101			-mcpu=apple-a14
-+MACHINE_FLAGS_ARM64_T8103 = -DARM64_BOARD_CONFIG_T8103                  -mcpu=apple-a14
-+MACHINE_FLAGS_ARM64_T6000 = -DARM64_BOARD_CONFIG_T6000			-mcpu=apple-a14
-+MACHINE_FLAGS_ARM64_T6020 = -DARM64_BOARD_CONFIG_T6020 			-mcpu=apple-a15
-+MACHINE_FLAGS_ARM64_T8112 = -DARM64_BOARD_CONFIG_T8112 			-mcpu=apple-a15
-+MACHINE_FLAGS_ARM64_T6030 = -DARM64_BOARD_CONFIG_T6030 			-mcpu=apple-m3
-+MACHINE_FLAGS_ARM64_T6031 = -DARM64_BOARD_CONFIG_T6031 			-mcpu=apple-m3
-+MACHINE_FLAGS_ARM64_T6041 = -DARM64_BOARD_CONFIG_T6041			-mcpu=apple-m4
-+MACHINE_FLAGS_ARM64_T6050 = -DARM64_BOARD_CONFIG_T6050 			-mcpu=apple-m4+memtag+predres2
-+MACHINE_FLAGS_ARM64_T8122 = -DARM64_BOARD_CONFIG_T8122_T8130		-mcpu=apple-m3
-+MACHINE_FLAGS_ARM64_T8132 = -DARM64_BOARD_CONFIG_T8132			-mcpu=apple-m4
-+MACHINE_FLAGS_ARM64_T8142 = -DARM64_BOARD_CONFIG_T8142 			-mcpu=apple-m4+memtag+predres2
-+
-+MACHINE_FLAGS_ARM64_VMAPPLE = -DARM64_BOARD_CONFIG_VMAPPLE              -march=armv8.5a+sme2
-+
-+
-+#
-+# Deployment target flag
-+#
-+ifeq ($(PLATFORM),MacOSX)
-+    DEPLOYMENT_TARGET_FLAGS = -mmacosx-version-min=$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS = -Wl,-macosx_version_min,$(SDKVERSION)
-+else ifeq ($(PLATFORM),DriverKit)
-+    DEPLOYMENT_TARGET_FLAGS = -target apple-driverkit$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS = -Wl,-target,apple-driverkit$(SDKVERSION)
-+else ifeq ($(PLATFORM),WatchOS)
-+    DEPLOYMENT_TARGET_FLAGS = -mwatchos-version-min=$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS =
-+else ifeq ($(PLATFORM),tvOS)
-+    DEPLOYMENT_TARGET_FLAGS = -mtvos-version-min=$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS =
-+else ifeq ($(PLATFORM),AppleTVOS)
-+    DEPLOYMENT_TARGET_FLAGS = -mtvos-version-min=$(SDKVERSION)
-+else ifeq ($(PLATFORM),BridgeOS)
-+    DEPLOYMENT_TARGET_FLAGS = -mbridgeos-version-min=$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS =
-+else ifeq ($(PLATFORM),XROS)
-+    DEPLOYMENT_TARGET_FLAGS = -target unknown-apple-xros$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS = -Wl,-target,unknown-apple-xros$(SDKVERSION)
-+else ifneq ($(filter $(SUPPORTED_EMBEDDED_PLATFORMS),$(PLATFORM)),)
-+    DEPLOYMENT_TARGET_FLAGS = -miphoneos-version-min=$(SDKVERSION)
-+    DEPLOYMENT_LINKER_FLAGS = -Wl,-ios_version_min,$(SDKVERSION)
-+else ifneq ($(filter $(SUPPORTED_SIMULATOR_PLATFORMS),$(PLATFORM)),)
-+    DEPLOYMENT_TARGET_FLAGS =
-+    DEPLOYMENT_LINKER_FLAGS =
-+else
-+    DEPLOYMENT_TARGET_FLAGS =
-+    DEPLOYMENT_LINKER_FLAGS =
-+endif
-+
-+ifeq ($(PLATFORM_FOR_CONFIG),MacOSX)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_OSX
-+else ifeq ($(PLATFORM_FOR_CONFIG),DriverKit)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_OSX
-+else ifeq ($(PLATFORM_FOR_CONFIG),WatchOS)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_WATCH
-+else ifeq ($(PLATFORM_FOR_CONFIG),tvOS)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_TV
-+else ifeq ($(PLATFORM_FOR_CONFIG),AppleTVOS)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_TV
-+else ifeq ($(PLATFORM_FOR_CONFIG),BridgeOS)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_BRIDGE
-+else ifeq ($(PLATFORM_FOR_CONFIG),XROS)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_XR
-+else ifneq ($(filter $(SUPPORTED_EMBEDDED_PLATFORMS),$(PLATFORM_FOR_CONFIG)),)
-+    DEPLOYMENT_TARGET_FLAGS += -DXNU_TARGET_OS_IOS
-+endif
-+
-+
-+DEPLOYMENT_TARGET_DEFINES = -DXNU_PLATFORM_$(PLATFORM_FOR_CONFIG)
-+
-+
-+#
-+# Standard defines list
-+#
-+DEFINES = -DAPPLE -DKERNEL -DKERNEL_PRIVATE -DXNU_KERNEL_PRIVATE \
-+	-DPRIVATE -D__MACHO__=1 -Dvolatile=__volatile -DXNU_KERN_EVENT_DATA_IS_VLA \
-+	-DCURRENT_MACHINE_CONFIG_LC=$(CURRENT_MACHINE_CONFIG_LC) \
-+	$(CONFIG_DEFINES) $(SEED_DEFINES)
-+
-+# Append experimental definition
-+ifneq ($(RC_EXPERIMENTAL_SYSTEM_VERSION_COMPAT),)
-+DEFINES += -DXNU_EXPERIMENTAL_SYSTEM_VERSION_COMPAT
-+endif
-+
-+# Enable caching with `make CCACHE=ccache`
-+# This intentionally does not override $(CC) because that will confuse
-+# utilities like mig.
-+CCACHE ?=
-+
-+#
-+# Compiler command
-+#
-+KCC  = $(CCACHE) $(CC)
-+KC++ = $(CCACHE) $(CXX)
-+
-+GENASSYM_KCC = $(CCACHE) $(CC)
-+
-+#
-+# Compiler warning flags
-+#
-+
-+USE_WERROR := 1
-+ifneq ($(BUILD_WERROR),)
-+USE_WERROR := $(BUILD_WERROR)
-+endif
-+
-+ifeq ($(USE_WERROR),1)
-+WERROR := -Werror
-+endif
-+
-+# Shared C/C++ warning flags
-+# NOTE: order matters here.  -Wno-xxx goes before opt-in of ones we want
-+WARNFLAGS_STD := \
-+	-Weverything \
-+	-Wundef-prefix=TARGET_OS_ \
-+	-Wundef-prefix=LCK_GRP_USE_ARG \
-+	-Wno-pedantic \
-+	$(WERROR) \
-+	-Wno-bad-function-cast \
-+	-Wno-bitwise-instead-of-logical \
-+	-Wno-c++-compat \
-+	-Wno-c++98-compat \
-+	-Wno-conditional-uninitialized \
-+	-Wno-covered-switch-default \
-+	-Wno-disabled-macro-expansion \
-+	-Wno-documentation-unknown-command \
-+	-Wno-extra-semi-stmt \
-+	-Wno-format-non-iso \
-+	-Wno-language-extension-token \
-+	-Wno-missing-variable-declarations \
-+	-Wno-packed \
-+	-Wno-padded \
-+	-Wno-ms-bitfield-padding \
-+	-Wno-partial-availability \
-+	-Wno-reserved-id-macro \
-+	-Wno-shift-sign-overflow \
-+	-Wno-switch-enum \
-+	-Wno-unaligned-access \
-+	-Wno-undef \
-+	-Wno-invalid-offsetof \
-+	-Wno-unused-macros \
-+	-Wno-used-but-marked-unused \
-+	-Wno-variadic-macros \
-+	-Wno-zero-length-array \
-+	-Wno-packed \
-+	-Wno-cast-function-type-strict \
-+	-Wno-incompatible-function-pointer-types-strict \
-+	-Wno-four-char-constants \
-+	-Wno-allocator-wrappers
-+
-+# Avoid lock-step changes between compiler submissions and xnu.
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-unknown-warning-option
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-anon-enum-enum-conversion
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-enum-enum-conversion
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-c99-designator
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-reorder-init-list
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-switch-default
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-tautological-value-range-compare
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-null-pointer-subtraction
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-deprecated-volatile
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-incompatible-function-pointer-types-strict
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-cast-function-type-strict
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-bounds-safety-legacy-checks-enabled
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-nrvo
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-unterminated-string-initialization
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-unnecessary-virtual-specifier
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-global-constructors
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-uninitialized-const-pointer
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) -Wno-sometimes-uninitialized
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-quoted-include-in-framework-header
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-declaration-after-statement
-+
-+# Hand-written sign conversion diagnostics are resolved, but the
-+# auto-generated ones need mig and iig to be updated to fix.  Disable the
-+# diagnostic here until we've completed that:
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-sign-compare \
-+	-Wno-sign-conversion
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-pre-c11-compat
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-missing-designated-field-initializers
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-format-signedness
-+
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wno-switch-default
-+
-+# Opt-ins:
-+WARNFLAGS_STD := $(WARNFLAGS_STD) \
-+	-Wpointer-arith \
-+	-Wxnu-typed-allocators
-+
-+
-+CWARNFLAGS_STD = \
-+	$(WARNFLAGS_STD)
-+
-+
-+# Can be overridden in Makefile.template or Makefile.$arch
-+export CWARNFLAGS ?= $(CWARNFLAGS_STD)
-+
-+define add_perfile_cflags
-+$(1)_CWARNFLAGS_ADD += $2
-+endef
-+
-+define rm_perfile_cflags
-+$(1)_CFLAGS_RM += $2
-+endef
-+
-+CXXWARNFLAGS_STD = \
-+	$(WARNFLAGS_STD) \
-+	-Wno-c++98-compat-pedantic \
-+	-Wno-exit-time-destructors \
-+	-Wno-global-constructors \
-+	-Wno-old-style-cast
-+
-+# Can be overridden in Makefile.template or Makefile.$arch
-+export CXXWARNFLAGS ?= $(CXXWARNFLAGS_STD)
-+
-+define add_perfile_cxxflags
-+$(1)_CXXWARNFLAGS_ADD += $2
-+endef
-+
-+#
-+# Default ARCH_FLAGS, for use with compiler/linker/assembler/mig drivers
-+
-+ARCH_FLAGS_X86_64	  = -arch x86_64
-+ARCH_FLAGS_X86_64H	  = -arch x86_64h
-+
-+ifeq ($(RC_ProjectName),xnu_libraries)
-+BUILD_STATIC_LINK := 1
-+BUILD_XNU_LIBRARY := 1
-+RC_NONARCH_CFLAGS += -D__BUILDING_XNU_LIBRARY__=1
-+ifneq ($(XNU_LibFlavour),)
-+RC_NONARCH_CFLAGS += -D__BUILDING_XNU_LIB_$(XNU_LibFlavour)__=1
-+endif
-+endif
-+
-+ifneq ($(filter ARM ARM64,$(CURRENT_ARCH_CONFIG)),)
-+
-+ifneq ($(findstring _Sim,$(RC_ProjectName)),)
-+ARCH_FLAGS_ARM64          = -arch arm64e
-+else ifneq ($(findstring _host,$(RC_ProjectName)),)
-+ARCH_FLAGS_ARM64          = -arch arm64e
-+else
-+
-+ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG ?=
-+
-+ifeq ($(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG),)
-+
-+ifneq ($(EMBEDDED_DEVICE_MAP),)
-+export ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG := $(shell $(EMBEDDED_DEVICE_MAP) -db $(EDM_DBPATH) -list -query SELECT DISTINCT KernelMachOArchitecture FROM Targets WHERE KernelPlatform IS \"$(CURRENT_MACHINE_CONFIG_LC)\" LIMIT 1 || echo UNKNOWN )
-+ifeq ($(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG),)
-+ifeq ($(filter $(EXTRA_TARGET_CONFIGS_$(CURRENT_KERNEL_CONFIG)),$(CURRENT_MACHINE_CONFIG)),)
-+$(error Machine config $(CURRENT_MACHINE_CONFIG_LC) not found in EmbeddedDeviceMap)
-+endif
-+endif
-+endif
-+
-+endif
-+
-+ifeq ($(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG),)
-+
-+# Without embdedded device map, use a default arch string
-+export ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG := $(shell echo $(CURRENT_ARCH_CONFIG) | tr A-Z a-z)
-+ifneq ($(filter arm64,$(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG)),)
-+export ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG := arm64e
-+endif
-+
-+endif
-+
-+
-+BUILD_STATIC_LINK := 1
-+
-+ARCH_FLAGS_ARM64	  = -arch $(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG)
-+
-+endif
-+
-+else
-+# non arm machine config string
-+ifndef ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG
-+export ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG := $(shell echo $(CURRENT_ARCH_CONFIG) | tr A-Z a-z)
-+endif
-+
-+endif
-+
-+#
-+# Default CFLAGS
-+#
-+ifdef RC_NONARCH_CFLAGS
-+OTHER_CFLAGS = $(RC_NONARCH_CFLAGS)
-+endif
-+
-+#
-+# Debug info
-+#
-+DSYMINFODIR	= Contents
-+DSYMKGMACROSDIR	= Contents/Resources
-+DSYMLLDBMACROSDIR = Contents/Resources/Python
-+DSYMDWARFDIR	= Contents/Resources/DWARF
-+
-+DEBUG_CFLAGS := -g
-+BUILD_DSYM := 1
-+
-+#
-+# We must not use -fno-keep-inline-functions, or it will remove the dtrace
-+# probes from the kernel.
-+#
-+CFLAGS_GEN = $(DEBUG_CFLAGS) -nostdlibinc \
-+	-ferror-limit=10000 \
-+	-fno-builtin \
-+	-fno-common \
-+	-ftrivial-auto-var-init=zero \
-+	-fsigned-bitfields \
-+	-fmerge-all-constants \
-+	-fno-c++-static-destructors \
-+	-Wframe-larger-than=0 -Wno-frame-larger-than \
-+	$(OTHER_CFLAGS)
-+
-+CFLAGS_RELEASE	=
-+CFLAGS_DEVELOPMENT	=
-+CFLAGS_DEBUG	=
-+CFLAGS_KASAN = $(CFLAGS_DEVELOPMENT)
-+CFLAGS_PROFILE	=  -pg
-+
-+CFLAGS_X86_64	= -Dx86_64 -DX86_64 -D__X86_64__ -DLP64 \
-+				-DPAGE_SIZE_FIXED -mkernel -msoft-float
-+
-+CFLAGS_X86_64H = $(CFLAGS_X86_64)
-+
-+# By default, all ARM64 targets use the small memory config
-+ARM64_LARGE_MEMORY = 0
-+ARM64_PLKSEG_ADDR  = 0xfffffff004004000
-+ARM64_LINK_ADDR    = 0xfffffff007004000
-+
-+# Use ARM_LARGE_MEMORY config for all MacOSX targets.
-+ifneq ($(filter $(PLATFORM),MacOSX),)
-+ARM64_LARGE_MEMORY = 1
-+ARM64_PLKSEG_ADDR  = 0xfffffe0004004000
-+ARM64_LINK_ADDR    = 0xfffffe0007004000
-+endif
-+
-+
-+ifeq ($(ARM64_LARGE_MEMORY),1)
-+	ARM64_EXTRA_BUILD_FLAGS += -DARM_LARGE_MEMORY=1
-+else
-+	ARM64_EXTRA_BUILD_FLAGS += -UARM_LARGE_MEMORY
-+endif
-+
-+ifeq ($(ARM64_LARGE_MEMORY_KERNONLY),1)
-+	ARM64_EXTRA_BUILD_FLAGS += -DARM_LARGE_MEMORY_KERNONLY=1
-+else
-+	ARM64_EXTRA_BUILD_FLAGS += -UARM_LARGE_MEMORY_KERNONLY
-+endif
-+
-+
-+
-+ifeq ($(BUILD_XNU_LIBRARY),1)
-+# __static_testable makes some static function not static and generate these warnings
-+CFLAGS_KERNEL   = -Wno-missing-prototypes
-+else
-+CFLAGS_KERNEL   = -mkernel
-+endif
-+
-+CFLAGS_ARM64	= -Darm64 -DARM64 -D__ARM64__ -DLP64 -DPAGE_SIZE_FIXED -DVM_KERNEL_LINK_ADDRESS=$(ARM64_LINK_ADDR) \
-+				$(ARM64_EXTRA_BUILD_FLAGS) -mno-implicit-sme -momit-leaf-frame-pointer -fno-strict-aliasing -D__API__=v4 $(CFLAGS_KERNEL)
-+
-+CXXFLAGS_ARM64  = $(ARM64_EXTRA_BUILD_FLAGS)
-+
-+CFLAGS_RELEASEX86_64 = -O2
-+CFLAGS_DEVELOPMENTX86_64 = -O2
-+CFLAGS_KASANX86_64 = $(CFLAGS_DEVELOPMENTX86_64)
-+# No space optimization for the DEBUG kernel for the benefit of gdb:
-+CFLAGS_DEBUGX86_64 = -O0
-+CFLAGS_PROFILEX86_64 = -O2
-+
-+CFLAGS_RELEASEX86_64H = -O2
-+CFLAGS_DEVELOPMENTX86_64H = -O2
-+CFLAGS_KASANX86_64H = $(CFLAGS_DEVELOPMENTX86_64H)
-+# No space optimization for the DEBUG kernel for the benefit of gdb:
-+CFLAGS_DEBUGX86_64H = -O0
-+CFLAGS_PROFILEX86_64H = -O2
-+
-+CFLAGS_RELEASEARM = -O2
-+CFLAGS_DEVELOPMENTARM = -O2
-+CFLAGS_DEBUGARM = -O0
-+CFLAGS_PROFILEARM = -O2
-+
-+CFLAGS_RELEASEARM64 = -O2
-+CFLAGS_DEVELOPMENTARM64 = -O2
-+CFLAGS_KASANARM64 = $(CFLAGS_DEVELOPMENTARM64)
-+CFLAGS_DEBUGARM64 = -O0
-+CFLAGS_SPTMARM64 = $(CFLAGS_DEVELOPMENTARM64)
-+CFLAGS_PROFILEARM64 = -O2
-+
-+#
-+# bounds-safety support
-+#
-+# Controlling flags:
-+#
-+# BOUND_CHECKS controls the support for the bounds-safety features.
-+# 	- On x86_64, bounds-safety features are disabled.
-+#	- On other platforms, explicitly setting BOUND_CHECKS=0
-+#		disables the support for the bounds-safety features
-+#	- Otherwise, the support for the bounds-safety features
-+#		is dynamically detected.
-+#
-+# BOUND_CHECKS_SOFT controls the support for the resumption of the bounds-safety traps.
-+#	- On x86_64, resumption of bounds-safety traps is not available.
-+#	- On other platforms, explicitly setting BOUND_CHECKS_SOFT=0
-+#		disables the support for the bounds-safety resumption
-+#	- Otherwise, the support for the bounds-safety features
-+#		is dynamically detected.
-+#
-+# Note: while it is generally expected that BOUND_CHECKS_SOFT will always
-+#     be accompanied with BOUND_CHECKS, a developer is allowed to use
-+#     BOUND_CHECKS_SOFT=1 as a shortcut for BOUND_CHECKS=1 BOUND_CHECKS_SOFT=1
-+#     The combination BOUND_CHECKS_SOFT=1 BOUND_CHECKS=0 is not supported.
-+#
-+#
-+ifndef BOUND_CHECKS
-+    ifeq ($(shell $(CC) -E -fbounds-safety /dev/null 2>/dev/null && echo 1),1)
-+        BOUND_CHECKS := 1
-+    else
-+        BOUND_CHECKS := 0
-+    endif
-+	export BOUND_CHECKS
-+endif # ifndef BOUND_CHECKS
-+
-+ifndef BOUND_CHECKS_SOFT
-+	ifeq ($(shell $(CC) -E -fbounds-safety -ftrap-function-returns /dev/null 2>/dev/null && echo 1),1)
-+		BOUND_CHECKS_SOFT := 1
-+	else
-+		BOUND_CHECKS_SOFT := 0
-+	endif
-+	export BOUND_CHECKS_SOFT
-+endif # ifndef BOUND_CHECKS_SOFT
-+
-+# On x86_64, the bounds-safety features are disabled
-+ifeq ($(CURRENT_ARCH_CONFIG_LC),x86_64)
-+	BOUND_CHECKS := 0
-+	BOUND_CHECKS_SOFT := 0
-+endif # x86_64
-+
-+# When BOUND_CHECKS_SOFT is enabled, ensure that BOUND_CHECKS is enabled as well
-+ifneq ($(BOUND_CHECKS_SOFT),0)
-+    ifeq ($(BOUND_CHECKS),0)
-+        BOUND_CHECKS := 1
-+    endif # ifeq ($(BOUND_CHECKS),0)
-+endif # ifneq($(BOUND_CHECKS_SOFT),0)
-+
-+# Set the values for the CFLAGS_BOUND_CHECKS* variables.
-+# Notes:
-+# 1. If building at desk, and the developer had set any of
-+#    CFLAGS_BOUND_CHECKS, CFLAGS_BOUND_CHECKS_SOFT, or CFLAGS_BOUND_CHECKS_DEBUG
-+#    the values are preserved. For B&I builds the values are reset.
-+# 2. The CFLAGS_BOUND_CHECKS_PENDING, CFLAGS_BOUND_CHECKS_ENABLE_NEW_CHECKS,
-+#    and CFLAGS_BOUND_CHECKS_DISABLE_NEW_CHECKS variables do not take into
-+#    consideration any pre-existing value.
-+#
-+ifeq ($(RC_XBS),YES)
-+    CFLAGS_BOUND_CHECKS :=
-+    CFLAGS_BOUND_CHECKS_SOFT :=
-+    CFLAGS_BOUND_CHECKS_DEBUG :=
-+else # ifeq ($(RC_XBS),YES)
-+    CFLAGS_BOUND_CHECKS ?=
-+    CFLAGS_BOUND_CHECKS_SOFT ?=
-+    CFLAGS_BOUND_CHECKS_DEBUG ?=
-+endif # ifeq ($(RC_XBS),YES)
-+
-+export CFLAGS_BOUND_CHECKS
-+export CFLAGS_BOUND_CHECKS_SOFT
-+export CFLAGS_BOUND_CHECKS_DEBUG
-+CFLAGS_BOUND_CHECKS_PENDING = -DBOUND_CHECKS_PENDING=1 -Wno-self-assign
-+export CFLAGS_BOUND_CHECKS_PENDING
-+export CFLAGS_BOUND_CHECKS_ENABLE_NEW_CHECKS
-+export CFLAGS_BOUND_CHECKS_DISABLE_NEW_CHECKS
-+
-+# If bounds-safety is available, update the CFLAGS_BOUND_CHECKS accordingly.
-+ifneq ($(BOUND_CHECKS),0)
-+	CFLAGS_BOUND_CHECKS += -fbounds-safety
-+	CFLAGS_BOUND_CHECKS_ENABLE_NEW_CHECKS := -fbounds-safety-bringup-missing-checks
-+	CFLAGS_BOUND_CHECKS_DISABLE_NEW_CHECKS := -fno-bounds-safety-bringup-missing-checks
-+else # ifneq($(BOUND_CHECKS),0)
-+	CFLAGS_BOUND_CHECKS += -Wno-error=self-assign
-+	CFLAGS_BOUND_CHECKS_ENABLE_NEW_CHECKS :=
-+	CFLAGS_BOUND_CHECKS_DISABLE_NEW_CHECKS :=
-+endif # ifneq($(BOUND_CHECKS),0)
-+
-+# Propagate the value of CFLAGS_BOUND_CHECKS CFLAGS_BOUND_CHECKS_{SOFT,DEBUG} variants,
-+# and set the appropriate flags if trap resumption is supported.
-+CFLAGS_BOUND_CHECKS_SOFT += $(CFLAGS_BOUND_CHECKS)
-+CFLAGS_BOUND_CHECKS_DEBUG = $(CFLAGS_BOUND_CHECKS_SOFT)
-+ifneq ($(BOUND_CHECKS_SOFT),0)
-+    CFLAGS_BOUND_CHECKS_SOFT += -ftrap-function=ml_bound_chk_soft_trap -ftrap-function-returns
-+    CFLAGS_BOUND_CHECKS_DEBUG += -DBOUND_CHECKS_DEBUG=1
-+endif # ifneq($(BOUND_CHECKS_SOFT),0)
-+
-+# Bounds-safety adoption mode
-+#
-+# * Tells Clang to run in bounds-safety adoption mode which is allowed to
-+#   produce better diagnostics but a slower build.
-+# * Doesn't try to suppress any warnings in staging (see Bounds-safety warning
-+#   staging)
-+#
-+BOUNDS_SAFETY_ADOPTION_MODE ?= 0
-+ifneq ($(BOUNDS_SAFETY_ADOPTION_MODE),0)
-+  ifeq ($(BOUND_CHECKS),0)
-+    $(error BOUNDS_SAFETY_ADOPTION_MODE cannot be enabled when BOUND_CHECKS=0)
-+  endif
-+  ifeq ($(RC_XBS),YES)
-+    # This mode should **only** be used at engineers' desks and not in B&I
-+    # builds because it may add compile-time overhead.
-+    $(error BOUNDS_SAFETY_ADOPTION_MODE should not be enabled in B&I builds)
-+  endif
-+  CFLAGS_BOUND_CHECKS += -fbounds-safety-adoption-mode
-+endif
-+
-+# Bounds-safety warning staging
-+#
-+# To prevent new bounds-safety warnings in a soon to be submitted Clang from
-+# breaking the build they can be explicitly be prevented from being errors by
-+# adding `-Wno-error=<new_warning_name>` to
-+# `BOUNDS_SAFETY_DOWNGRADED_UPCOMING_WARNFLAGS`.
-+#
-+# A warning in `BOUNDS_SAFETY_DOWNGRADED_UPCOMING_WARNFLAGS` should be
-+# removed once the new Clang with the warning is in the OS and the code builds
-+# without it firing.
-+#
-+BOUNDS_SAFETY_DOWNGRADED_UPCOMING_WARNFLAGS =
-+
-+ifneq ($(words $(BOUNDS_SAFETY_DOWNGRADED_UPCOMING_WARNFLAGS)),0)
-+  ifeq ($(BOUNDS_SAFETY_ADOPTION_MODE),0)
-+    # Note this implicitly relies on `-Wno-unknown-warning-option` already being
-+    # passed to the compiler.
-+    CFLAGS_BOUND_CHECKS +=  $(BOUNDS_SAFETY_DOWNGRADED_UPCOMING_WARNFLAGS)
-+  endif
-+endif
-+
-+#
-+# Sanitizers Support (KASan, UBSan)
-+#
-+
-+# Which kernel configurations are built with KCOV enabled.
-+KCOV_RUNTIME := KASAN
-+
-+ifneq ($(filter RELEASE, $(KCOV_RUNTIME)),)
-+$(error "Sanitizer runtime should not be enabled for RELEASE kernel.")
-+endif
-+
-+
-+SAN=0
-+
-+# KASan support
-+#
-+
-+ifeq ($(CURRENT_KERNEL_CONFIG),KASAN)
-+# KASan kernel config implicitly enables the KASan instrumentation.
-+# Instrumentation for other sanitizers is enabled explicitly at build time.
-+KASAN = 1
-+endif
-+
-+ifeq ($(KASAN),1)
-+SAN=1
-+BUILD_LTO=0
-+
-+# KASan Light support
-+#
-+# Light mode omits the HWASAN stack instrumentation.
-+# Not supported by KASan Classic at this moment.
-+
-+KASAN_LIGHT_PLATFORM := WatchOS
-+
-+ifneq ($(filter $(PLATFORM), $(KASAN_LIGHT_PLATFORM)),)
-+KASAN_LIGHT=1
-+HWASAN_INSTRUMENT_STACK=0
-+else
-+KASAN_LIGHT=0
-+HWASAN_INSTRUMENT_STACK=1
-+endif
-+
-+KASAN_DENYLIST=$(OBJROOT)/san/kasan-denylist-$(CURRENT_ARCH_CONFIG_LC)
-+
-+# To calculate the kasan offset, subtract the lowest KVA to sanitize, shifted right by KASAN_SCALE_$INSTRUMENTATION bits,
-+# from the base address of the kasan shadow area, (e.g. for x86_64 solve the following equation:
-+# OFFSET = {VA mapped by the first KASAN PML4 [Currently #494]} - (LOWEST_KVA >> 3)
-+# OFFSET = (0ULL - (512GiB * (512 - 494))) - (LOWEST_SAN_KVA >> 3)
-+# OFFSET = FFFFF70000000000 - ((0ULL - (512GiB * (512 - 496))) >> 3) [PML4 #496 is the first possible KVA]
-+# OFFSET = FFFFF70000000000 - (FFFFF80000000000 >> 3)
-+# OFFSET = DFFFF80000000000
-+# ).
-+KASAN_OFFSET_X86_64=0xdffff80000000000
-+KASAN_OFFSET_X86_64H=$(KASAN_OFFSET_X86_64)
-+KASAN_OFFSET_ARM64=0xf000000000000000
-+
-+KASAN_OFFSET=$($(addsuffix $(CURRENT_ARCH_CONFIG),KASAN_OFFSET_))
-+
-+# CLANG HWASAN/KHWASAN instrumentation powers KASAN_TBI. HWASAN traditional prefixing
-+# is replaced by __asan_ to commonize exports across models.
-+KASAN_SCALE_TBI=4
-+CFLAGS_KASAN_INSTRUMENTATION_TBI = -DKASAN_TBI=1 -DKASAN_SCALE=$(KASAN_SCALE_TBI) \
-+	-fsanitize=kernel-hwaddress \
-+	-fsanitize-ignorelist=$(KASAN_DENYLIST) \
-+	-mllvm -hwasan-recover=0 \
-+	-mllvm -hwasan-mapping-offset=$(KASAN_OFFSET) \
-+	-mllvm -hwasan-instrument-atomics=1 \
-+	-mllvm -hwasan-instrument-stack=$(HWASAN_INSTRUMENT_STACK) \
-+	-mllvm -hwasan-generate-tags-with-calls=1 \
-+	-mllvm -hwasan-instrument-with-calls=0 \
-+	-mllvm -hwasan-use-short-granules=0 \
-+	-mllvm -hwasan-memory-access-callback-prefix="__asan_"
-+
-+
-+KASAN_SCALE_CLASSIC=3
-+CFLAGS_KASAN_INSTRUMENTATION_CLASSIC = -DKASAN_CLASSIC=1 -DKASAN_SCALE=$(KASAN_SCALE_CLASSIC) \
-+	-fsanitize=address \
-+	-mllvm -asan-globals-live-support \
-+	-mllvm -asan-mapping-offset=$(KASAN_OFFSET) \
-+	-fsanitize-ignorelist=$(KASAN_DENYLIST)
-+
-+CFLAGS_KASANARM64 += $(CFLAGS_KASAN_INSTRUMENTATION_TBI)
-+CFLAGS_KASANX86_64 += $(CFLAGS_KASAN_INSTRUMENTATION_CLASSIC)
-+CFLAGS_KASANX86_64H += $(CFLAGS_KASAN_INSTRUMENTATION_CLASSIC)
-+CFLAGS_GEN += -DKASAN=1 -DKASAN_OFFSET=$(KASAN_OFFSET) -DKASAN_LIGHT=$(KASAN_LIGHT)
-+
-+SFLAGS_KASANARM64 += $(CFLAGS_KASAN_INSTRUMENTATION_TBI)
-+SFLAGS_KASANX86_64 += $(CFLAGS_KASAN_INSTRUMENTATION_CLASSIC)
-+SFLAGS_KASANX86_64H += $(CFLAGS_KASAN_INSTRUMENTATION_CLASSIC)
-+SFLAGS_GEN += -DKASAN=1 -DKASAN_OFFSET=$(KASAN_OFFSET) -DKASAN_LIGHT=$(KASAN_LIGHT)
-+
-+endif
-+
-+# UBSan
-+#
-+# The Undefined Behavior sanitizer runtime is always built as part of, and only for,
-+# KASAN variants. UBSan instrumentation is disabled by default and only enabled explicitly
-+# when building with UBSAN=1.
-+#
-+# On iOS RELEASE and DEVELOPMENT kernels, a subset of UBSan checks is enabled along with a minimal
-+# runtime that emulates trap mode (but makes it recoverable).
-+
-+ifeq ($(KASAN), 1)
-+
-+ifeq ($(UBSAN),1)
-+SAN=1
-+
-+UBSAN_RUNTIME =
-+UBSAN_CHECKS += signed-integer-overflow shift pointer-overflow bounds object-size # non-fatal (calls runtime, can return)
-+# UBSAN_CHECKS = undefined nullability unsigned-integer-overflow # everything
-+UBSAN_CHECKS_FATAL =                                           # fatal (calls runtime, must not return)
-+UBSAN_CHECKS_TRAP = vla-bound builtin                          # emit a trap instruction (no runtime support)
-+UBSAN_DISABLED += vptr function     # requires unsupported C++ runtime
-+
-+# UBSan alignment + KASan code size is too large
-+# UBSan unreachable doesn't play nice with ASan (40723397)
-+UBSAN_DISABLED += alignment unreachable
-+
-+endif
-+
-+else
-+
-+# DEVELOPMENT and RELEASE variants
-+ifeq ($(PLATFORM),iPhoneOS)
-+
-+# Currently we have to keep alive two separated UBSAN runtimes (minimal for DEVELOPMENT,
-+# full for KASAN). This implies that we cannot use CFLAGS_$(CURRENT_KERNEL_CONFIG), because
-+# CFLAGS_DEVELOPMENT is folded into CFLAGS_KASAN. For the time being we leave this check here,
-+# as we work (independently) to both break the CFLAGS direct dependency and commonize the
-+# sanitizer runtimes.
-+UBSAN_MINIMAL_RUNTIME := DEVELOPMENT DEBUG
-+ifneq ($(filter $(CURRENT_KERNEL_CONFIG), $(UBSAN_MINIMAL_RUNTIME)),)
-+
-+# This is (unfortunately) intentional. Currently the "kasan" denylist, which folds both
-+# ubsan and kasan specific files, is generated for all builds during the
-+# setup phase. The denylist file itself is divided per-sanitizer, so won't
-+# affect the UBSAN build outside of the entries that are legitimately
-+# intended for it.
-+UBSAN_DENYLIST=$(OBJROOT)/san/kasan-denylist-$(CURRENT_ARCH_CONFIG_LC)
-+
-+UBSAN_CHECKS = signed-integer-overflow
-+UBSAN_RUNTIME = -fsanitize-minimal-runtime -fsanitize-ignorelist=$(UBSAN_DENYLIST)
-+UBSAN_CHECKS_TRAP =
-+UBSAN_CHECKS_FATAL =
-+UBSAN_DISABLED =
-+endif
-+endif
-+
-+endif
-+
-+CFLAGS_GEN += $(UBSAN_RUNTIME)
-+CFLAGS_GEN += $(foreach x,$(UBSAN_CHECKS) $(UBSAN_CHECKS_FATAL) $(UBSAN_CHECKS_TRAP),-fsanitize=$(x))
-+CFLAGS_GEN += $(foreach x,$(UBSAN_CHECKS_FATAL),-fno-sanitize-recover=$(x))
-+CFLAGS_GEN += $(foreach x,$(UBSAN_CHECKS_TRAP),-fsanitize-trap=$(x))
-+CFLAGS_GEN += $(foreach x,$(UBSAN_DISABLED),-fno-sanitize=$(x))
-+
-+ifeq ($(KSANCOV),1)
-+# Enable SanitizerCoverage instrumentation in xnu
-+SAN = 1
-+KCOV_DENYLIST := $(OBJROOT)/san/kcov-denylist-$(CURRENT_ARCH_CONFIG_LC)
-+KCOV_CFLAGS := -fsanitize-coverage=trace-pc-guard,trace-cmp -fsanitize-coverage-ignorelist=$(KCOV_DENYLIST)
-+CFLAGS_GEN += $(KCOV_CFLAGS) -DKSANCOV=1
-+endif
-+
-+ifeq ($(SAN),1)
-+CFLAGS_GEN += -fsanitize-ignorelist=$(OBJROOT)/san/kasan-denylist-$(CURRENT_ARCH_CONFIG_LC)
-+endif
-+
-+# Any extra flags that get passed at the command line during build.
-+ifeq ($(CFLAGS_EXTRA),)
-+CFLAGS_EXTRA =
-+endif
-+
-+CFLAGS	= $(CFLAGS_GEN) \
-+		  $($(addsuffix $(CURRENT_MACHINE_CONFIG),MACHINE_FLAGS_$(CURRENT_ARCH_CONFIG)_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),ARCH_FLAGS_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),CFLAGS_)) \
-+		  $($(addsuffix $(CURRENT_KERNEL_CONFIG),CFLAGS_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG), $(addsuffix $(CURRENT_KERNEL_CONFIG),CFLAGS_))) \
-+		  $(DEPLOYMENT_TARGET_FLAGS) \
-+		  $(DEPLOYMENT_TARGET_DEFINES) \
-+		  $(DEFINES) \
-+		  $(CFLAGS_EXTRA)
-+
-+#
-+# Default C++ flags
-+#
-+
-+OTHER_CXXFLAGS	=
-+
-+ifeq ($(BUILD_XNU_LIBRARY),1)
-+CXXFLAGS_KERNEL   = -fno-exceptions -Wno-missing-prototypes
-+else
-+CXXFLAGS_KERNEL   = -fapple-kext
-+endif
-+
-+CXXFLAGS_GEN  = -std=gnu++2b -fsized-deallocation $(CXXFLAGS_KERNEL) $(OTHER_CXXFLAGS)
-+
-+CXXFLAGS      = $(CXXFLAGS_GEN) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),CXXFLAGS_)) \
-+		  $($(addsuffix $(CURRENT_KERNEL_CONFIG),CXXFLAGS_))
-+
-+#
-+# Assembler command
-+#
-+AS	= $(CCACHE) $(CC)
-+S_KCC	= $(CC)
-+
-+#
-+# Default SFLAGS
-+#
-+SFLAGS_GEN = -D__ASSEMBLER__ -DASSEMBLER $(OTHER_CFLAGS)
-+
-+SFLAGS_RELEASE	=
-+SFLAGS_DEVELOPMENT	=
-+
-+# When making non-compatible changes to the XNU runtime, it can be useful to build
-+# a KASAN kernel + runtime, but linked against a DEVELOPMENT kernel cache.
-+# Uncomment the lines below to be able to build development, but passing KASAN=1.
-+# #_ifeq ($(KASAN),1)
-+# SFLAGS_DEVELOPMENT += -DKASAN=1
-+# #_endif
-+
-+SFLAGS_KASAN = $(SFLAGS_DEVELOPMENT) -DKASAN=1
-+SFLAGS_DEBUG	=
-+SFLAGS_PROFILE	=
-+
-+SFLAGS_X86_64	= $(CFLAGS_X86_64)
-+SFLAGS_X86_64H	= $(CFLAGS_X86_64H)
-+SFLAGS_ARM64	= $(CFLAGS_ARM64)
-+
-+SFLAGS	= $(SFLAGS_GEN) \
-+		  $($(addsuffix $(CURRENT_MACHINE_CONFIG),MACHINE_FLAGS_$(CURRENT_ARCH_CONFIG)_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),ARCH_FLAGS_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),SFLAGS_)) \
-+		  $($(addsuffix $(CURRENT_KERNEL_CONFIG),SFLAGS_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG), $(addsuffix $(CURRENT_KERNEL_CONFIG),SFLAGS_))) \
-+		  $(DEPLOYMENT_TARGET_FLAGS) \
-+		  $(DEPLOYMENT_TARGET_DEFINES) \
-+		  $(DEFINES)
-+
-+#
-+# Linker command
-+#
-+LD	= $(KC++) -nostdlib
-+
-+#
-+# Default LDFLAGS
-+#
-+# Availability of DWARF allows DTrace CTF (compressed type format) to be constructed.
-+# ctf_insert creates the CTF section.  It needs reserved padding in the
-+# headers for the load command segment and the CTF section structures.
-+#
-+LDFLAGS_KERNEL_GEN = \
-+	-nostdlib \
-+	-fapple-kext \
-+	-Wl,-e,__start \
-+	-Wl,-sectalign,__TEXT,__text,0x1000 \
-+	-Wl,-sectalign,__DATA,__common,0x1000 \
-+	-Wl,-sectalign,__DATA,__bss,0x1000 \
-+	-Wl,-sectcreate,__PRELINK_TEXT,__text,/dev/null \
-+	-Wl,-segprot,__PRELINK_TEXT,r-x,r-x \
-+	-Wl,-sectcreate,__PRELINK_INFO,__info,/dev/null \
-+	-Wl,-pagezero_size,0x0 \
-+	-Wl,-version_load_command \
-+	-Wl,-function_starts \
-+	-Wl,-headerpad,152
-+
-+# LDFLAGS_KERNEL_SDK	= -L$(SDKROOT)/usr/local/lib/kernel -lfirehose_kernel
-+LDFLAGS_KERNEL_SDK	= -L$(SDKROOT)/usr/local/lib/kernel -L$(SDKROOT)/usr/local/lib/kernel/platform
-+ifneq ($(KDKROOT),)
-+LDFLAGS_KERNEL_SDK     += -L$(KDKROOT)/usr/local/lib/kernel/platform
-+endif
-+
-+LDFLAGS_KERNEL_RELEASE	=
-+LDFLAGS_KERNEL_DEVELOPMENT =
-+LDFLAGS_KERNEL_KASAN = $(LDFLAGS_KERNEL_DEVELOPMENT)
-+LDFLAGS_KERNEL_DEBUG	=
-+LDFLAGS_KERNEL_PROFILE	=
-+
-+# Tightbeam finds modules in the "tightbeam" subdirectory.
-+TIGHTBEAM_MODULE_DIR       = $(SDKROOT)/usr/local/lib/kernel/tightbeam
-+
-+# KASLR static slide config:
-+ifndef SLIDE
-+SLIDE=0x00
-+endif
-+KERNEL_MIN_ADDRESS      = 0xffffff8000000000
-+KERNEL_BASE_OFFSET      = 0x100000
-+# POSIX shells use signed long for their arithmetic expressions. However,
-+# we're dealing with uintptr_t values here, so explicitly use bash which
-+# is known to be able to handle such larger values. ksh also works; dash
-+# and zsh both fail with different results (zsh even warns you).
-+KERNEL_STATIC_SLIDE     = $(shell $(BASH) -c 'printf "0x%016x" \
-+			  $$(( $(SLIDE) << 21 ))')
-+KERNEL_STATIC_BASE      = $(shell $(BASH) -c 'printf "0x%016x" \
-+			  $$(( $(KERNEL_MIN_ADDRESS) + $(KERNEL_BASE_OFFSET) ))')
-+KERNEL_HIB_SECTION_BASE = $(shell $(BASH) -c 'printf "0x%016x" \
-+			  $$(( $(KERNEL_STATIC_BASE) + $(KERNEL_STATIC_SLIDE) ))')
-+KERNEL_TEXT_BASE        = $(shell $(BASH) -c 'printf "0x%016x" \
-+			  $$(( $(KERNEL_HIB_SECTION_BASE) + 0x100000 ))')
-+
-+LDFLAGS_KERNEL_RELEASEX86_64 = \
-+	-Wl,-pie \
-+	-Wl,-segaddr,__HIB,$(KERNEL_HIB_SECTION_BASE) \
-+	-Wl,-image_base,$(KERNEL_TEXT_BASE) \
-+	-Wl,-seg_page_size,__TEXT,0x200000 \
-+	-Wl,-sectalign,__HIB,__bootPT,0x1000 \
-+	-Wl,-sectalign,__HIB,__desc,0x1000 \
-+	-Wl,-sectalign,__HIB,__data,0x1000 \
-+	-Wl,-sectalign,__HIB,__text,0x1000 \
-+	-Wl,-sectalign,__HIB,__const,0x1000 \
-+	-Wl,-sectalign,__HIB,__bss,0x1000 \
-+	-Wl,-sectalign,__HIB,__common,0x1000 \
-+	-Wl,-sectalign,__HIB,__llvm_prf_cnts,0x1000 \
-+	-Wl,-sectalign,__HIB,__llvm_prf_names,0x1000 \
-+	-Wl,-sectalign,__HIB,__llvm_prf_data,0x1000 \
-+	-Wl,-sectalign,__HIB,__textcoal_nt,0x1000 \
-+	-Wl,-sectalign,__HIB,__cstring,0x1000 \
-+	-Wl,-sectalign,__DATA,__percpu,0x1000 \
-+	-Wl,-rename_section,__DATA,__const,__DATA_CONST,__const \
-+	-Wl,-segprot,__DATA_CONST,r--,r-- \
-+	-Wl,-rename_section,__KLD,__const,__KLDDATA,__const \
-+	-Wl,-rename_section,__KLD,__cstring,__KLDDATA,__cstring \
-+	-Wl,-segprot,__KLDDATA,rw-,rw- \
-+	-Wl,-segprot,__KLD,r-x,r-x \
-+	-Wl,-no_zero_fill_sections \
-+	$(LDFLAGS_NOSTRIP_FLAG)
-+
-+ifeq ($(SAN),1)
-+LDFLAGS_KERNEL_RELEASEX86_64 += \
-+	-Wl,-sectalign,__HIB,__cstring,0x1000
-+endif
-+
-+ifeq ($(KSANCOV),1)
-+LDFLAGS_KERNEL_RELEASEX86_64 += \
-+	-Wl,-sectalign,__HIB,__sancov_guards,0x1000 \
-+	-Wl,-sectalign,__HIB,__sancov_pcs,0x1000
-+endif
-+
-+# Define KERNEL_BASE_OFFSET so known at compile time:
-+CFLAGS_X86_64 += -DKERNEL_BASE_OFFSET=$(KERNEL_BASE_OFFSET)
-+CFLAGS_X86_64H += -DKERNEL_BASE_OFFSET=$(KERNEL_BASE_OFFSET)
-+
-+LDFLAGS_KERNEL_DEBUGX86_64 = $(LDFLAGS_KERNEL_RELEASEX86_64)
-+LDFLAGS_KERNEL_DEVELOPMENTX86_64 = $(LDFLAGS_KERNEL_RELEASEX86_64)
-+LDFLAGS_KERNEL_KASANX86_64 = $(LDFLAGS_KERNEL_DEVELOPMENTX86_64) \
-+	-Wl,-sectalign,__HIB,__asan_globals,0x1000 \
-+	-Wl,-sectalign,__HIB,__asan_liveness,0x1000 \
-+	-Wl,-sectalign,__HIB,__mod_term_func,0x1000 \
-+	-Wl,-rename_section,__HIB,__mod_init_func,__NULL,__mod_init_func \
-+	-Wl,-rename_section,__HIB,__eh_frame,__NULL,__eh_frame
-+LDFLAGS_KERNEL_PROFILEX86_64 = $(LDFLAGS_KERNEL_RELEASEX86_64)
-+
-+LDFLAGS_KERNEL_RELEASEX86_64H = $(LDFLAGS_KERNEL_RELEASEX86_64)
-+LDFLAGS_KERNEL_DEBUGX86_64H = $(LDFLAGS_KERNEL_RELEASEX86_64H)
-+LDFLAGS_KERNEL_DEVELOPMENTX86_64H = $(LDFLAGS_KERNEL_RELEASEX86_64H)
-+LDFLAGS_KERNEL_KASANX86_64H = $(LDFLAGS_KERNEL_KASANX86_64)
-+LDFLAGS_KERNEL_PROFILEX86_64H = $(LDFLAGS_KERNEL_RELEASEX86_64H)
-+
-+# Offset image base by page to have iBoot load kernel TEXT correctly.
-+# First page is used for various purposes : sleep token, reset vector.
-+# We also need a 32MB offset, as this is the minimum block mapping size
-+# for a 16KB page runtime, and we wish to use the first virtual block
-+# to map the low globals page.  We also need another 4MB to account for
-+# the address space reserved by L4 (because the reservation is not a
-+# multiple of the block size in alignment/length, we will implictly map
-+# it with our block mapping, and we therefore must reflect that the
-+# first 4MB of the block mapping for xnu do not belong to xnu).
-+# For the moment, kaliber has a unique memory layout (monitor at the top
-+# of memory).  Support this by breaking 16KB on other platforms and
-+# mandating 32MB alignment. Image base (i.e. __TEXT) must be 16KB
-+# aligned since ld64 will link with 16KB alignment for ARM64.
-+#
-+# We currently offset by an additional 32MB in order to reclaim memory.
-+# We need a dedicated virtual page for the low globals.  Our bootloader
-+# may have a significant chunk of memory (up to an L2 entry in size)
-+# that lies before the kernel.  The addition 32MB of virtual padding
-+# ensures that we have enough virtual address space to map all of that
-+# memory as part of the V-to-P mapping.
-+# 23355738 - put __PRELINK_TEXT first. We reserve enough room
-+# for 0x0000000003000000 = 48MB of kexts
-+#
-+# 0xfffffff000000000 (32MB range for low globals)
-+# 0xfffffff002000000 (32MB range to allow for large page physical slide)
-+# 0xfffffff004000000 (16KB range to reserve the first available page)
-+# 0xfffffff004004000 (48MB range for kexts)
-+# 0xfffffff007004000 (Start of xnu proper).
-+LDFLAGS_KERNEL_GENARM64 = \
-+	-Wl,-pie \
-+	-Wl,-static \
-+	-Wl,-segaddr,__PRELINK_TEXT,$(ARM64_PLKSEG_ADDR) \
-+	-Wl,-image_base,$(ARM64_LINK_ADDR) \
-+	\
-+	-Wl,-rename_section,__HIB,__text,__TEXT_EXEC,__hib_text \
-+	\
-+	-Wl,-rename_section,__HIB,__const,__DATA_CONST,__hib_const \
-+	-Wl,-rename_section,__HIB,__cstring,__DATA_CONST,__hib_const \
-+	-Wl,-rename_section,__HIB,__literal8,__DATA_CONST,__hib_const \
-+	-Wl,-rename_section,__HIB,__literal16,__DATA_CONST,__hib_const \
-+	\
-+	-Wl,-rename_segment,__HIB,__HIBDATA \
-+	\
-+	-Wl,-sectalign,__DATA,__const,0x4000 \
-+	-Wl,-sectalign,__DATA,__percpu,0x4000 \
-+	-Wl,-sectalign,__DATA,__data,0x4000 \
-+	-Wl,-rename_section,__DATA,__mod_init_func,__DATA_CONST,__mod_init_func \
-+	-Wl,-rename_section,__DATA,__mod_term_func,__DATA_CONST,__mod_term_func \
-+	-Wl,-rename_section,__DATA,__auth_ptr,__DATA_CONST,__auth_ptr \
-+	-Wl,-rename_section,__DATA,__auth_got,__DATA_CONST,__auth_got \
-+	-Wl,-rename_section,__DATA,__const,__DATA_CONST,__const \
-+	-Wl,-segprot,__DATA_CONST,r--,r-- \
-+	-Wl,-rename_section,__KLD,__const,__KLDDATA,__const \
-+	-Wl,-rename_section,__KLD,__cstring,__KLDDATA,__cstring \
-+	-Wl,-segprot,__KLDDATA,rw-,rw- \
-+	-Wl,-segprot,__KLD,r-x,r-x \
-+	-Wl,-rename_section,__TEXT,__text,__TEXT_EXEC,__text \
-+	-Wl,-rename_section,__TEXT,__stubs,__TEXT_EXEC,__stubs \
-+	-Wl,-sectcreate,"__PLK_TEXT_EXEC",__text,/dev/null \
-+	-Wl,-sectcreate,__PRELINK_DATA,__data,/dev/null \
-+	-Wl,-sectcreate,"__PLK_DATA_CONST",__data,/dev/null \
-+	-Wl,-sectcreate,"__PLK_LLVM_COV",__llvm_covmap,/dev/null \
-+	-Wl,-sectcreate,"__PLK_LINKEDIT",__data,/dev/null
-+
-+# To support code coverage for kexts, the coverage mapping sections __llvm_covmap
-+# and __llvm_covfun are put into the __PLK_LLVM_COV segment rather than the
-+# standard __LLVM_COV segment. For later processing of the coverage data using
-+# llvm-cov, we move the coverage mapping for the kernel itself into the same
-+# segment (see also rdar://104951137)
-+ifeq ($(BUILD_CODE_COVERAGE),1)
-+LDFLAGS_KERNEL_GENARM64 += \
-+  -Wl,-rename_section,__LLVM_COV,__llvm_covmap,__PLK_LLVM_COV,__llvm_covmap \
-+  -Wl,-rename_section,__LLVM_COV,__llvm_covfun,__PLK_LLVM_COV,__llvm_covfun
-+endif
-+
-+LDFLAGS_KERNEL_SEGARM64_SEG_ORDER = \
-+	__TEXT:__DATA_CONST:__DATA_SPTM:__LINKEDIT:__TEXT_EXEC:__TEXT_BOOT_EXEC:__KLD:__PPLTEXT:__PPLTRAMP:__PPLDATA_CONST:__LASTDATA_CONST:__LAST:__PPLDATA:__KLDDATA:__DATA:__HIBDATA:__BOOTDATA
-+
-+LDFLAGS_KERNEL_SEGARM64 = \
-+	-Wl,-rename_section,__PPLDATA,__const,__PPLDATA_CONST,__const \
-+	-Wl,-segment_order,$(LDFLAGS_KERNEL_SEGARM64_SEG_ORDER) \
-+	-Wl,-segprot,__TEXT,r--,r-- \
-+	-Wl,-segprot,__TEXT_EXEC,r-x,r-x \
-+	-Wl,-segprot,__TEXT_BOOT_EXEC,r-x,r-x \
-+	-Wl,-segprot,__PPLTEXT,r-x,r-x \
-+	-Wl,-segprot,__PPLTRAMP,r-x,r-x \
-+	-Wl,-segprot,__PPLDATA_CONST,r--,r-- \
-+	-Wl,-segprot,__LASTDATA_CONST,r--,r-- \
-+	-Wl,-segprot,__LAST,r-x,r-x \
-+
-+LDFLAGS_KERNEL_RELEASEARM64     = \
-+	$(LDFLAGS_KERNEL_GENARM64) \
-+	$(LDFLAGS_KERNEL_SEGARM64) \
-+	$(LDFLAGS_KERNEL_STRIP_LTO)
-+
-+LDFLAGS_KERNEL_ONLY_CONFIG_RELEASEARM64     = \
-+	-Wl,-exported_symbols_list,$(TARGET)/all-kpi.exp
-+
-+LDFLAGS_KERNEL_DEVELOPMENTARM64     = \
-+	$(LDFLAGS_KERNEL_GENARM64) \
-+	$(LDFLAGS_KERNEL_SEGARM64) \
-+	$(LDFLAGS_NOSTRIP_FLAG)
-+
-+LDFLAGS_KERNEL_ONLY_CONFIG_DEVELOPMENTARM64 =
-+
-+LDFLAGS_KERNEL_KASANARM64 = $(LDFLAGS_KERNEL_DEVELOPMENTARM64)
-+LDFLAGS_KERNEL_DEBUGARM64 = $(LDFLAGS_KERNEL_DEVELOPMENTARM64)
-+LDFLAGS_KERNEL_SPTMARM64 = $(LDFLAGS_KERNEL_DEVELOPMENTARM64)
-+
-+LDFLAGS_KERNEL_ONLY_CONFIG_KASANARM64 = $(LDFLAGS_KERNEL_ONLY_CONFIG_DEVELOPMENTARM64)
-+LDFLAGS_KERNEL_ONLY_CONFIG_DEBUGARM64 = $(LDFLAGS_KERNEL_ONLY_CONFIG_DEVELOPMENTARM64)
-+
-+#
-+# arm64e specific linker flags that should be used only when linking the kernel
-+# (and not the static kernel cache / kcgen)
-+#
-+LDFLAGS_KERNEL_ONLY_SUBARCH_arm64e = \
-+	-Wl,-add_split_seg_info \
-+	-Wl,-kernel
-+
-+LDFLAGS_KERNEL_ONLY_SUBARCH_x86_64 = \
-+	-Wl,-add_split_seg_info \
-+	-Wl,-kernel
-+LDFLAGS_KERNEL_ONLY_SUBARCH_x86_64h = $(LDFLAGS_KERNEL_ONLY_SUBARCH_x86_64)
-+
-+LDFLAGS_KERNEL	= $(LDFLAGS_KERNEL_GEN) \
-+		  $(LDFLAGS_KERNEL_SDK) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),ARCH_FLAGS_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG),LDFLAGS_KERNEL_)) \
-+		  $($(addsuffix $(CURRENT_KERNEL_CONFIG),LDFLAGS_KERNEL_)) \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG), $(addsuffix $(CURRENT_KERNEL_CONFIG),LDFLAGS_KERNEL_))) \
-+		  $(DEPLOYMENT_TARGET_FLAGS)
-+
-+LDFLAGS_KERNEL_ONLY  +=   \
-+		  $($(addsuffix $(CURRENT_ARCH_CONFIG), $(addsuffix $(CURRENT_KERNEL_CONFIG),LDFLAGS_KERNEL_ONLY_CONFIG_))) \
-+		  $($(addsuffix $(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG),LDFLAGS_KERNEL_ONLY_SUBARCH_)) \
-+		  -Wl,-alias_list,$(TARGET)/all-alias.exp \
-+		  -Wl,-sectcreate,__LINKINFO,__symbolsets,$(TARGET)/symbolsets.plist -Wl,-segprot,__LINKINFO,r--,r--
-+
-+LDFILES_KERNEL_ONLY = $(TARGET)/all-kpi.exp $(TARGET)/all-alias.exp $(TARGET)/symbolsets.plist
-+
-+#
-+# Default runtime libraries to be linked with the kernel
-+#
-+LD_KERNEL_LIBS	   = -lcc_kext
-+LD_KERNEL_ARCHIVES = $(LDFLAGS_KERNEL_SDK) -lfirehose_kernel
-+# Link opensource binary library for VMAPPLE and specific SoCs
-+ifneq ($(filter T6000 T6020 T8101 T8103 T8112 VMAPPLE,$(CURRENT_MACHINE_CONFIG)),)
-+	LDFLAGS_KERNEL_ONLY += -rdynamic -Wl,-force_load,$(KDKROOT)/System/Library/KernelSupport/lib$(CURRENT_MACHINE_CONFIG).os.$(CURRENT_KERNEL_CONFIG).a
-+endif
-+
-+# Link binary support library
-+ifneq ($(CURRENT_MACHINE_CONFIG),NONE)
-+        LDFLAGS_KERNEL_ONLY += -rdynamic -Wl,-force_load,$(KDKROOT)/System/Library/KernelSupport/lib$(CURRENT_MACHINE_CONFIG).os.$(CURRENT_KERNEL_CONFIG).a
-+endif
-+
-+#
-+# Derive SPTM/TXM and Exclaves enablement from the EDM properties.
-+#
-+ifneq ($(EMBEDDED_DEVICE_MAP),)
-+PLATFORM_NORMALIZED := $(shell echo $(PLATFORM) | tr '[:upper:]' '[:lower:]')
-+
-+SPTM_ENABLED := $(shell $(EMBEDDED_DEVICE_MAP) -db $(EDM_DBPATH) -query SELECT DISTINCT EnableSPTMTXM FROM Targets WHERE KernelPlatform IS \"$(CURRENT_MACHINE_CONFIG_LC)\" AND SDKPlatform IS \"$(PLATFORM_NORMALIZED)\" AND EnableSPTMTXM == 1)
-+
-+
-+EXCLAVES_ENABLED := $(shell $(EMBEDDED_DEVICE_MAP) -db $(EDM_DBPATH) -query SELECT DISTINCT HascL4 FROM Targets WHERE KernelPlatform IS \"$(CURRENT_MACHINE_CONFIG_LC)\" AND SDKPlatform IS \"$(PLATFORM_NORMALIZED)\" AND HascL4 == 1)
-+endif # !EMBEDDED_DEVICE_MAP
-+
-+ifeq ($(CURRENT_KERNEL_CONFIG),SPTM)
-+  SPTM_ENABLED = 1
-+endif # SPTM
-+
-+
-+ifneq ($(filter $(CURRENT_MACHINE_CONFIG_LC),$(SPTM_ENABLED_SOCS_$(PLATFORM))),)
-+  SPTM_ENABLED = 1
-+endif
-+ifneq ($(filter $(CURRENT_MACHINE_CONFIG_LC),$(EXCLAVES_ENABLED_SOCS_$(PLATFORM))),)
-+  EXCLAVES_ENABLED := 1
-+endif
-+
-+ifeq ($(SPTM_ENABLED),1)
-+  LD_KERNEL_ARCHIVES += -lTrustedExecutionMonitor_Kernel
-+  LD_KERNEL_ARCHIVES += -lsptm_xnu
-+  DOCONF_SPTM := -sptm
-+endif # !SPTM_ENABLED
-+
-+ifeq ($(EXCLAVES_ENABLED),1)
-+  DOCONF_EXCLAVES := -exclaves
-+endif # !EXCLAVES_ENABLED
-+
-+
-+ifneq ($(wildcard $(SDKROOT)/usr/local/lib/kernel/platform/libTightbeam.a),)
-+XNU_CONFIG_TIGHTBEAM := 1
-+TIGHTBEAM_IN_SDK := 1
-+else ifneq ($(wildcard $(KDKROOT)/usr/local/lib/kernel/platform/libTightbeam.a),)
-+XNU_CONFIG_TIGHTBEAM := 1
-+endif
-+ifeq ($(XNU_CONFIG_TIGHTBEAM),1)
-+  ifeq ($(TIGHTBEAM_IN_SDK),1)
-+    # Force-import the Tightbeam static lib so that all of its symbols can be exported to kexts
-+    LD_KERNEL_ARCHIVES += -Wl,-force_load,$(SDKROOT)/usr/local/lib/kernel/platform/libTightbeam.a
-+    TIGHTBEAM_EXPORTS := $(SDKROOT)/usr/local/lib/kernel/platform/libTightbeam.exports
-+  else # !TIGHTBEAM_IN_SDK
-+    LD_KERNEL_ARCHIVES += -Wl,-force_load,$(KDKROOT)/usr/local/lib/kernel/platform/libTightbeam.a
-+    TIGHTBEAM_EXPORTS := $(KDKROOT)/usr/local/lib/kernel/platform/libTightbeam.exports
-+  endif # TIGHTBEAM_IN_SDK
-+endif
-+
-+#
-+# DTrace support
-+#
-+ifndef DO_CTFMERGE
-+DO_CTFMERGE := 1
-+ifeq ($(CURRENT_KERNEL_CONFIG),RELEASE)
-+ifneq ($(PLATFORM),MacOSX)
-+DO_CTFMERGE := 0
-+endif
-+endif
-+endif # DO_CTFMERGE
-+
-+
-+#
-+# Default INCFLAGS
-+#
-+INCFLAGS_IMPORT	= $(patsubst %, -I$(OBJROOT)/EXPORT_HDRS/%, $(COMPONENT_IMPORT_LIST))
-+INCFLAGS_EXTERN	= -I$(SRCROOT)/EXTERNAL_HEADERS
-+INCFLAGS_GEN	= -I$(SRCROOT)/$(COMPONENT) -I$(OBJROOT)/EXPORT_HDRS/$(COMPONENT)
-+INCFLAGS_LOCAL	= -I.
-+INCFLAGS_SDK    = -I$(SDKROOT)/usr/local/include/kernel -I$(SDKROOT)/usr/local/include/iBoot -I$(SDKROOT)/$(KPINCDIR)/AppleFeatures
-+INCFLAGS_PLATFORM = -I$(SDKROOT)/$(KPINCDIR)/platform
-+ifneq ($(KDKROOT),)
-+INCFLAGS_SDK   += -I$(KDKROOT)/$(KPINCDIR) -I$(KDKROOT)/System/Library/KernelSupport
-+INCFLAGS_PLATFORM += -I$(KDKROOT)/$(KINCDIR)/platform -I$(KDKROOT)/$(KPINCDIR)/platform
-+endif
-+
-+INCFLAGS	= $(INCFLAGS_LOCAL) $(INCFLAGS_GEN) $(INCFLAGS_IMPORT) $(INCFLAGS_EXTERN) $(INCFLAGS_MAKEFILE) $(INCFLAGS_SDK) $(INCFLAGS_PLATFORM)
-+
-+#
-+# Default MIGFLAGS
-+#
-+MIGFLAGS	= $(DEFINES) $(INCFLAGS) -novouchers $($(addsuffix $(CURRENT_ARCH_CONFIG),CFLAGS_)) $($(addsuffix $(CURRENT_ARCH_CONFIG),ARCH_FLAGS_)) \
-+		$(DEPLOYMENT_TARGET_FLAGS)
-+
-+#
-+# Default MIG Kernel Server flags
-+#
-+MIGKSFLAGS = \
-+	-DMACH_KERNEL_PRIVATE \
-+	-DKERNEL_SERVER=1 \
-+	-mach_msg2
-+
-+#
-+# Default MIG KernelUser flags
-+#
-+MIGKUFLAGS = \
-+	-DMACH_KERNEL_PRIVATE \
-+	-DKERNEL_USER=1 \
-+	-DEXC_SERVER_AUDITTOKEN=1 \
-+	-DMACH_EXC_SERVER_AUDITTOKEN=1 \
-+	-maxonstack 1024
-+
-+# Support for LLVM Profile Guided Optimization (PGO)
-+
-+ifeq ($(BUILD_PROFILE),1)
-+CFLAGS_GEN += -fprofile-instr-generate -DPROFILE
-+CXXFLAGS_GEN += -fprofile-instr-generate -DPROFILE
-+endif
-+
-+ifdef USE_PROFILE
-+CFLAGS_GEN += -fprofile-instr-use=$(USE_PROFILE)
-+CXXFLAGS_GEN += -fprofile-instr-use=$(USE_PROFILE)
-+LDFLAGS_KERNEL_GEN += -fprofile-instr-use=$(USE_PROFILE)
-+
-+CFLAGS_GEN += -Wno-error=profile-instr-out-of-date
-+endif
-+
-+# Support for LLVM Source-based Code coverage. Since enabling code coverage
-+# increases the size of __LINKEDIT, it might be necessary to set the keepsyms=1
-+# boot-arg when building the kernel with code coverage enabled.
-+ifeq ($(BUILD_CODE_COVERAGE),1)
-+CFLAGS_GEN += -fprofile-instr-generate -fcoverage-mapping
-+CXXFLAGS_GEN += -fprofile-instr-generate -fcoverage-mapping
-+endif
-+
-+#
-+# Support for LLVM Link Time Optimization (LTO)
-+#
-+# LTO can be explicitly enabled or disabled with BUILD_LTO=1|0
-+# and defaults to enabled except for DEBUG kernels
-+#
-+# CFLAGS_NOLTO_FLAG is needed on a per-file basis (for files
-+# that deal poorly with LTO, or files that must be machine
-+# code *.o files for xnu to build (i.e, setsegname runs on
-+# them).
-+#
-+# LDFLAGS_NOSTRIP_FLAG is used to support configurations that
-+# do not utilize an export list.  For these configs to build,
-+# we need to prevent the LTO logic from dead stripping them.
-+
-+LTO_ENABLED_RELEASE = 1
-+LTO_ENABLED_DEVELOPMENT = 1
-+LTO_ENABLED_DEBUG = 0
-+LTO_ENABLED_KASAN = 0
-+LTO_ENABLED_SPTM = $(LTO_ENABLED_DEVELOPMENT)
-+
-+ifneq ($(BUILD_LTO),)
-+USE_LTO = $(BUILD_LTO)
-+else
-+USE_LTO = $(LTO_ENABLED_$(CURRENT_KERNEL_CONFIG))
-+endif
-+
-+ifeq ($(USE_LTO),1)
-+CFLAGS_GEN	+= -flto -DBUILT_LTO=1
-+CXXFLAGS_GEN	+= -flto -DBUILT_LTO=1
-+LDFLAGS_KERNEL_LTO	= -Wl,-mllvm,-inline-threshold=100
-+LDFLAGS_KERNEL_GEN	+= $(LDFLAGS_KERNEL_LTO) -Wl,-object_path_lto,$(TARGET)/lto.o
-+LDFLAGS_NOSTRIP_FLAG = -rdynamic
-+LDFLAGS_KERNEL_STRIP_LTO = -Wl,-dead_strip,-no_dead_strip_inits_and_terms
-+
-+CFLAGS_NOLTO_FLAG = -fno-lto
-+else
-+LDFLAGS_KERNEL_LTO =
-+LDFLAGS_NOSTRIP_FLAG =
-+LDFLAGS_KERNEL_STRIP_LTO =
-+CFLAGS_NOLTO_FLAG =
-+endif
-+
-+ifneq ($(SAVE_OPT_RECORD),)
-+ifeq ($(USE_LTO),1)
-+REMARKS_FLAGS = -Wl,-mllvm,--lto-pass-remarks-filter="$(SAVE_OPT_RECORD)" \
-+                -Wl,-mllvm,--lto-pass-remarks-output=lto_remarks.opt.yaml \
-+                -Wl,-mllvm,--lto-pass-remarks-format=yaml
-+LDFLAGS_KERNEL_LTO += $(REMARKS_FLAGS)
-+LDFLAGS_KERNEL_GEN += $(REMARKS_FLAGS)
-+else
-+REMARKS_FLAGS = -foptimization-record-passes="$(SAVE_OPT_RECORD)" \
-+                -fsave-optimization-record=yaml
-+CFLAGS_GEN += $(REMARKS_FLAGS)
-+CXXFLAGS_GEN += $(REMARKS_FLAGS)
-+endif
-+endif
-+
-+#
-+# Default VPATH
-+#
-+export VPATH = .:$(SOURCE)
-+
-+
-+
-+#
-+# Macros that control installation of kernel and its header files
-+#
-+# install flags for header files
-+#
-+INSTALL_FLAGS = -c -S -m 0444
-+DATA_INSTALL_FLAGS = -c -S -m 0644
-+DATA_INSTALL_FLAGS_RO = -c -S -m 0444
-+EXEC_INSTALL_FLAGS = -c -S -m 0755
-+
-+#
-+# Header file destinations
-+#
-+
-+ifeq ($(DRIVERKIT),1)
-+    SDKHEADERSROOT=$(DRIVERKITRUNTIMEROOT)
-+    # only whitelisted headers install outside of the DriverKit Runtime hierarchy
-+    DRIVERKITSDKHEADERSROOT=$(DRIVERKITROOT)
-+    DRIVERKITFRAMEDIR = $(DRIVERKITROOT)/System/Library/Frameworks
-+endif
-+
-+ifeq ($(EXCLAVEKIT),1)
-+    EXCLAVEKITSDKHEADERSROOT=$(EXCLAVEKITROOT)
-+    EXCLAVEKITFRAMEDIR = $(EXCLAVEKITROOT)/System/Library/Frameworks
-+endif
-+
-+ifeq ($(EXCLAVECORE),1)
-+    EXCLAVECORESDKHEADERSROOT=$(EXCLAVECOREROOT)
-+    EXCLAVECOREFRAMEDIR = $(EXCLAVECOREROOT)/System/Library/Frameworks
-+endif
-+
-+FRAMEDIR = $(SDKHEADERSROOT)/System/Library/Frameworks
-+
-+IINCVERS = A
-+IINCFRAME = $(FRAMEDIR)/IOKit.framework
-+IINCDIR = $(IINCFRAME)/Versions/$(IINCVERS)/Headers
-+IPINCDIR = $(IINCFRAME)/Versions/$(IINCVERS)/PrivateHeaders
-+IRESDIR = $(IINCFRAME)/Versions/$(IINCVERS)/Resources
-+
-+SINCVERS = B
-+SINCFRAME = $(FRAMEDIR)/System.framework
-+SINCDIR = $(SINCFRAME)/Versions/$(SINCVERS)/Headers
-+SPINCDIR = $(SINCFRAME)/Versions/$(SINCVERS)/PrivateHeaders
-+SRESDIR = $(SINCFRAME)/Versions/$(SINCVERS)/Resources
-+
-+ifndef INCDIR
-+    INCDIR = $(SDKHEADERSROOT)/usr/include
-+endif
-+ifndef DRIVERKITINCDIR
-+    DRIVERKITINCDIR = $(DRIVERKITSDKHEADERSROOT)/usr/include
-+endif
-+ifndef EXCLAVEKITINCDIR
-+    EXCLAVEKITINCDIR = $(EXCLAVEKITSDKHEADERSROOT)/usr/include
-+endif
-+ifndef EXCLAVECOREINCDIR
-+    EXCLAVECOREINCDIR = $(EXCLAVECORESDKHEADERSROOT)/usr/include
-+endif
-+ifndef LCLDIR
-+	LCLDIR = $(SDKHEADERSROOT)/usr/local/include
-+endif
-+ifndef DRIVERKITLCLDIR
-+    DRIVERKITLCLDIR = $(DRIVERKITSDKHEADERSROOT)/usr/local/include
-+endif
-+
-+KINCVERS = A
-+KINCFRAME = $(FRAMEDIR)/Kernel.framework
-+KINCDIR = $(KINCFRAME)/Versions/$(KINCVERS)/Headers
-+KPINCDIR = $(KINCFRAME)/Versions/$(KINCVERS)/PrivateHeaders
-+KRESDIR = $(KINCFRAME)/Versions/$(KINCVERS)/Resources
-+
-+KLIBCXXDIR = $(KPINCDIR)/kernel_sdkroot
-+KLIBCXXINCDIR = $(KLIBCXXDIR)/usr/include
-+
-+DKIT_INCFRAME = DriverKit.framework
-+
-+ifeq ($(PLATFORM),MacOSX)
-+DKIT_INCVERS = A
-+DKIT_INCDIR = $(DKIT_INCFRAME)/Versions/$(DKIT_INCVERS)/Headers
-+DKIT_PINCDIR = $(DKIT_INCFRAME)/Versions/$(DKIT_INCVERS)/PrivateHeaders
-+else
-+# non-macOS SDK frameworks use shallow bundle structure
-+DKIT_INCDIR = $(DKIT_INCFRAME)/Headers
-+DKIT_PINCDIR = $(DKIT_INCFRAME)/PrivateHeaders
-+endif
-+
-+# DriverKit SDK frameworks use shallow bundle structure
-+DRIVERKIT_DKIT_INCDIR = $(DKIT_INCFRAME)/Headers
-+DRIVERKIT_DKIT_PINCDIR = $(DKIT_INCFRAME)/PrivateHeaders
-+
-+XNU_PRIVATE_UNIFDEF ?=
-+XNU_PRIVATE_UNIFDEF += -UMACH_KERNEL_PRIVATE
-+XNU_PRIVATE_UNIFDEF += -UBSD_KERNEL_PRIVATE
-+XNU_PRIVATE_UNIFDEF += -UIOKIT_KERNEL_PRIVATE
-+XNU_PRIVATE_UNIFDEF += -ULIBKERN_KERNEL_PRIVATE
-+XNU_PRIVATE_UNIFDEF += -ULIBSA_KERNEL_PRIVATE
-+XNU_PRIVATE_UNIFDEF += -UPEXPERT_KERNEL_PRIVATE
-+XNU_PRIVATE_UNIFDEF += -UXNU_KERNEL_PRIVATE
-+
-+
-+PLATFORM_UNIFDEF = $(foreach x,$(SUPPORTED_PLATFORMS),$(if $(filter $(PLATFORM),$(x)),-DXNU_PLATFORM_$(x) $(foreach token,$(PLATFORM_UNIFDEF_BLACKLIST_TOKENS_$(x)),-U$(token)),-UXNU_PLATFORM_$(x)))
-+
-+
-+# Some header guards need to be present and checked in kernel headers but removed from userspace headers
-+KERNEL_ONLY_GUARDS_UNIFDEF =
-+
-+# Test-only guards should be stripped from all exported headers
-+TEST_ONLY_GUARDS_UNIFDEF = -USCHED_TEST_HARNESS
-+
-+SPINCFRAME_UNIFDEF  = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -DPRIVATE -UDRIVERKIT -UEXCLAVEKIT -UEXCLAVECORE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+SINCFRAME_UNIFDEF   = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -UPRIVATE -UDRIVERKIT -UEXCLAVEKIT -UEXCLAVECORE -D_OPEN_SOURCE_ -D__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+SFPINCFRAME_UNIFDEF = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -UMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -DPRIVATE -UDRIVERKIT -UEXCLAVEKIT -UEXCLAVECORE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+DKPINCFRAME_UNIFDEF = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -DPRIVATE -DDRIVERKIT -UEXCLAVEKIT -UEXCLAVECORE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+DKINCFRAME_UNIFDEF  = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -UPRIVATE -DDRIVERKIT -UEXCLAVEKIT -UEXCLAVECORE -D_OPEN_SOURCE_ -D__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+EKPINCFRAME_UNIFDEF = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -DPRIVATE -UDRIVERKIT -DEXCLAVEKIT -UEXCLAVECORE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+EKINCFRAME_UNIFDEF  = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -UPRIVATE -UDRIVERKIT -DEXCLAVEKIT -UEXCLAVECORE -D_OPEN_SOURCE_ -D__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+ECPINCFRAME_UNIFDEF = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -DPRIVATE -UDRIVERKIT -UEXCLAVEKIT -DEXCLAVECORE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+ECINCFRAME_UNIFDEF  = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UKERNEL_PRIVATE -UKERNEL -UPRIVATE -UDRIVERKIT -UEXCLAVEKIT -DEXCLAVECORE -D_OPEN_SOURCE_ -D__OPEN_SOURCE__ $(KERNEL_ONLY_GUARDS_UNIFDEF) $(TEST_ONLY_GUARDS_UNIFDEF)
-+KPINCFRAME_UNIFDEF  = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -UMODULES_SUPPORTED -DKERNEL_PRIVATE -DKERNEL -DPRIVATE -UDRIVERKIT -UXNU_LIBCXX_SDKROOT -UEXCLAVEKIT -UEXCLAVECORE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(TEST_ONLY_GUARDS_UNIFDEF)
-+LIBCXXINCFRAME_UNIFDEF = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -UMODULES_SUPPORTED -DKERNEL_PRIVATE -DKERNEL -DPRIVATE -UDRIVERKIT -DXNU_LIBCXX_SDKROOT -UEXCLAVEKIT -UEXCLAVECORE  -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(TEST_ONLY_GUARDS_UNIFDEF)
-+KINCFRAME_UNIFDEF   = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -UMODULES_SUPPORTED -UKERNEL_PRIVATE -DKERNEL -UPRIVATE -UDRIVERKIT -UEXCLAVEKIT -UEXCLAVECORE -D_OPEN_SOURCE_ -D__OPEN_SOURCE__ $(TEST_ONLY_GUARDS_UNIFDEF)
-+PDATA_UNIFDEF       = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -DPRIVATE -U_OPEN_SOURCE_ -U__OPEN_SOURCE__ $(TEST_ONLY_GUARDS_UNIFDEF)
-+DATA_UNIFDEF        = $(PLATFORM_UNIFDEF) $(XNU_PRIVATE_UNIFDEF) $(SEED_DEFINES) -DMODULES_SUPPORTED -UPRIVATE -D_OPEN_SOURCE_ -D__OPEN_SOURCE__ $(TEST_ONLY_GUARDS_UNIFDEF)
-+
-+#
-+# Compononent Header file destinations
-+#
-+EXPDIR = EXPORT_HDRS/$(COMPONENT)
-+
-+#
-+# Strip Flags
-+#
-+STRIP_FLAGS_RELEASE	= -S -x
-+STRIP_FLAGS_DEVELOPMENT	= -S
-+STRIP_FLAGS_KASAN = $(STRIP_FLAGS_DEVELOPMENT)
-+STRIP_FLAGS_DEBUG	= -S
-+STRIP_FLAGS_SPTM = $(STRIP_FLAGS_DEVELOPMENT)
-+STRIP_FLAGS_PROFILE	= -S -x
-+
-+STRIP_FLAGS	= $($(addsuffix $(CURRENT_KERNEL_CONFIG),STRIP_FLAGS_))
-+
-+#
-+# dsymutil flags
-+#
-+DSYMUTIL_FLAGS_X86_64	= --arch=x86_64
-+DSYMUTIL_FLAGS_X86_64H	= --arch=x86_64h
-+DSYMUTIL_FLAGS_ARM64	=
-+
-+DSYMUTIL_FLAGS = $($(addsuffix $(CURRENT_ARCH_CONFIG),DSYMUTIL_FLAGS_))
-+
-+
-+
-+
-+#
-+# Man Page destination
-+#
-+MANDIR = /usr/share/man
-+
-+#
-+# DEBUG alias location
-+#
-+DEVELOPER_EXTRAS_DIR = /AppleInternal/CoreOS/xnu_$(CURRENT_KERNEL_CONFIG_LC)
-+
-+#
-+# mach_kernel install location
-+#
-+INSTALL_KERNEL_DIR = /
-+
-+#
-+# new OS X install location
-+#
-+SYSTEM_LIBRARY_KERNELS_DIR = /System/Library/Kernels
-+
-+#
-+# File names in DSTROOT
-+#
-+
-+ifeq ($(PLATFORM),MacOSX)
-+KERNEL_FILE_NAME_PREFIX = kernel
-+else
-+KERNEL_FILE_NAME_PREFIX = mach
-+endif
-+
-+ifeq ($(CURRENT_MACHINE_CONFIG),NONE)
-+ifeq ($(CURRENT_KERNEL_CONFIG),RELEASE)
-+KERNEL_FILE_NAME = $(KERNEL_FILE_NAME_PREFIX)
-+KERNEL_LLDBBOOTSTRAP_NAME = $(KERNEL_FILE_NAME_PREFIX).py
-+else
-+KERNEL_FILE_NAME = $(KERNEL_FILE_NAME_PREFIX).$(CURRENT_KERNEL_CONFIG_LC)
-+KERNEL_LLDBBOOTSTRAP_NAME = $(KERNEL_FILE_NAME_PREFIX).py
-+endif
-+else
-+KERNEL_FILE_NAME = $(KERNEL_FILE_NAME_PREFIX).$(CURRENT_KERNEL_CONFIG_LC).$(CURRENT_MACHINE_CONFIG_LC)
-+KERNEL_LLDBBOOTSTRAP_NAME = $(KERNEL_FILE_NAME_PREFIX)_$(CURRENT_KERNEL_CONFIG_LC).py
-+endif
-+
-+CURRENT_ALIAS_MACHINE_CONFIG = $(word 4,$(subst ^, ,$(CURRENT_BUILD_CONFIG)))
-+CURRENT_ALIAS_MACHINE_CONFIG_LC = $(shell printf "%s" "$(CURRENT_ALIAS_MACHINE_CONFIG)" | $(TR) A-Z a-z)
-+ifneq ($(CURRENT_ALIAS_MACHINE_CONFIG),)
-+ALIAS_FILE_NAME = $(KERNEL_FILE_NAME_PREFIX).$(CURRENT_KERNEL_CONFIG_LC).$(CURRENT_ALIAS_MACHINE_CONFIG_LC)
-+endif
-+
-+#
-+# System.kext pseudo-kext install location
-+#
-+INSTALL_EXTENSIONS_DIR = /System/Library/Extensions
-+SYSTEM_KEXT_INFO_PLIST = $(addprefix $(INSTALL_EXTENSIONS_DIR),/System.kext/Info.plist)
-+
-+#
-+# System.kext PlugIns install location
-+#
-+DSTROOT_SYSTEM_KEXT_PATH = $(addprefix $(DSTROOT)$(INSTALL_EXTENSIONS_DIR),/System.kext/PlugIns)
-+SYMROOT_SYSTEM_KEXT_PATH = $(addprefix $(SYMROOT),/System.kext/PlugIns)
-+
-+#
-+# KDK location
-+#
-+INSTALL_KERNEL_SYM_DIR = /System/Library/Extensions/KDK
-+
-+#
-+# Misc. Etc.
-+#
-+INSTALL_SHARE_MISC_DIR = /usr/share/misc
-+INSTALL_DTRACE_SCRIPTS_DIR = /usr/lib/dtrace
-+INSTALL_DTRACE_LIBEXEC_DIR = /usr/libexec/dtrace
-+INSTALL_ARIADNE_PLISTS_DIR = /AppleInternal/Library/Ariadne/Plists
-+#
-+# Generated xnu version file
-+#
-+XNU_VERSION = $(OBJROOT)/xnuVersion
-+
-+#
-+# Overrides for XBS build aliases
-+#
-+ifneq ($(filter $(RC_ProjectName),xnu_headers_driverkit),)
-+USE_BINARY_PLIST = 1
-+else ifneq ($(filter $(RC_ProjectName),xnu_debug),)
-+INSTALL_KERNEL_DIR := $(DEVELOPER_EXTRAS_DIR)
-+INSTALL_KERNEL_SYM_DIR := $(DEVELOPER_EXTRAS_DIR)
-+INSTALL_KERNEL_SYM_TO_KDK = 1
-+INSTALL_XNU_DEBUG_FILES = 1
-+else ifneq ($(filter $(SUPPORTED_EMBEDDED_PLATFORMS),$(PLATFORM)),)
-+INSTALL_KERNEL_SYM_TO_KDK = 1
-+USE_BINARY_PLIST = 1
-+else ifneq ($(filter $(SUPPORTED_SIMULATOR_PLATFORMS),$(PLATFORM)),)
-+USE_BINARY_PLIST = 1
-+else ifeq ($(PLATFORM),MacOSX)
-+INSTALL_KERNEL_DIR := $(SYSTEM_LIBRARY_KERNELS_DIR)
-+INSTALL_KERNEL_SYM_DIR := $(SYSTEM_LIBRARY_KERNELS_DIR)
-+INSTALL_KERNEL_SYM_TO_KDK = $(if $(filter YES,$(DWARF_DSYM_FILE_SHOULD_ACCOMPANY_PRODUCT)),1,0)
-+endif
-+
-+ifneq ($(filter $(RC_ProjectName),xnu_kasan),)
-+INSTALL_KASAN_ONLY = 1
-+endif
-+
-+# vim: set ft=make:
-diff -ruN dxb-base/osfmk/arm/arm_init.c dxb-tree/osfmk/arm/arm_init.c
+diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
 --- a/osfmk/arm/arm_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/arm_init.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm/arm_init.c	2026-11-20 20:53:28.575094229 +0100
 @@ -58,6 +58,7 @@
  #include <pexpert/arm/consistent_debug.h>
  #include <pexpert/device_tree.h>
@@ -47147,9 +45533,9 @@ diff -ruN dxb-base/osfmk/arm/arm_init.c dxb-tree/osfmk/arm/arm_init.c
  
  	serialmode = 0;
  	if (PE_parse_boot_argn("serial", &serialmode, sizeof(serialmode))) {
-diff -ruN dxb-base/osfmk/arm/machine_routines_common.c dxb-tree/osfmk/arm/machine_routines_common.c
+diff -ruN ci-base/osfmk/arm/machine_routines_common.c ci-sweet/osfmk/arm/machine_routines_common.c
 --- a/osfmk/arm/machine_routines_common.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/machine_routines_common.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm/machine_routines_common.c	2026-11-20 20:53:28.575094229 +0100
 @@ -1542,3 +1542,12 @@
  	}
  	ml_lockdown_init();
@@ -47163,9 +45549,9 @@ diff -ruN dxb-base/osfmk/arm/machine_routines_common.c dxb-tree/osfmk/arm/machin
 +	return TRUE;
 +}
 +#endif /* !defined(APPLE_ARM64_ARCH_FAMILY) */
-diff -ruN dxb-base/osfmk/arm/pmap/pmap.c dxb-tree/osfmk/arm/pmap/pmap.c
+diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
 --- a/osfmk/arm/pmap/pmap.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/pmap/pmap.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm/pmap/pmap.c	2026-11-20 20:53:28.575094229 +0100
 @@ -84,8 +84,16 @@
  
  #include <arm64/proc_reg.h>
@@ -47258,9 +45644,9 @@ diff -ruN dxb-base/osfmk/arm/pmap/pmap.c dxb-tree/osfmk/arm/pmap/pmap.c
 +	return _pmap_pending_preemption_real();
 +}
 +#endif /* SCHED_HYGIENE_DEBUG && (DEBUG || DEVELOPMENT) */
-diff -ruN dxb-base/osfmk/arm/pmap/pmap.h dxb-tree/osfmk/arm/pmap/pmap.h
+diff -ruN ci-base/osfmk/arm/pmap/pmap.h ci-sweet/osfmk/arm/pmap/pmap.h
 --- a/osfmk/arm/pmap/pmap.h	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/pmap/pmap.h	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm/pmap/pmap.h	2026-11-20 20:53:28.575094229 +0100
 @@ -428,7 +428,7 @@
  	/* Whether the pmap is used for Rosetta. */
  	bool is_rosetta;
@@ -47270,9 +45656,9 @@ diff -ruN dxb-base/osfmk/arm/pmap/pmap.h dxb-tree/osfmk/arm/pmap/pmap.h
  #endif /* defined(CONFIG_ROSETTA) */
  
  #if DEVELOPMENT || DEBUG
-diff -ruN dxb-base/osfmk/arm/pmap/pmap_misc.c dxb-tree/osfmk/arm/pmap/pmap_misc.c
+diff -ruN ci-base/osfmk/arm/pmap/pmap_misc.c ci-sweet/osfmk/arm/pmap/pmap_misc.c
 --- a/osfmk/arm/pmap/pmap_misc.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/pmap/pmap_misc.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm/pmap/pmap_misc.c	2026-11-20 20:53:28.575094229 +0100
 @@ -39,6 +39,19 @@
   */
  
@@ -47293,9 +45679,9 @@ diff -ruN dxb-base/osfmk/arm/pmap/pmap_misc.c dxb-tree/osfmk/arm/pmap/pmap_misc.
  void
  pmap_abandon_measurement(void)
  {
-diff -ruN dxb-base/osfmk/arm64/Makefile dxb-tree/osfmk/arm64/Makefile
+diff -ruN ci-base/osfmk/arm64/Makefile ci-sweet/osfmk/arm64/Makefile
 --- a/osfmk/arm64/Makefile	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/Makefile	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/Makefile	2026-11-20 20:53:28.575094229 +0100
 @@ -53,6 +53,7 @@
  	machine_remote_time.h \
  	monotonic.h \
@@ -47304,9 +45690,9 @@ diff -ruN dxb-base/osfmk/arm64/Makefile dxb-tree/osfmk/arm64/Makefile
  	asm.h \
  	speculation.h \
  	static_if.h \
-diff -ruN dxb-base/osfmk/arm64/amcc_rorgn_common.c dxb-tree/osfmk/arm64/amcc_rorgn_common.c
+diff -ruN ci-base/osfmk/arm64/amcc_rorgn_common.c ci-sweet/osfmk/arm64/amcc_rorgn_common.c
 --- a/osfmk/arm64/amcc_rorgn_common.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/amcc_rorgn_common.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/amcc_rorgn_common.c	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,9 @@
 +/*
 + * sweet: files.arm64 builds this for nos_arm_asm, but the source only ships
@@ -47317,9 +45703,9 @@ diff -ruN dxb-base/osfmk/arm64/amcc_rorgn_common.c dxb-tree/osfmk/arm64/amcc_ror
 +#include <stdint.h>
 +
 +static const uint8_t sweet_no_amcc_rorgn __attribute__((unused)) = 0;
-diff -ruN dxb-base/osfmk/arm64/amcc_rorgn_ppl.c dxb-tree/osfmk/arm64/amcc_rorgn_ppl.c
+diff -ruN ci-base/osfmk/arm64/amcc_rorgn_ppl.c ci-sweet/osfmk/arm64/amcc_rorgn_ppl.c
 --- a/osfmk/arm64/amcc_rorgn_ppl.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/amcc_rorgn_ppl.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/amcc_rorgn_ppl.c	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,9 @@
 +/*
 + * sweet: files.arm64 builds this for nos_arm_asm, but the source only ships
@@ -47330,9 +45716,9 @@ diff -ruN dxb-base/osfmk/arm64/amcc_rorgn_ppl.c dxb-tree/osfmk/arm64/amcc_rorgn_
 +#include <stdint.h>
 +
 +static const uint8_t sweet_no_amcc_rorgn __attribute__((unused)) = 0;
-diff -ruN dxb-base/osfmk/arm64/arm_vm_init.c dxb-tree/osfmk/arm64/arm_vm_init.c
+diff -ruN ci-base/osfmk/arm64/arm_vm_init.c ci-sweet/osfmk/arm64/arm_vm_init.c
 --- a/osfmk/arm64/arm_vm_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/arm_vm_init.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/arm_vm_init.c	2026-11-20 20:53:28.575094229 +0100
 @@ -41,6 +41,7 @@
  #include <machine/atomic.h>
  #include <arm64/proc_reg.h>
@@ -47479,9 +45865,9 @@ diff -ruN dxb-base/osfmk/arm64/arm_vm_init.c dxb-tree/osfmk/arm64/arm_vm_init.c
  
  #if defined(KERNEL_INTEGRITY_KTRR) || defined(KERNEL_INTEGRITY_CTRR) || defined(KERNEL_INTEGRITY_PV_CTRR)
  	/*
-diff -ruN dxb-base/osfmk/arm64/caches_asm.s dxb-tree/osfmk/arm64/caches_asm.s
+diff -ruN ci-base/osfmk/arm64/caches_asm.s ci-sweet/osfmk/arm64/caches_asm.s
 --- a/osfmk/arm64/caches_asm.s	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/caches_asm.s	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/caches_asm.s	2026-11-20 20:53:28.575094229 +0100
 @@ -212,6 +212,7 @@
  	.align 2
  	.globl EXT(CleanPoC_Dcache)
@@ -47525,9 +45911,9 @@ diff -ruN dxb-base/osfmk/arm64/caches_asm.s dxb-tree/osfmk/arm64/caches_asm.s
  /*
   *	void FlushPoC_Dcache(void)
   *
-diff -ruN dxb-base/osfmk/arm64/cpc_arm64.c dxb-tree/osfmk/arm64/cpc_arm64.c
+diff -ruN ci-base/osfmk/arm64/cpc_arm64.c ci-sweet/osfmk/arm64/cpc_arm64.c
 --- a/osfmk/arm64/cpc_arm64.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/cpc_arm64.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/cpc_arm64.c	2026-11-20 20:53:28.575094229 +0100
 @@ -37,8 +37,9 @@
  #include <kern/cpc_private.h>
  #include <machine/machine_cpc.h>
@@ -47540,9 +45926,9 @@ diff -ruN dxb-base/osfmk/arm64/cpc_arm64.c dxb-tree/osfmk/arm64/cpc_arm64.c
  bool cpc_cpmu_supported = false;
  #else
  bool cpc_cpmu_supported = true;
-diff -ruN dxb-base/osfmk/arm64/cpu.c dxb-tree/osfmk/arm64/cpu.c
+diff -ruN ci-base/osfmk/arm64/cpu.c ci-sweet/osfmk/arm64/cpu.c
 --- a/osfmk/arm64/cpu.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/cpu.c	2026-11-20 20:36:38.855165016 +0100
++++ b/osfmk/arm64/cpu.c	2026-11-20 20:53:28.575094229 +0100
 @@ -922,6 +922,19 @@
  		if (processor->startup_thread != THREAD_NULL) {
  			first_thread = processor->startup_thread;
@@ -47585,9 +45971,9 @@ diff -ruN dxb-base/osfmk/arm64/cpu.c dxb-tree/osfmk/arm64/cpu.c
  void
  cpu_timebase_init(boolean_t from_boot)
  {
-diff -ruN dxb-base/osfmk/arm64/machine_routines.c dxb-tree/osfmk/arm64/machine_routines.c
+diff -ruN ci-base/osfmk/arm64/machine_routines.c ci-sweet/osfmk/arm64/machine_routines.c
 --- a/osfmk/arm64/machine_routines.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/machine_routines.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/machine_routines.c	2026-11-20 20:53:28.575094229 +0100
 @@ -1154,6 +1154,16 @@
  	const boolean_t cpus_boot_arg_present = PE_parse_boot_argn("cpus", &cpu_boot_arg, sizeof(cpu_boot_arg));
  	const boolean_t cpumask_boot_arg_present = PE_parse_boot_argn("cpumask", &cpumask_boot_arg, sizeof(cpumask_boot_arg));
@@ -47624,9 +46010,9 @@ diff -ruN dxb-base/osfmk/arm64/machine_routines.c dxb-tree/osfmk/arm64/machine_r
  boolean_t
  ml_get_timer_pending(void)
  {
-diff -ruN dxb-base/osfmk/arm64/ppl/sart.h dxb-tree/osfmk/arm64/ppl/sart.h
+diff -ruN ci-base/osfmk/arm64/ppl/sart.h ci-sweet/osfmk/arm64/ppl/sart.h
 --- a/osfmk/arm64/ppl/sart.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/ppl/sart.h	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/ppl/sart.h	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,13 @@
 +/*
 + * sweet: Apple's SART (IOMMU for NVMe/ANS) header is not in the open
@@ -47641,9 +46027,9 @@ diff -ruN dxb-base/osfmk/arm64/ppl/sart.h dxb-tree/osfmk/arm64/ppl/sart.h
 +}
 +
 +#endif /* _ARM64_PPL_SART_H_ */
-diff -ruN dxb-base/osfmk/arm64/ppl/uat.h dxb-tree/osfmk/arm64/ppl/uat.h
+diff -ruN ci-base/osfmk/arm64/ppl/uat.h ci-sweet/osfmk/arm64/ppl/uat.h
 --- a/osfmk/arm64/ppl/uat.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/ppl/uat.h	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/ppl/uat.h	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,13 @@
 +/*
 + * sweet: Apple's UAT (GPU unified address translator) header is not in the
@@ -47658,9 +46044,9 @@ diff -ruN dxb-base/osfmk/arm64/ppl/uat.h dxb-tree/osfmk/arm64/ppl/uat.h
 +}
 +
 +#endif /* _ARM64_PPL_UAT_H_ */
-diff -ruN dxb-base/osfmk/arm64/proc_reg.h dxb-tree/osfmk/arm64/proc_reg.h
---- a/osfmk/arm64/proc_reg.h	2026-11-20 20:36:49.259261878 +0100
-+++ b/osfmk/arm64/proc_reg.h	2026-11-20 20:36:38.859165053 +0100
+diff -ruN ci-base/osfmk/arm64/proc_reg.h ci-sweet/osfmk/arm64/proc_reg.h
+--- a/osfmk/arm64/proc_reg.h	2026-11-20 20:53:28.407091435 +0100
++++ b/osfmk/arm64/proc_reg.h	2026-11-20 20:53:28.575094229 +0100
 @@ -243,6 +243,24 @@
  /* D-Cache, 128KB for Acc8 PCore, 8-way. 64KB for ECore, 8-way. */
  #define MMU_CLINE   6                      /* cache line size is 1<<MMU_CLINE (64) */
@@ -47686,9 +46072,9 @@ diff -ruN dxb-base/osfmk/arm64/proc_reg.h dxb-tree/osfmk/arm64/proc_reg.h
  #elif defined (VMAPPLE)
  
  /* I-Cache. */
-diff -ruN dxb-base/osfmk/arm64/sleh.c dxb-tree/osfmk/arm64/sleh.c
+diff -ruN ci-base/osfmk/arm64/sleh.c ci-sweet/osfmk/arm64/sleh.c
 --- a/osfmk/arm64/sleh.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/sleh.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/sleh.c	2026-11-20 20:53:28.575094229 +0100
 @@ -32,6 +32,7 @@
  #include <arm/misc_protos.h>
  #include <arm/thread.h>
@@ -47748,9 +46134,9 @@ diff -ruN dxb-base/osfmk/arm64/sleh.c dxb-tree/osfmk/arm64/sleh.c
  
  	entropy_collect();
  
-diff -ruN dxb-base/osfmk/arm64/start.s dxb-tree/osfmk/arm64/start.s
+diff -ruN ci-base/osfmk/arm64/start.s ci-sweet/osfmk/arm64/start.s
 --- a/osfmk/arm64/start.s	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/start.s	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/start.s	2026-11-20 20:53:28.575094229 +0100
 @@ -33,13 +33,38 @@
  #include <pexpert/arm64/board_config.h>
  #include <mach_assert.h>
@@ -48014,9 +46400,9 @@ diff -ruN dxb-base/osfmk/arm64/start.s dxb-tree/osfmk/arm64/start.s
  
  #if HAS_CLUSTER && !NO_CPU_OVRD
  	// Unmask external IRQs if we're restarting from non-retention WFI
-diff -ruN dxb-base/osfmk/arm64/sweet_early.c dxb-tree/osfmk/arm64/sweet_early.c
+diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 --- a/osfmk/arm64/sweet_early.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/sweet_early.c	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,144 @@
 +/*
 + * Redmi Note 10 Pro bootstrap console. No allocation, locks, ADT parsing or
@@ -48162,9 +46548,9 @@ diff -ruN dxb-base/osfmk/arm64/sweet_early.c dxb-tree/osfmk/arm64/sweet_early.c
 +	__asm__ volatile("dsb sy" ::: "memory");
 +}
 +#endif /* SWEET */
-diff -ruN dxb-base/osfmk/arm64/sweet_early.h dxb-tree/osfmk/arm64/sweet_early.h
+diff -ruN ci-base/osfmk/arm64/sweet_early.h ci-sweet/osfmk/arm64/sweet_early.h
 --- a/osfmk/arm64/sweet_early.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.h	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/sweet_early.h	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,24 @@
 +/* Screen diagnostics through bootstrap TTBR0 and the final kernel TTBR1. */
 +#ifndef _ARM64_SWEET_EARLY_H_
@@ -48190,9 +46576,9 @@ diff -ruN dxb-base/osfmk/arm64/sweet_early.h dxb-tree/osfmk/arm64/sweet_early.h
 +#endif
 +
 +#endif
-diff -ruN dxb-base/osfmk/arm64/tunables/tunables.s dxb-tree/osfmk/arm64/tunables/tunables.s
+diff -ruN ci-base/osfmk/arm64/tunables/tunables.s ci-sweet/osfmk/arm64/tunables/tunables.s
 --- a/osfmk/arm64/tunables/tunables.s	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/tunables/tunables.s	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/arm64/tunables/tunables.s	2026-11-20 20:53:28.575094229 +0100
 @@ -0,0 +1,7 @@
 +/*
 + * sweet: Apple's per-SoC CPU tunables (implementation-defined HID/ACC
@@ -48201,9 +46587,9 @@ diff -ruN dxb-base/osfmk/arm64/tunables/tunables.s dxb-tree/osfmk/arm64/tunables
 + */
 +.macro APPLY_TUNABLES midr, tmp1, tmp2
 +.endmacro
-diff -ruN dxb-base/osfmk/conf/files.arm64 dxb-tree/osfmk/conf/files.arm64
+diff -ruN ci-base/osfmk/conf/files.arm64 ci-sweet/osfmk/conf/files.arm64
 --- a/osfmk/conf/files.arm64	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/conf/files.arm64	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/conf/files.arm64	2026-11-20 20:53:28.575094229 +0100
 @@ -35,10 +35,10 @@
  osfmk/arm64/WKdmData.s		standard
  osfmk/arm64/lz4_decode_arm64.s  standard
@@ -48227,9 +46613,9 @@ diff -ruN dxb-base/osfmk/conf/files.arm64 dxb-tree/osfmk/conf/files.arm64
  osfmk/arm64/arm64_hypercall.c	standard
  osfmk/arm/io_map.c		standard
  osfmk/arm64/loose_ends.c	standard
-diff -ruN dxb-base/osfmk/console/serial_console.c dxb-tree/osfmk/console/serial_console.c
+diff -ruN ci-base/osfmk/console/serial_console.c ci-sweet/osfmk/console/serial_console.c
 --- a/osfmk/console/serial_console.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/console/serial_console.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/console/serial_console.c	2026-11-20 20:53:28.575094229 +0100
 @@ -268,6 +268,12 @@
   * (either video or serial).
   *
@@ -48253,9 +46639,9 @@ diff -ruN dxb-base/osfmk/console/serial_console.c dxb-tree/osfmk/console/serial_
  {
  	if (disableConsoleOutput) {
  		return;
-diff -ruN dxb-base/osfmk/console/video_console.c dxb-tree/osfmk/console/video_console.c
+diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_console.c
 --- a/osfmk/console/video_console.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/console/video_console.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/console/video_console.c	2026-11-20 20:53:28.575094229 +0100
 @@ -122,6 +122,10 @@
  
  extern int       disableConsoleOutput;
@@ -48345,9 +46731,9 @@ diff -ruN dxb-base/osfmk/console/video_console.c dxb-tree/osfmk/console/video_co
  		break;
  
  	case kPEReleaseScreen:
-diff -ruN dxb-base/osfmk/kern/debug.c dxb-tree/osfmk/kern/debug.c
+diff -ruN ci-base/osfmk/kern/debug.c ci-sweet/osfmk/kern/debug.c
 --- a/osfmk/kern/debug.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/debug.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/kern/debug.c	2026-11-20 20:53:28.575094229 +0100
 @@ -86,6 +86,9 @@
  #include <stdatomic.h>
  #include <sys/pgo.h>
@@ -48370,9 +46756,9 @@ diff -ruN dxb-base/osfmk/kern/debug.c dxb-tree/osfmk/kern/debug.c
  #if defined(__x86_64__) && (DEVELOPMENT || DEBUG)
  	read_lbr();
  #endif
-diff -ruN dxb-base/osfmk/kern/exception.c dxb-tree/osfmk/kern/exception.c
+diff -ruN ci-base/osfmk/kern/exception.c ci-sweet/osfmk/kern/exception.c
 --- a/osfmk/kern/exception.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/exception.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/kern/exception.c	2026-11-20 20:53:28.575094229 +0100
 @@ -960,6 +960,228 @@
  	return exception_triage_thread(exception, code, codeCnt, thread);
  }
@@ -48602,9 +46988,9 @@ diff -ruN dxb-base/osfmk/kern/exception.c dxb-tree/osfmk/kern/exception.c
  kern_return_t
  bsd_exception(
  	exception_type_t        exception,
-diff -ruN dxb-base/osfmk/kern/exclaves.c dxb-tree/osfmk/kern/exclaves.c
+diff -ruN ci-base/osfmk/kern/exclaves.c ci-sweet/osfmk/kern/exclaves.c
 --- a/osfmk/kern/exclaves.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/exclaves.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/kern/exclaves.c	2026-11-20 20:53:28.575094229 +0100
 @@ -3328,7 +3328,7 @@
  
  #endif /* CONFIG_EXCLAVES */
@@ -48614,9 +47000,9 @@ diff -ruN dxb-base/osfmk/kern/exclaves.c dxb-tree/osfmk/kern/exclaves.c
  
  #include <Tightbeam/tightbeam.h>
  
-diff -ruN dxb-base/osfmk/kern/sched_prim.c dxb-tree/osfmk/kern/sched_prim.c
+diff -ruN ci-base/osfmk/kern/sched_prim.c ci-sweet/osfmk/kern/sched_prim.c
 --- a/osfmk/kern/sched_prim.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/sched_prim.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/kern/sched_prim.c	2026-11-20 20:53:28.579094295 +0100
 @@ -5357,6 +5357,72 @@
  
  
@@ -48719,9 +47105,9 @@ diff -ruN dxb-base/osfmk/kern/sched_prim.c dxb-tree/osfmk/kern/sched_prim.c
  			assert(processor->is_recommended);
  			assert(bit_test(pcs.pcs_recommended_cores, processor->cpu_id));
  
-diff -ruN dxb-base/osfmk/prng/entropy.c dxb-tree/osfmk/prng/entropy.c
+diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 --- a/osfmk/prng/entropy.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/prng/entropy.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/prng/entropy.c	2026-11-20 20:53:28.579094295 +0100
 @@ -40,6 +40,10 @@
  #include <machine/machine_routines.h>
  #include <libkern/section_keywords.h>
@@ -48772,9 +47158,9 @@ diff -ruN dxb-base/osfmk/prng/entropy.c dxb-tree/osfmk/prng/entropy.c
  int32_t
  entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
  {
-diff -ruN dxb-base/osfmk/prng/prng_random.c dxb-tree/osfmk/prng/prng_random.c
+diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
 --- a/osfmk/prng/prng_random.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/prng/prng_random.c	2026-11-20 20:36:38.859165053 +0100
++++ b/osfmk/prng/prng_random.c	2026-11-20 20:53:28.579094295 +0100
 @@ -145,6 +145,140 @@
  	// efiboot can only provide 64 bytes of entropy, so fill the rest of the buffer with zero.
  	// We compensate for this by sampling from RDRAND/RDSEED in bootseed_init_native.
@@ -48916,9 +47302,9 @@ diff -ruN dxb-base/osfmk/prng/prng_random.c dxb-tree/osfmk/prng/prng_random.c
  	#endif
  
  	/*
-diff -ruN dxb-base/pexpert/arm/pe_fiq.c dxb-tree/pexpert/arm/pe_fiq.c
+diff -ruN ci-base/pexpert/arm/pe_fiq.c ci-sweet/pexpert/arm/pe_fiq.c
 --- a/pexpert/arm/pe_fiq.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/arm/pe_fiq.c	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/arm/pe_fiq.c	2026-11-20 20:53:28.579094295 +0100
 @@ -3,6 +3,7 @@
   */
  
@@ -49057,9 +47443,9 @@ diff -ruN dxb-base/pexpert/arm/pe_fiq.c dxb-tree/pexpert/arm/pe_fiq.c
  }
  #else
  void
-diff -ruN dxb-base/pexpert/arm/pe_init.c dxb-tree/pexpert/arm/pe_init.c
+diff -ruN ci-base/pexpert/arm/pe_init.c ci-sweet/pexpert/arm/pe_init.c
 --- a/pexpert/arm/pe_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/arm/pe_init.c	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/arm/pe_init.c	2026-11-20 20:53:28.579094295 +0100
 @@ -29,6 +29,54 @@
  /* extern references */
  extern void     pe_identify_machine(boot_args *bootArgs);
@@ -49150,9 +47536,9 @@ diff -ruN dxb-base/pexpert/arm/pe_init.c dxb-tree/pexpert/arm/pe_init.c
  	} else {
  		PE_initialize_console(&PE_state.video, kPETextMode);
  	}
-diff -ruN dxb-base/pexpert/arm/pe_serial.c dxb-tree/pexpert/arm/pe_serial.c
+diff -ruN ci-base/pexpert/arm/pe_serial.c ci-sweet/pexpert/arm/pe_serial.c
 --- a/pexpert/arm/pe_serial.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/arm/pe_serial.c	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/arm/pe_serial.c	2026-11-20 20:53:28.579094295 +0100
 @@ -26,6 +26,7 @@
  #include <pexpert/arm/consistent_debug.h>
  #include <pexpert/arm64/board_config.h>
@@ -49321,9 +47707,9 @@ diff -ruN dxb-base/pexpert/arm/pe_serial.c dxb-tree/pexpert/arm/pe_serial.c
  	bool serial_device_phandle_specified = false;
  	const uint32_t *defaults_phandle;
  	unsigned int defaults_phandle_size;
-diff -ruN dxb-base/pexpert/pexpert/arm/protos.h dxb-tree/pexpert/pexpert/arm/protos.h
+diff -ruN ci-base/pexpert/pexpert/arm/protos.h ci-sweet/pexpert/pexpert/arm/protos.h
 --- a/pexpert/pexpert/arm/protos.h	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/pexpert/arm/protos.h	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/pexpert/arm/protos.h	2026-11-20 20:53:28.579094295 +0100
 @@ -37,6 +37,9 @@
  int uart_getc(void);
  
@@ -49334,9 +47720,9 @@ diff -ruN dxb-base/pexpert/pexpert/arm/protos.h dxb-tree/pexpert/pexpert/arm/pro
  
  #ifdef PRIVATE
  /**
-diff -ruN dxb-base/pexpert/pexpert/arm64/Makefile dxb-tree/pexpert/pexpert/arm64/Makefile
+diff -ruN ci-base/pexpert/pexpert/arm64/Makefile ci-sweet/pexpert/pexpert/arm64/Makefile
 --- a/pexpert/pexpert/arm64/Makefile	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/pexpert/arm64/Makefile	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/pexpert/arm64/Makefile	2026-11-20 20:53:28.579094295 +0100
 @@ -33,6 +33,7 @@
  	H15.h \
  	H16.h \
@@ -49345,9 +47731,9 @@ diff -ruN dxb-base/pexpert/pexpert/arm64/Makefile dxb-tree/pexpert/pexpert/arm64
  	VMAPPLE.h
  
  
-diff -ruN dxb-base/pexpert/pexpert/arm64/SWEET.h dxb-tree/pexpert/pexpert/arm64/SWEET.h
+diff -ruN ci-base/pexpert/pexpert/arm64/SWEET.h ci-sweet/pexpert/pexpert/arm64/SWEET.h
 --- a/pexpert/pexpert/arm64/SWEET.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/pexpert/pexpert/arm64/SWEET.h	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/pexpert/arm64/SWEET.h	2026-11-20 20:53:28.579094295 +0100
 @@ -0,0 +1,98 @@
 +/*
 + * Board config for the Redmi Note 10 Pro ("sweet", Qualcomm SM7150 /
@@ -49447,9 +47833,9 @@ diff -ruN dxb-base/pexpert/pexpert/arm64/SWEET.h dxb-tree/pexpert/pexpert/arm64/
 +/* End of GICv3 register definitions */
 +
 +#endif /* ! _PEXPERT_ARM64_SWEET_H */
-diff -ruN dxb-base/pexpert/pexpert/arm64/apple_arm64_cpu.h dxb-tree/pexpert/pexpert/arm64/apple_arm64_cpu.h
+diff -ruN ci-base/pexpert/pexpert/arm64/apple_arm64_cpu.h ci-sweet/pexpert/pexpert/arm64/apple_arm64_cpu.h
 --- a/pexpert/pexpert/arm64/apple_arm64_cpu.h	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/pexpert/arm64/apple_arm64_cpu.h	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/pexpert/arm64/apple_arm64_cpu.h	2026-11-20 20:53:28.579094295 +0100
 @@ -32,6 +32,12 @@
  
  #include <stdbool.h>
@@ -49463,9 +47849,9 @@ diff -ruN dxb-base/pexpert/pexpert/arm64/apple_arm64_cpu.h dxb-tree/pexpert/pexp
  
  /**
   * Defines the core type of the executing CPU.
-diff -ruN dxb-base/pexpert/pexpert/arm64/board_config.h dxb-tree/pexpert/pexpert/arm64/board_config.h
+diff -ruN ci-base/pexpert/pexpert/arm64/board_config.h ci-sweet/pexpert/pexpert/arm64/board_config.h
 --- a/pexpert/pexpert/arm64/board_config.h	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/pexpert/arm64/board_config.h	2026-11-20 20:36:38.859165053 +0100
++++ b/pexpert/pexpert/arm64/board_config.h	2026-11-20 20:53:28.579094295 +0100
 @@ -304,6 +304,17 @@
  
  
