@@ -5984,8 +5984,8 @@ diff -ruN ci-base/bsd/dev/sweet_gpu.c ci-sweet/bsd/dev/sweet_gpu.c
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
 diff -ruN ci-base/bsd/dev/sweet_haptic.c ci-sweet/bsd/dev/sweet_haptic.c
 --- a/bsd/dev/sweet_haptic.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/dev/sweet_haptic.c	2026-11-20 21:52:45.711419836 +0100
-@@ -0,0 +1,1099 @@
++++ b/bsd/dev/sweet_haptic.c	2026-11-20 22:23:44.917155661 +0100
+@@ -0,0 +1,1100 @@
 +/*
 + * GUACAMOLE (OnePlus 7 Pro, SM8150) vibration motor: an Awinic AW8697 LRA driver at I2C 0x5a on QUP wrapper 0
 + * SE7 (DT qupv3_se7_i2c, i2c@89c000). Patch 0248. Facts (research/haptics/README.md, live Android FDT, OnePlus's
@@ -6111,6 +6111,7 @@ diff -ruN ci-base/bsd/dev/sweet_haptic.c ci-sweet/bsd/dev/sweet_haptic.c
 +static int hap_sleep_chan;
 +static volatile unsigned hi_taps, hi_loops, hi_capped, hi_wedged;
 +static volatile uint32_t hi_last_peak, hi_last_wave;
++static uint64_t hi_last_log_us;
 +static int hap_configure_locked(bool full, bool click);
 +
 +static uint32_t
@@ -11725,7 +11726,7 @@ diff -ruN ci-base/bsd/kern/kern_mib.c ci-sweet/bsd/kern/kern_mib.c
  	 * consistent instead. */
 diff -ruN ci-base/bsd/kern/kern_trustcache.c ci-sweet/bsd/kern/kern_trustcache.c
 --- a/bsd/kern/kern_trustcache.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/bsd/kern/kern_trustcache.c	2026-11-20 21:55:31.589345508 +0100
++++ b/bsd/kern/kern_trustcache.c	2026-11-20 22:23:44.925155755 +0100
 @@ -579,6 +579,21 @@
  	allow_legacy_caches = true;
  #endif
@@ -11786,15 +11787,12 @@ diff -ruN ci-base/bsd/kern/kern_trustcache.c ci-sweet/bsd/kern/kern_trustcache.c
  	kern_return_t ret = KERN_DENIED;
  	uintptr_t length_check = 0;
  
-@@ -1063,6 +1095,15 @@
+@@ -1063,6 +1095,12 @@
  		printf("successfully loaded legacy trust cache\n");
  	}
  
 +#if defined(SWEET)
 +	if (trust_cache_rt == NULL) {
-+		if (query_type >= kTCQueryTypeTotal) {
-+			return KERN_INVALID_ARGUMENT;
-+		}
 +		return KERN_NOT_FOUND;
 +	}
 +#endif
@@ -11802,7 +11800,7 @@ diff -ruN ci-base/bsd/kern/kern_trustcache.c ci-sweet/bsd/kern/kern_trustcache.c
  	return ret;
  }
  
-@@ -1314,6 +1355,12 @@
+@@ -1314,6 +1352,12 @@
  	*capabilities0_ret = kTCCapabilityNone;
  	*capabilities1_ret = kTCCapabilityNone;
  
@@ -106842,8 +106840,8 @@ diff -ruN ci-base/bsd/sweet_hfs/sweet_hfs_compat.h ci-sweet/bsd/sweet_hfs/sweet_
 +#endif
 diff -ruN ci-base/bsd/sweet_hfs/sweet_hfs_iokit.c ci-sweet/bsd/sweet_hfs/sweet_hfs_iokit.c
 --- a/bsd/sweet_hfs/sweet_hfs_iokit.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/bsd/sweet_hfs/sweet_hfs_iokit.c	2026-11-20 20:53:28.559093963 +0100
-@@ -0,0 +1,132 @@
++++ b/bsd/sweet_hfs/sweet_hfs_iokit.c	2026-11-20 22:23:44.925155755 +0100
+@@ -0,0 +1,136 @@
 +/*
 + * Built-in replacement for HFS's IOKit glue (core/hfs_iokit.cpp and
 + * hfs_encodings/hfs_encodings_kext.cpp) on SWEET.
@@ -106976,6 +106974,10 @@ diff -ruN ci-base/bsd/sweet_hfs/sweet_hfs_iokit.c ci-sweet/bsd/sweet_hfs/sweet_h
 +	serial_number_str[0] = '\0';
 +	return KERN_NOT_SUPPORTED;
 +}
++
++/* SWEET: namespace event stubs (open-source xnu-12377 dropped these) */
++int resolve_nspace_item(struct vnode *vp __unused, uint64_t op __unused) { return 0; }
++int nspace_snapshot_event(vnode_t vp __unused, time_t ctime __unused, uint64_t op_type __unused, void *arg __unused) { return 0; }
 diff -ruN ci-base/bsd/sys/flame_wlan.h ci-sweet/bsd/sys/flame_wlan.h
 --- a/bsd/sys/flame_wlan.h	1970-01-01 01:00:00.000000000 +0100
 +++ b/bsd/sys/flame_wlan.h	2026-11-20 20:53:28.559093963 +0100
@@ -107049,6 +107051,17 @@ diff -ruN ci-base/bsd/sys/flame_wlan.h ci-sweet/bsd/sys/flame_wlan.h
 +};
 +
 +#endif
+diff -ruN ci-base/bsd/sys/fsctl.h ci-sweet/bsd/sys/fsctl.h
+--- a/bsd/sys/fsctl.h	2026-06-18 01:28:50.000000000 +0200
++++ b/bsd/sys/fsctl.h	2026-11-20 22:23:44.925155755 +0100
+@@ -519,3 +519,7 @@
+ __END_DECLS
+ #endif /* !KERNEL */
+ #endif /* !_SYS_FSCTL_H_ */
++
++/* SWEET: these were removed from open-source xnu-12377 but the staged HFS calls them */
++int resolve_nspace_item(struct vnode *vp, uint64_t op);
++int nspace_snapshot_event(vnode_t vp, time_t ctime, uint64_t op_type, void *arg);
 diff -ruN ci-base/bsd/sys/pthread_internal.h ci-sweet/bsd/sys/pthread_internal.h
 --- a/bsd/sys/pthread_internal.h	2026-06-18 01:28:50.000000000 +0200
 +++ b/bsd/sys/pthread_internal.h	2026-11-20 20:53:28.559093963 +0100
@@ -110306,7 +110319,7 @@ diff -ruN ci-base/iokit/Kernel/arm/SweetAccelerator.cpp ci-sweet/iokit/Kernel/ar
 +#endif /* SWEET */
 diff -ruN ci-base/iokit/Kernel/arm/SweetAudio.cpp ci-sweet/iokit/Kernel/arm/SweetAudio.cpp
 --- a/iokit/Kernel/arm/SweetAudio.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetAudio.cpp	2026-11-20 21:55:31.593345555 +0100
++++ b/iokit/Kernel/arm/SweetAudio.cpp	2026-11-20 22:23:56.181287730 +0100
 @@ -0,0 +1,600 @@
 +/*
 + * Built-in IOAudio2 stand-in for SWEET (0226): a silent "IOAudio2Device" so CoreAudio has a built-in device.
@@ -110785,7 +110798,7 @@ diff -ruN ci-base/iokit/Kernel/arm/SweetAudio.cpp ci-sweet/iokit/Kernel/arm/Swee
 +	m.event.id = 0;
 +	m.event.type = type;
 +	m.event.arg[0] = arg0;
-+	kern_return_t kr = mach_msg_send_from_kernel_with_options(&m.header, sizeof(m), MACH_SEND_TIMEOUT, MACH_MSG_TIMEOUT_NONE);
++	kern_return_t kr = mach_msg_send_from_kernel_with_options(&m.header, sizeof(m), (mach_msg_option64_t)MACH_SEND_TIMEOUT, MACH_MSG_TIMEOUT_NONE);
 +	if (sweet_audio_notes_logged < 40) {
 +		IOLog("SWEET AUDIO: sent '%c%c%c%c' (arg %u) -> %#x\n", (char)(type >> 24), (char)(type >> 16), (char)(type >> 8),
 +		    (char)type, arg0, kr);
@@ -159517,7 +159530,7 @@ diff -ruN ci-base/osfmk/arm64/arm_vm_init.c ci-sweet/osfmk/arm64/arm_vm_init.c
  	/*
 diff -ruN ci-base/osfmk/arm64/caches_asm.s ci-sweet/osfmk/arm64/caches_asm.s
 --- a/osfmk/arm64/caches_asm.s	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm64/caches_asm.s	2026-11-20 20:53:28.575094229 +0100
++++ b/osfmk/arm64/caches_asm.s	2026-11-20 22:24:08.309429930 +0100
 @@ -212,6 +212,7 @@
  	.align 2
  	.globl EXT(CleanPoC_Dcache)
@@ -159526,18 +159539,7 @@ diff -ruN ci-base/osfmk/arm64/caches_asm.s ci-sweet/osfmk/arm64/caches_asm.s
  LEXT(CleanPoC_Dcache)
  	ARM64_PROLOG
  #if  defined(APPLE_ARM64_ARCH_FAMILY)
-@@ -304,6 +305,10 @@
-  */
- 	.text
- 	.align 2
-+#if !defined(APPLE_ARM64_ARCH_FAMILY)
-+	.globl EXT(CleanPoC_DcacheRegion_Force_nopreempt_nohid)
-+LEXT(CleanPoC_DcacheRegion_Force_nopreempt_nohid)
-+#endif
- LEXT(CleanPoC_DcacheRegion_internal)
- 	dsb		sy
- 	CLEANPOC_DCACHEREGION
-@@ -354,6 +359,23 @@
+@@ -354,6 +355,23 @@
  	b		EXT(CleanPoC_DcacheRegion_internal)
  #endif /* APPLE_ARM64_ARCH_FAMILY */
  
@@ -160408,7 +160410,7 @@ diff -ruN ci-base/osfmk/kern/debug.c ci-sweet/osfmk/kern/debug.c
  #endif
 diff -ruN ci-base/osfmk/kern/exception.c ci-sweet/osfmk/kern/exception.c
 --- a/osfmk/kern/exception.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/exception.c	2026-11-20 21:22:51.618208972 +0100
++++ b/osfmk/kern/exception.c	2026-11-20 22:23:44.917155661 +0100
 @@ -960,6 +960,229 @@
  	return exception_triage_thread(exception, code, codeCnt, thread);
  }
@@ -160653,95 +160655,91 @@ diff -ruN ci-base/osfmk/kern/exclaves.c ci-sweet/osfmk/kern/exclaves.c
  
 diff -ruN ci-base/osfmk/kern/sched_prim.c ci-sweet/osfmk/kern/sched_prim.c
 --- a/osfmk/kern/sched_prim.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/sched_prim.c	2026-11-20 21:52:45.715419883 +0100
-@@ -5357,6 +5357,72 @@
++++ b/osfmk/kern/sched_prim.c	2026-11-20 22:23:44.925155755 +0100
+@@ -5357,80 +5357,6 @@
  
  
  
-+#if defined(ARM64_BOARD_CONFIG_SWEET)
-+#include <pexpert/pexpert.h>
-+/*
-+ * 0156: core placement on SM8150 (guacamole). This kernel runs the SMP Clutch scheduler, one pset: the ADT gives every
-+ * CPU cluster-type 0 (tools/mkadt.py), there is no AMP/Edge scheduler, and choose_processor() takes the lowest idle
-+ * CPU, so a woken thread lands on a Cortex-A55 (cpu 0-3, 1.79 GHz) whenever one is idle, the A76s (cpu 4-6 2.42 GHz,
-+ * 7 2.96 GHz) only when all four are busy. backboardd's render thread, busy ~26 ms a frame (mtl2 run 15), was among
-+ * them. Only which idle CPU is taken changes: a perf thread (realtime, or a user thread at base priority
-+ * BASEPRI_USER_INITIATED and up: QoS user-initiated/interactive, foreground main threads, the render server) takes an
-+ * idle A76 first, any other an idle A55 first; with none of its kind idle it takes any idle CPU, as before.
-+ * The same as iOSPlus10's 0395 placement on SM8450 (akshaynexus/iOSPlus10), written for this kernel.
-+ * Boot-arg sweetplace=0 keeps the old rule.
-+ */
-+static cpumap_t sweet_sched_pmask = 0xf0;               /* cpu 4-7 */
-+static int sweet_sched_place = -1;
-+
-+static inline cpumap_t
-+sweet_sched_big(void)
-+{
-+	if (sweet_sched_place < 0) {
-+		int on = 1;
-+		(void)PE_parse_boot_argn("sweetplace", &on, sizeof(on));
-+		sweet_sched_place = on ? 1 : 0;
-+	}
-+	return sweet_sched_place ? sweet_sched_pmask : 0;
-+}
-+
-+static inline bool
-+sweet_thread_wants_big(thread_t thread)
-+{
-+	if (get_threadtask(thread) == kernel_task) {
-+		return false;
-+	}
-+	return thread->sched_pri >= BASEPRI_RTQUEUES || thread->base_pri >= BASEPRI_USER_INITIATED;
-+}
-+
-+/* The CPU of map this thread takes: its kind first, else any; -1 when map is empty */
-+static int
-+sweet_pick_cpu(thread_t thread, cpumap_t map)
-+{
-+	cpumap_t big = sweet_sched_big();
-+	if (big == 0 || map == 0) {
-+		return lsb_first(map);
-+	}
-+	cpumap_t pref = sweet_thread_wants_big(thread) ? (map & big) : (map & ~big);
-+	return lsb_first(pref ? pref : map);
-+}
-+
-+/* An idle hint (the thread's last CPU) of the wrong kind gives way to an idle CPU of the right kind */
-+static processor_t
-+sweet_check_idle_hint(processor_set_t pset, processor_t hint, thread_t thread)
-+{
-+	cpumap_t big = sweet_sched_big();
-+	if (big == 0) {
-+		return hint;
-+	}
-+	bool want_big = sweet_thread_wants_big(thread);
-+	if (bit_test(big, hint->cpu_id) == want_big) {
-+		return hint;
-+	}
-+	cpumap_t idle = pset->cpu_state_map[PROCESSOR_IDLE] & pset->primary_map & pset->recommended_bitmask;
-+	cpumap_t pref = want_big ? (idle & big) : (idle & ~big);
-+	return pref ? processor_array[lsb_first(pref)] : hint;
-+}
-+#endif /* ARM64_BOARD_CONFIG_SWEET */
-+
- /*
-  * Default implementation of SCHED(choose_node)()
-  * for single node systems
-@@ -5431,6 +5497,11 @@
- 		avoid_cpu0 = true;
- 		/* Assert that cpu0 is in pset 0.  I expect this to be true on __x86_64__ */
- 		assert(bit_test(pset_for_id(0)->cpu_bitmask, 0));
-+#if defined(ARM64_BOARD_CONFIG_SWEET)
-+				if (thread->sched_pri < BASEPRI_RTQUEUES) {
-+					return sweet_check_idle_hint(pset, processor, thread);     /* 0156 */
-+				}
-+#endif
+-/*
+- * Default implementation of SCHED(choose_node)()
+- * for single node systems
+- */
+-pset_node_t
+-sched_choose_node(__unused thread_t thread)
+-{
+-	return sched_boot_pset_node;
+-}
+-
+-/*
+- *	choose_starting_pset:
+- *
+- *	Choose a starting processor set for the thread.
+- *	May return a processor hint within the pset.
+- *
+- *	Returns a starting processor set, to be used by
+- *      choose_processor.
+- *
+- *	The thread must be locked.  The resulting pset is unlocked on return,
+- *      and is chosen without taking any pset locks.
+- */
+-processor_set_t
+-choose_starting_pset(pset_node_t node, thread_t thread, processor_t *processor_hint)
+-{
+-	processor_set_t pset;
+-	processor_t processor = PROCESSOR_NULL;
+-
+-	if (thread->affinity_set != AFFINITY_SET_NULL) {
+-		/*
+-		 * Use affinity set policy hint.
+-		 */
+-		pset = thread->affinity_set->aset_pset;
+-	} else if (thread->last_processor != PROCESSOR_NULL) {
+-		/*
+-		 *	Simple (last processor) affinity case.
+-		 */
+-		processor = thread->last_processor;
+-		pset = processor->processor_set;
+-	} else {
+-		/*
+-		 *	No Affinity case:
+-		 *
+-		 *	Utilitize a per task hint to spread threads
+-		 *	among the available processor sets.
+-		 * NRG this seems like the wrong thing to do.
+-		 * See also task->pset_hint = pset in thread_setrun()
+-		 */
+-		pset = get_threadtask(thread)->pset_hint;
+-		if (pset == PROCESSOR_SET_NULL) {
+-			pset = current_processor()->processor_set;
+-		}
+-
+-		pset = choose_next_pset(pset);
+-	}
+-
+-	if (!bit_test(node->pset_map, pset->pset_id)) {
+-		/* pset is not from this node so choose one that is */
+-		pset = pset_for_id((pset_id_t)lsb_first(node->pset_map));
+-	}
+-
+-	if (bit_count(node->pset_map) == 1) {
+-		/* Only a single pset in this node */
+-		goto out;
+-	}
+-
+-	bool avoid_cpu0 = false;
+-
+-#if defined(__x86_64__)
+-	if ((thread->sched_pri >= BASEPRI_RTQUEUES) && sched_avoid_cpu0) {
+-		/* Avoid the pset containing cpu0 */
+-		avoid_cpu0 = true;
+-		/* Assert that cpu0 is in pset 0.  I expect this to be true on __x86_64__ */
+-		assert(bit_test(pset_for_id(0)->cpu_bitmask, 0));
  	}
  #endif
  
 diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 --- a/osfmk/prng/entropy.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/prng/entropy.c	2026-11-20 21:52:45.715419883 +0100
++++ b/osfmk/prng/entropy.c	2026-11-20 22:24:22.745599192 +0100
 @@ -40,6 +40,10 @@
  #include <machine/machine_routines.h>
  #include <libkern/section_keywords.h>
@@ -160753,7 +160751,28 @@ diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
  
  // The number of samples we can hold in an entropy buffer.
  #define ENTROPY_MAX_SAMPLE_COUNT (2048)
-@@ -469,6 +473,38 @@
+@@ -93,7 +97,8 @@
+ 	// State for a SHA512 computation. This is used to accumulate
+ 	// entropy samples from across all CPUs. It is finalized when
+ 	// entropy is provided to the consumer of this module.
+-	SHA512_CTX sha512_ctx;
++	ccdigest_ctx_decl(CCSHA256_STATE_SIZE, CCSHA256_BLOCK_SIZE, sha256_ctx);
++	bool sha256_ctx_init;
+ 
+ 	// A buffer to hold a bitmap with one bit per sample of an entropy
+ 	// buffer. We are able to reuse this instance across all the
+@@ -199,8 +204,8 @@
+ void
+ entropy_init(size_t seed_size, uint8_t *seed)
+ {
+-	SHA512_Init(&entropy_data.sha512_ctx);
+-	SHA512_Update(&entropy_data.sha512_ctx, seed, seed_size);
++	SHA512_Init(&entropy_data.sha256_ctx);
++	SHA512_Update(&entropy_data.sha256_ctx, seed, seed_size);
+ 
+ 	lck_grp_init(&entropy_data.lock_group, "entropy-data", LCK_GRP_ATTR_NULL);
+ 	lck_mtx_init(&entropy_data.mutex, &entropy_data.lock_group, LCK_ATTR_NULL);
+@@ -469,6 +474,38 @@
  	return result;
  }
  
@@ -160762,9 +160781,9 @@ diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 +entropy_hash_init(void)
 +{
 +#if defined(SWEET)
-+	ccdigest_init(&ccsha256_ltc_di, entropy_data.sha512_ctx);
++	ccdigest_init(&ccsha256_ltc_di, entropy_data.sha256_ctx);
 +#else
-+	SHA256_Init(&entropy_data.sha512_ctx);
++	SHA256_Init(&entropy_data.sha256_ctx);
 +#endif
 +}
 +
@@ -160772,9 +160791,9 @@ diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 +entropy_hash_update(const void *data, size_t nbytes)
 +{
 +#if defined(SWEET)
-+	ccdigest_update(&ccsha256_ltc_di, entropy_data.sha512_ctx, nbytes, data);
++	ccdigest_update(&ccsha256_ltc_di, entropy_data.sha256_ctx, nbytes, data);
 +#else
-+	SHA256_Update(&entropy_data.sha512_ctx, data, nbytes);
++	SHA256_Update(&entropy_data.sha256_ctx, data, nbytes);
 +#endif
 +}
 +
@@ -160782,16 +160801,53 @@ diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 +entropy_hash_final(void *out)
 +{
 +#if defined(SWEET)
-+	ccdigest_final(&ccsha256_ltc_di, entropy_data.sha512_ctx, out);
-+	ccdigest_ctx_clear(CCSHA256_STATE_SIZE, CCSHA256_BLOCK_SIZE, entropy_data.sha512_ctx);
++	ccdigest_final(&ccsha256_ltc_di, entropy_data.sha256_ctx, out);
++	ccdigest_ctx_clear(CCSHA256_STATE_SIZE, CCSHA256_BLOCK_SIZE, entropy_data.sha256_ctx);
 +#else
-+	SHA256_Final(out, &entropy_data.sha512_ctx);
++	SHA256_Final(out, &entropy_data.sha256_ctx);
 +#endif
 +}
 +
  int32_t
  entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
  {
+@@ -520,7 +557,7 @@
+ 		// We accumulate the samples regardless of whether the test
+ 		// failed or a particular sample was filtered. It cannot hurt.
+ 		entropy_data.total_sample_count += filtered_sample_count;
+-		SHA512_Update(&entropy_data.sha512_ctx, e->samples, cpu_sample_count * sizeof(e->samples[0]));
++		SHA512_Update(&entropy_data.sha256_ctx, e->samples, cpu_sample_count * sizeof(e->samples[0]));
+ 
+ 		// "Drain" the per-CPU buffer by resetting its sample count.
+ 		os_atomic_store(&e->sample_count, 0, relaxed);
+@@ -562,14 +599,14 @@
+ 
+ 	// Extract the entropy seed from the digest context and adjust
+ 	// counters accordingly.
+-	SHA512_Final(entropy, &entropy_data.sha512_ctx);
++	SHA512_Final(entropy, &entropy_data.sha256_ctx);
+ 	entropy_data.read_sample_count = entropy_data.total_sample_count;
+ 	sample_count = n;
+ 	*entropy_size = SHA512_DIGEST_LENGTH;
+ 
+ 	// Reinitialize the digest context for future entropy
+ 	// conditioning.
+-	SHA512_Init(&entropy_data.sha512_ctx);
++	SHA512_Init(&entropy_data.sha256_ctx);
+ 
+ 	// To harden the entropy conditioner against an attacker with
+ 	// partial or temporary control of interrupts, we roll the
+@@ -585,8 +622,8 @@
+ 	// internal SHA512 block size. This will force an additional
+ 	// compression to provide backtracking resistance.
+ 	assert3u(sizeof(label) + *entropy_size, ==, SHA512_BLOCK_LENGTH);
+-	SHA512_Update(&entropy_data.sha512_ctx, label, sizeof(label));
+-	SHA512_Update(&entropy_data.sha512_ctx, entropy, *entropy_size);
++	SHA512_Update(&entropy_data.sha256_ctx, label, sizeof(label));
++	SHA512_Update(&entropy_data.sha256_ctx, entropy, *entropy_size);
+ 
+ out:
+ 	lck_mtx_unlock(&entropy_data.mutex);
 diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
 --- a/osfmk/prng/prng_random.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/osfmk/prng/prng_random.c	2026-11-20 20:53:28.579094295 +0100
