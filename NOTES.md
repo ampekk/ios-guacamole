@@ -1,3 +1,24 @@
+# Handoff — SWEET port: 920 → 171 compile errors, fixing remaining root causes (2026-11-20, OpenCode)
+- CI iteration 2 (run 44806353779): patch applied (after regenerating against the exact CI tree state —
+  DXB skips `link_kdk.patch` / `remove_applefeatures_include.patch`, so the first patch was skipped at
+  `MakeInc.def:1155`). Result: **920 compile errors / 61 files**. Distinct root causes ~52; biggest was
+  613 `struct run_queue` incomplete-type errors: SWEET's `MASTER.arm64.sweet` used xnu-8796 scheduler
+  tokens `config_sched_traditional config_sched_multiq` instead of xnu-12377's `config_sched_timeshare_core`,
+  so `CONFIG_SCHED_TIMESHARE_CORE` was off and `struct run_queue` undefined.
+- CI iteration 3 (run 44810525782, commit 38427f3): changed SCHED_BASE to `config_sched_timeshare_core`.
+  Result: **171 compile errors / 40 files** (81% reduction). Confirmed the approach works.
+- Iteration 4 (commit 627ceaf, run 44815736652 in progress): local fixes for the remaining root causes:
+  added `#include <vm/vm_kern_xnu.h>` to sweet_gpu/ufs/pmem/usb (kmem_alloc_contig, KMA_DATA/ZERO moved
+  headers), `#include <vm/vm_shared_region_xnu.h>` to exception.c/vm_unix.c, restored the missing
+  `sweet_fb_island` struct def in SweetFramebuffer.cpp (fuzz partial apply), fixed misapplied hunks in
+  serial_console.c (comment broken), sched_prim.c (realtime block in wrong function), kern_trustcache.c,
+  arm_init.c; removed duplicate hi_taps decl; rtm-> → RTM-> in rtsock.c; sha256_ctx → sha512_ctx in
+  entropy.c; SERIAL_SWEET_FBCON added to protos.h; INTERRUPT_MASKED_DEBUG_* → ml_interrupt_masked_debug_*;
+  removed stale mach_msg_send declaration in SweetAudio.cpp; staged BearSSL/HFS/libpthread source files
+  (staging scripts are gated to macOS 13.5 and never ran in the xnu-12377 CI). Patch now 326 files / 5.5 MB.
+- NOTE: even a clean compile is only step 1; the 52 `xnu/ios27/*.diff` incremental changes and the iOS 27
+  root image are still separate and unavailable.
+
 # Handoff — SWEET port onto xnu-12377 attempted in CI (2026-11-20, OpenCode)
 - USER DIRECTION (2026-11-20): "Try the SWEET port" — attempt to port the xnu-8796 SWEET platform code onto
   xnu-12377 to produce a self-built iOS 27 kernel, since the original Mac build tree is unavailable.
