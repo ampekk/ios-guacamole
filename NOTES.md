@@ -1,3 +1,22 @@
+# Handoff — hotdog (OnePlus 7T Pro) board support added, hardware unverified (2026-11-20, OpenCode)
+- Commit `618ef7b` on branch `hotdog` (off `ios27`): added `BOARD=hotdog` / `mkadt.py --hotdog` as a sibling
+  of guacamole, plus `tools/hotdog-mkboot.sh`, `tools/mkhotdogboot.py`, README device-support table and
+  `docs/hotdog.md`. Pushed to the user's fork `ampekk/ios-guacamole` (branches `ios27` base + `hotdog`).
+- Observation (local, offline): `python3 tools/mkadt.py /tmp/htd-test.adt --highmem --hotdog` succeeds
+  (11912 B with the Apple firmware blobs absent), dumps `hotdog,wcn3990`, `qcom,sm8150`, canvas 1125x2436
+  and `sweet-fbcon` 1440x3120. `bash -n` and `py_compile` pass for every changed script. No kernel build
+  and no CI run (`gh workflow run xnu.yml`) was spent; no hotdog device was available.
+- Guess (documented, not measured): hotdog inherits guacamole's splash FB address/reboot method, DDR map,
+  GPU firmware, lens firmware, Wi-Fi board file and battery/charger values. Sources for the shared parts
+  are in `docs/hotdog.md` (hotdog-linux-bringup's HD1913 status) but none were checked on this port.
+- NOT changed: XNU diffs, userland drivers, Metal plugin, D73 identity, iOS root image. They key off SoC
+  addresses and the userland identity, not the phone model.
+- Next concrete action (needs hardware): `fastboot boot` a hotdog triple image built with
+  `BOARD=hotdog sh shim/build.sh` + `tools/hotdog-mkboot.sh`, then work through the 10-item checklist in
+  `docs/hotdog.md` in order. Highest-risk items first: stock DTB acceptance, splash FB address, PON
+  reboot path, Wi-Fi board id (guacamole used `bdwlan.b0e`; hotdog's prj/hw/rf versions differ), and
+  12 GB DDR window. Record each result here as observation, not assumption.
+
 # Landscape games black: CA's rotated framebuffer (2026-11-19, Claude) -- fixed: Minecraft runs (low fps)
 - Summary: landscape now works through the system (backboardd's rotated framebuffer, apps' rotated drawables, the
   kernel scaler's rotation); diffs in xnu/ios27/ (adrenometal-landscape, adrenometal-vertex-absent = bridge 0043,
