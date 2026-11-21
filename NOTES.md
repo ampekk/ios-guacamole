@@ -1,3 +1,21 @@
+# Handoff — iOS 27: panic-log fix worked; now uninitialized vc_progress_lock (2026-11-21, OpenCode)
+- The DC-ZVA fix (CI 44927243392, kernel SHA `404428a0b13015fa068a7bd615031c36f70a4693ccc728ed9a7a5d3cdaa128b3`,
+  image `out/hotdog-s27-fix2.img`) WORKED: boot reached `EARLY 21 before PE_create_console` and the color
+  breadcrumbs (magenta=PE_create_console entered, cyan=FB mapped, green=text console requested) all painted —
+  so check_for_panic_log's volatile wipe and the 17.9 MB framebuffer map succeeded.
+- NEW PANIC right after: `Invalid spinlock 0xfffffe000836db40 @locks_arm.c:343` (no register dump shown).
+  Symbolicated with the fix2 unstripped kernel: the address is exactly **`_vc_progress_lock`**. It is
+  initialized only in `vcattach()`, but the kPETextScreen path reaches `vc_progress_set` →
+  `lck_spin_lock(&vc_progress_lock)` first — because **`console_is_serial()` returned FALSE** (the mark-8
+  block painted GREEN, i.e. not-serial) despite arm_init calling `switch_to_serial_console()` before
+  PE_create_console (cons_ops_index mystery — `serial_console_enabled` is set true right before, SERIAL_CONS_OPS=0).
+- FIX (commit d71cb12 on sweet-port, pushed, **CI run 44930586911 in progress**): initialize
+  `vc_progress_lock` on first use — guarded `simple_lock_init` added in `gc_initialize()` (runs before the
+  kPETextScreen path) and the same guard in `vcattach()`. Note: a `git branch -f` mis-step briefly pushed the
+  patch commit to the hotdog branch first (6967742); resolved by re-committing the regenerated patch on top of
+  the remote sweet-port tip (bdd0ebb → d71cb12).
+- NEXT: boot the new kernel; expect PE_create_console to complete (EARLY 22) and kernel_bootstrap lines.
+
 # Handoff — iOS 27: bzero fault ROOT-CAUSED = DC ZVA on WCOMB panic-log mapping (2026-11-21, OpenCode)
 - FOUND IT. Instrumented boot (CI 44922273146, `out/hotdog-s27-diag2.img`, `sweetearly=1`) printed
   **EARLY 21 "before PE_create_console"** then panicked — the fault is inside `PE_create_console()`.
