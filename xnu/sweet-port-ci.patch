@@ -159136,7 +159136,7 @@ diff -ruN ci-base/makedefs/MakeInc.def ci-sweet/makedefs/MakeInc.def
  
 diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
 --- a/osfmk/arm/arm_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/arm_init.c	2026-11-21 17:00:58.207399822 +0100
++++ b/osfmk/arm/arm_init.c	2026-11-21 20:01:31.151669047 +0100
 @@ -58,6 +58,7 @@
  #include <pexpert/arm/consistent_debug.h>
  #include <pexpert/device_tree.h>
@@ -159145,15 +159145,17 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  #include <arm/pmap.h>
  #include <arm/caches_internal.h>
  #include <arm/cpu_internal.h>
-@@ -349,6 +350,7 @@
+@@ -349,6 +350,9 @@
  arm_init(
  	boot_args       *args)
  {
++	sweet_early_geometry_init(args->Video.v_width, args->Video.v_height,
++	    args->Video.v_rowBytes);
 +	sweet_early_mark(1, "arm_init entered (MMU on)");
  	unsigned int    maxmem;
  	uint32_t        memsize;
  	uint64_t        xmaxmem;
-@@ -376,6 +378,7 @@
+@@ -376,6 +380,7 @@
  #endif /* defined(HAS_APPLE_PAC) */
  
  	PE_init_platform(FALSE, args); /* Get platform expert set up */
@@ -159161,7 +159163,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  #if __arm64__
  	configure_timer_apple_regs();
-@@ -459,6 +462,7 @@
+@@ -459,6 +464,7 @@
  #endif
  
  	ml_parse_cpu_topology();
@@ -159169,7 +159171,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  
  	boot_cpu_id = ml_get_boot_cpu_number();
-@@ -490,11 +494,13 @@
+@@ -490,11 +496,13 @@
  	 */
  	thread->machine.preemption_count = 0;
  	cpu_bootstrap();
@@ -159183,7 +159185,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  	/*
  	 * Initialize the timer callout world
-@@ -503,6 +509,7 @@
+@@ -503,6 +511,7 @@
  
  	cpu_init();
  
@@ -159191,7 +159193,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  	processor_bootstrap();
  
  	if (PE_parse_boot_argn("maxmem", &maxmem, sizeof(maxmem))) {
-@@ -569,7 +576,9 @@
+@@ -569,7 +578,9 @@
  	gDramSize = *dram_size;
  	pmap_first_pnum = (ppnum_t)atop(gDramBase);
  
@@ -159201,7 +159203,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  	if (debug_boot_arg) {
  		patch_low_glo();
-@@ -582,9 +591,19 @@
+@@ -582,9 +593,19 @@
  	PE_consistent_debug_inherit();
  
  	/* Setup debugging output. */
@@ -159221,7 +159223,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  	serialmode = 0;
  	if (PE_parse_boot_argn("serial", &serialmode, sizeof(serialmode))) {
-@@ -624,10 +643,13 @@
+@@ -624,10 +645,13 @@
  		(void)switch_to_serial_console(); /* Switch into serial mode from video console */
  		disableConsoleOutput = FALSE;     /* Allow printfs to happen */
  	}
@@ -159235,7 +159237,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  #if __arm64__
  #if DEBUG
-@@ -648,7 +670,9 @@
+@@ -648,7 +672,9 @@
  		panic("The cpumask=N boot arg cannot be used together with cpus=N, and the boot CPU must be enabled");
  	}
  
@@ -159245,7 +159247,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  #if APPLE_ARM64_ARCH_FAMILY
  	configure_late_apple_regs(true);
-@@ -657,6 +681,7 @@
+@@ -657,6 +683,7 @@
  #endif
  
  	cpu_timebase_init(TRUE);
@@ -159253,7 +159255,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  #if KPERF
  	/* kptimer_curcpu_up() must be called after cpu_timebase_init */
-@@ -664,11 +689,13 @@
+@@ -664,11 +691,13 @@
  #endif /* KPERF */
  
  	PE_init_cpu();
@@ -159267,7 +159269,7 @@ diff -ruN ci-base/osfmk/arm/arm_init.c ci-sweet/osfmk/arm/arm_init.c
  
  
  #if HIBERNATION
-@@ -682,11 +709,13 @@
+@@ -682,11 +711,13 @@
  	 * function, we do not risk failing the check even though
  	 * we mutate the guard word during execution.
  	 */
@@ -160126,8 +160128,8 @@ diff -ruN ci-base/osfmk/arm64/start.s ci-sweet/osfmk/arm64/start.s
  	// Unmask external IRQs if we're restarting from non-retention WFI
 diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 --- a/osfmk/arm64/sweet_early.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.c	2026-11-21 17:00:46.867233093 +0100
-@@ -0,0 +1,149 @@
++++ b/osfmk/arm64/sweet_early.c	2026-11-21 20:01:31.151669047 +0100
+@@ -0,0 +1,174 @@
 +/*
 + * Redmi Note 10 Pro bootstrap console. No allocation, locks, ADT parsing or
 + * per-CPU state: panic() can reach this before a current thread exists.
@@ -160143,15 +160145,24 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 +
 +static volatile uint32_t *early_fb = (volatile uint32_t *)(uintptr_t)0x9c000000;
 +#define EARLY_FB early_fb
-+/* GUACAMOLE (OnePlus 7 Pro): ABL splash is 1440x3120 a8r8g8b8, stride 5760 */
-+#define EARLY_WIDTH 1440u
-+#define EARLY_HEIGHT 3120u
-+#define EARLY_STRIDE (5760u / 4)
-+#define EARLY_SCALE 3u
++/*
++ * Console geometry. Defaults are GUACAMOLE (OnePlus 7 Pro / 7T Pro: ABL splash
++ * 1440x3120 a8r8g8b8, stride 5760, 3x cells). sweet_early_geometry_init() reads
++ * the ADT "sweet-fbcon" node before the first mark, so QEMU (1080x2400, 2x)
++ * and any other panel draw correctly instead of spilling across rows.
++ */
++static unsigned int early_width = 1440u, early_height = 3120u, early_stride = 1440u;
++static unsigned int early_scale = 3u;
++#define EARLY_WIDTH early_width
++#define EARLY_HEIGHT early_height
++#define EARLY_STRIDE early_stride
++#define EARLY_SCALE early_scale
 +#define EARLY_CELL_W (8u * EARLY_SCALE)
 +#define EARLY_CELL_H (16u * EARLY_SCALE)
 +#define EARLY_ROWS ((EARLY_HEIGHT - 32u) / EARLY_CELL_H)
 +#define EARLY_COLS (EARLY_WIDTH / EARLY_CELL_W)
++
++extern unsigned char iso_font[256 * 16];
 +
 +extern unsigned char iso_font[256 * 16];
 +
@@ -160168,6 +160179,22 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 +			line[x] = 0xff000000u;
 +		}
 +	}
++}
++
++void
++sweet_early_geometry_init(unsigned int width, unsigned int height, unsigned int stride)
++{
++	/* boot_args->Video is what the booter/shim set up (1440x3120/5760 on the
++	 * OnePlus SM8150 phones, 1080x2400/4320 under QEMU). Must run before the
++	 * first mark; arm_init calls it with args->Video. */
++	if (width < 640 || width > 4096 || height < 480 || height > 8192 ||
++	    stride < width || stride > 16384) {
++		return;
++	}
++	early_width = width;
++	early_height = height;
++	early_stride = stride / 4;
++	early_scale = (width > 1200) ? 3 : 2;
 +}
 +
 +void
@@ -160279,8 +160306,8 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 +#endif /* SWEET */
 diff -ruN ci-base/osfmk/arm64/sweet_early.h ci-sweet/osfmk/arm64/sweet_early.h
 --- a/osfmk/arm64/sweet_early.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.h	2026-11-21 17:00:39.023117778 +0100
-@@ -0,0 +1,24 @@
++++ b/osfmk/arm64/sweet_early.h	2026-11-21 20:01:31.151669047 +0100
+@@ -0,0 +1,30 @@
 +/* Screen diagnostics through bootstrap TTBR0 and the final kernel TTBR1. */
 +#ifndef _ARM64_SWEET_EARLY_H_
 +#define _ARM64_SWEET_EARLY_H_
@@ -160290,12 +160317,18 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.h ci-sweet/osfmk/arm64/sweet_early.h
 +#include <stdint.h>
 +
 +#if defined(SWEET)
++void sweet_early_geometry_init(unsigned int width, unsigned int height, unsigned int stride);
 +void sweet_early_mark(unsigned int stage, const char *label);
 +void sweet_early_putc(char c);
 +void sweet_early_panic(const char *fmt, va_list *args);
 +void sweet_early_relocate(uint64_t base);
 +void sweet_early_disable(void);
 +#else
++static inline void sweet_early_geometry_init(unsigned int width, unsigned int height,
++    unsigned int stride)
++{
++	(void)width; (void)height; (void)stride;
++}
 +static inline void sweet_early_mark(unsigned int stage, const char *label)
 +{
 +	(void)stage;
