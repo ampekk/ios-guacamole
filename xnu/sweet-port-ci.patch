@@ -160856,7 +160856,7 @@ diff -ruN ci-base/osfmk/kern/startup.c ci-sweet/osfmk/kern/startup.c
  #if XNU_TARGET_OS_OSX
 diff -ruN ci-base/osfmk/kern/waitq.c ci-sweet/osfmk/kern/waitq.c
 --- a/osfmk/kern/waitq.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/waitq.c	2026-11-21 21:44:30.248601397 +0100
++++ b/osfmk/kern/waitq.c	2026-11-21 22:59:21.587415358 +0100
 @@ -55,6 +55,7 @@
   */
  
@@ -160865,15 +160865,16 @@ diff -ruN ci-base/osfmk/kern/waitq.c ci-sweet/osfmk/kern/waitq.c
  #include <kern/backtrace.h>
  #include <kern/kern_types.h>
  #include <kern/mach_param.h>
-@@ -371,6 +372,7 @@
+@@ -371,6 +372,8 @@
  #pragma mark global wait queues
  
  static __startup_data struct waitq g_boot_waitq;
 +static int waitq_boot_done;	/* SWEET: trace pre-bootstrap waiters */
++int sweet_waitq_boot_done(void) { return waitq_boot_done; }
  static SECURITY_READ_ONLY_LATE(struct waitq *) global_waitqs = &g_boot_waitq;
  static SECURITY_READ_ONLY_LATE(uint32_t) g_num_waitqs = 1;
  
-@@ -631,6 +633,8 @@
+@@ -631,6 +634,8 @@
  __static_testable void
  waitq_bootstrap(void)
  {
@@ -160882,7 +160883,7 @@ diff -ruN ci-base/osfmk/kern/waitq.c ci-sweet/osfmk/kern/waitq.c
  	const uint32_t qsz = sizeof(struct waitq);
  	vm_offset_t whsize;
  	int cpu = 0;
-@@ -1916,6 +1920,10 @@
+@@ -1916,6 +1921,10 @@
  static void
  __waitq_validate(waitq_t waitq)
  {
@@ -161150,7 +161151,7 @@ diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
  	/*
 diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 --- a/osfmk/vm/vm_resident.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/vm/vm_resident.c	2026-11-21 22:08:35.770350926 +0100
++++ b/osfmk/vm/vm_resident.c	2026-11-21 22:59:21.587415358 +0100
 @@ -80,6 +80,7 @@
  #include <kern/ledger.h>
  #include <kern/ecc.h>
@@ -161165,8 +161166,8 @@ diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
  {
 +	/* SWEET: who waits for a page before waitq_bootstrap? (boot only) */
 +	{
-+		extern int waitq_boot_done;
-+		if (!waitq_boot_done) {
++		extern int sweet_waitq_boot_done(void);
++		if (!sweet_waitq_boot_done()) {
 +			sweet_early_bootpc("vm_page_wait", (uintptr_t)__builtin_return_address(0));
 +		}
 +	}
