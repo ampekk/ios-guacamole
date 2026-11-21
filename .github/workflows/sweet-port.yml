@@ -108,6 +108,13 @@ jobs:
             echo "::warning::no kernel produced"
           fi
           cp dxb/build.log out/build.log 2>/dev/null || true
+          # Unstripped kernel + symbols: lets the agent symbolicate device
+          # panic pc/lr addresses offline.
+          for u in dxb/build/xnu.obj/DEVELOPMENT_ARM64_SWEET/kernel.development.sweet.unstripped.noctf \
+                   dxb/build/xnu.obj/DEVELOPMENT_ARM64_SWEET/kernel.development.sweet.unstripped.noctf.dSYM; do
+            if [ -e "$u" ]; then cp -R "$u" out/ 2>/dev/null; fi
+          done
+          ls -lh out/ | head -20
           tar czf out/buildtree.tgz \
             --exclude='*.o' --exclude='*.cpo' --exclude='*.a' --exclude='*.dSYM' --exclude='*.unstripped' \
             --exclude='kernel.development.*' --exclude='.git' \
