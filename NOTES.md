@@ -15,6 +15,14 @@
 - NEXT: dump msgbuf → symbolicate the panic caller → fix the early waitq use → continue the QEMU loop
   toward the root mount (the dev's milestone).
 
+- Iteration updates: the panic is during vm_mem_bootstrap (EARLY 33 "before vm_mem_bootstrap" then
+  panic) — `Invalid waitq: g_boot_waitq` before `waitq_bootstrap` (STARTUP(MACH_IPC), after KMEM).
+  qemu-sweet.py gained `--pmemsave ADDR SIZE FILE` (native QMP dumps after stop; the msgbuf console ring
+  moved to oslog in 12377 so the ring dump was a dead end). gdb-multiarch against QEMU's gdbstub hit a
+  remote-protocol mismatch — instead the kernel now prints the caller itself:
+  `sweet_early_bootpc()` traces every pre-bootstrap waiter (guard `waitq_boot_done` set in
+  `waitq_bootstrap`); instrumentation commit pushed, **CI run 44943936654 in progress**.
+
 # Handoff — iOS 27: QEMU iteration loop established; waitq panic found (2026-11-21, OpenCode)
 - USER PUSHBACK ("we are doing something wrong — dev showcased iOS 27 on the 7 Pro"): correct. Reading
   panics off the phone's tiny garbled console was the wrong workflow. **QEMU iteration is now set up on this
