@@ -1,3 +1,25 @@
+# Handoff — iOS 16 path: root image being built locally on Linux (2026-11-21, OpenCode)
+- USER DIRECTION: pivot to iOS 16 ("it may be ready to go"). Research (subagent) confirmed: iOS 16 kernel +
+  shim work on hotdog (boot to "waiting for root device"), guacamole fully booted iOS 16.7.16, but **no root
+  image exists locally** — the historical one lived at `/run/media/dipa/android/ios-sweet-ipsw/...` (absent).
+- iOS 16 root is buildable on **Linux** (no macOS VM needed): `tools/mkiosroot.sh OS.dmg SYSTEMOS.dmg APPOS.dmg
+  OUT.img [SIZE]` builds a case-sensitive journaled HFS+ image from an iPhone X (D22AP) 16.7.16/20H392 IPSW.
+- Tooling installed on this box: `hfsprogs` 540.1.linux3-5build3 from Ubuntu universe (provides mkfs.hfsplus,
+  fsck.hfsplus in /sbin; depends on libssl3t64 which Debian 13 has); `apfs-fuse` built from source
+  (github.com/sgan81/apfs-fuse) at `/tmp/opencode/apfs-fuse/build/apfs-fuse`; rsync installed. Wrappers in
+  `/tmp/opencode/bin/` and /usr/local/bin.
+- IPSW: `iPhone10,3,iPhone10,6_16.7.16_20H392_Restore.ipsw` (URL from api.ipsw.me). Extracted three DMGs via
+  `tools/remotezip.py` into `/tmp/opencode/ipsw/`: OS `087-86698-044.dmg` (4.5G), SystemOS
+  `087-86593-047.dmg` (2.6G), AppOS `087-86715-047.dmg` (10M) — IDs match the historical build in NOTES.
+  apfs-fuse mount verified OK.
+- Root build in progress: `PATH=/tmp/opencode/bin:$PATH bash tools/mkiosroot.sh ... /tmp/opencode/ios16-root-20H392.img 16G`
+  (log `/tmp/opencode/mkroot.log`, PID 6237).
+- NEXT: after root builds, apply `tools/sweet-root-tweaks.py`, build an iOS 16 boot image with the full root
+  args `rd=ufsroot0 ufsroot=userdata unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin
+  ufsrw=1 rootrw=1 launchd_unsecure_cache=1 sweetfb_hz=30 ...` (NOTE: on hotdog AGENTS.md says root goes in
+  `userdata`, no GPT changes; `ufsroot=userdata`), then **ask the user before any destructive flash** of the
+  root to userdata (it destroys Android data). First test non-destructively with `fastboot boot`.
+
 # Handoff — macOS VM requested for local kernel iteration (2026-11-21, OpenCode)
 - USER WILL PROVIDE a macOS VM with SSH so we can iterate on the kernel locally (GitHub Actions costs 20-50 min
   per run). The VM needs macOS 26.x (Tahoe), Xcode 26.x, KDK 26.5 (25F71), 8+ CPU / 16+ GB RAM / 120+ GB disk.
