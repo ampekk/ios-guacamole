@@ -160371,7 +160371,7 @@ diff -ruN ci-base/osfmk/console/serial_console.c ci-sweet/osfmk/console/serial_c
  	}
 diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_console.c
 --- a/osfmk/console/video_console.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/console/video_console.c	2026-11-21 18:31:13.323284715 +0100
++++ b/osfmk/console/video_console.c	2026-11-21 18:53:40.654999500 +0100
 @@ -122,6 +122,10 @@
  
  extern int       disableConsoleOutput;
@@ -160383,7 +160383,19 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  static boolean_t gc_initialized = FALSE;
  static boolean_t vm_initialized = FALSE;
  
-@@ -478,6 +482,14 @@
+@@ -468,6 +472,11 @@
+ 	}
+ }
+ 
++/* SWEET: vcattach() initializes vc_progress_lock, but PE_create_console's
++ * kPETextScreen path can take it first (console_is_serial() false ->
++ * vc_progress_set), and the un-initialized lock panics @locks_arm.c.
++ * Initialize it on first use. */
++static boolean_t vc_progress_lock_initialized = FALSE;
+ static void
+ gc_initialize(struct vc_info * info)
+ {
+@@ -478,6 +487,14 @@
  		gc_initialized = TRUE;
  	}
  
@@ -160398,7 +160410,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  	gc_ops.initialize(info);
  
  	gc_reset_vt100();
-@@ -1106,6 +1118,11 @@
+@@ -1106,6 +1123,11 @@
  gc_scroll_up(int num, unsigned int top, unsigned int bottom)
  {
  	if (!gc_buffer_size) {
@@ -160410,7 +160422,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  		return;
  	}
  
-@@ -1231,6 +1248,14 @@
+@@ -1231,6 +1253,14 @@
  vcputc_options(char c, __unused bool poll)
  {
  	if (gc_initialized && gc_enabled) {
@@ -160425,18 +160437,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  		VCPUTC_LOCK_LOCK();
  		if (gc_enabled) {
  			gc_hide_cursor(gc_x, gc_y);
-@@ -1837,6 +1862,10 @@
- vc_progress_user_options        vc_user_options;
- 
- decl_simple_lock_data(, vc_progress_lock);
-+/* SWEET: vcattach() initializes this, but PE_create_console's kPETextScreen
-+ * path can take it first (console_is_serial() false -> vc_progress_set), and
-+ * the un-initialized lock panics @locks_arm.c. Initialize it on first use. */
-+static boolean_t vc_progress_lock_initialized = FALSE;
- 
- #if defined(XNU_TARGET_OS_OSX)
- static int                      vc_progress_withmeter = 3;
-@@ -2860,7 +2889,7 @@
+@@ -2860,7 +2890,7 @@
  			gc_acquired = TRUE;
  		} else {
  			if (makeMapping) {
@@ -160445,7 +160446,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  				/*
  				 * Framebuffers would normally use VM_WIMG_RT, which
  				 * io_map doesn't support.  However this buffer is set up
-@@ -2878,6 +2907,9 @@
+@@ -2878,6 +2908,9 @@
  					newMapSize = (unsigned int) round_page(new_vinfo.v_height * new_vinfo.v_rowbytes);                      /* Remember size */
  				}
  				newVideoVirt = ml_io_map_unmappable((vm_map_offset_t)new_vinfo.v_physaddr, newMapSize, flags);   /* Allocate address space for framebuffer */
@@ -160455,7 +160456,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  			}
  			new_vinfo.v_baseaddr = newVideoVirt + boot_vinfo->v_offset;                     /* Set the new framebuffer address */
  		}
-@@ -2935,6 +2967,11 @@
+@@ -2935,6 +2968,11 @@
  	case kPEGraphicsMode:
  		gc_graphics_boot = TRUE;
  		gc_desire_text = FALSE;
@@ -160467,7 +160468,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  		break;
  
  	case kPETextMode:
-@@ -2984,6 +3021,9 @@
+@@ -2984,6 +3022,9 @@
  		break;
  
  	case kPETextScreen:
@@ -160477,7 +160478,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  		if (console_is_serial()) {
  			break;
  		}
-@@ -3001,6 +3041,9 @@
+@@ -3001,6 +3042,9 @@
  		vc_enable_progressmeter( FALSE );
  #endif
  		gc_enable( TRUE );
@@ -160487,7 +160488,7 @@ diff -ruN ci-base/osfmk/console/video_console.c ci-sweet/osfmk/console/video_con
  		break;
  
  	case kPEReleaseScreen:
-@@ -3077,7 +3120,10 @@
+@@ -3077,7 +3121,10 @@
  	vc_progress_meter_end   = kProgressMeterEnd;
  #endif /* defined(__x86_64__ */
  #endif /* defined(CONFIG_VC_PROGRESS_METER_SUPPORT) */
