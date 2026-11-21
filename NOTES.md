@@ -1,3 +1,19 @@
+# Handoff — iOS 16 root tweaks applied + boot image with root args (2026-11-21, OpenCode)
+- ROOT TWEAKS: mounted `/home/ampekk/ios16-work/ios16-root-20H392.img` HFS+ RW and ran
+  `tools/sweet-root-tweaks.py` — launchd.plist (7 _PanicOnCrash renamed, CommCenter + fairplayd.H2 removed,
+  com.sweet.autorun added, backboardd via sweet-bbd wrapper), containers created, migration/springboard/
+  purplebuddy prefs merged, VirtualAudio disabled, MediaToolbox StartRecorderServer off. Re-fsck OK.
+  Final SHA-256 `ea632036e81f720b94f3b33c98895fea175f422372345929b29385cc7e92dbf4`.
+  The SWEET userland binaries (sweet-autorun, sweet-bbd, wland, etc.) are NOT installed — they need the
+  macOS VM (iPhoneOS SDK + codesign), so a full GUI boot is not possible yet.
+- BOOT IMAGE: `out/hotdog-ios16-root.img` SHA-256 `24a7da78ff04f1f604aa237596c732b6d88b8a918c63a13a56cec99f2121467c`
+  built with the iOS 16 kernel + full root args including `rd=ufsroot0 ufsroot=userdata` (hotdog root goes in
+  userdata per AGENTS.md, no GPT changes), `unentitled_ios_sim_launch=1 ignition_level=1 ufsrw=1 rootrw=1 ...`.
+- BLOCKER: to actually boot iOS 16 the root image must be flashed to the `userdata` partition, which is
+  DESTRUCTIVE (destroys Android data). User approved using UFS for iOS and that Android may be deleted, but
+  AGENTS.md requires confirming each destructive step. Must ask the user before flashing. Non-destructive
+  `fastboot boot` test of the image (with userdata still Android) is possible first to verify the UFS path.
+
 # Handoff — iOS 16 ROOT IMAGE BUILT locally (2026-11-21, OpenCode)
 - MILESTONE: `/home/ampekk/ios16-work/ios16-root-20H392.img` — 16 GiB, SHA-256
   `b27e6b81a5b51124e18ffa5aeec61acbf0f366e5587e4d2af054c124a39a6e0a`, case-sensitive journaled HFS+,
