@@ -1,3 +1,15 @@
+# Handoff — SWEET port: 0 COMPILER ERRORS, one link error fixed, awaiting clean CI run (2026-11-21, OpenCode)
+- CI iteration 9 (run 44836831694): **0 compiler errors**, 1 undefined link symbol `_pid_hibernate`
+  (syscalls.master enabled syscall 435 for SWEET but its implementation in `bsd/kern/kern_proc.c` stayed under
+  `#if !XNU_TARGET_OS_OSX`). Iteration 10 commit 850fca0 changed that guard to
+  `#if !XNU_TARGET_OS_OSX || defined(ARM64_BOARD_CONFIG_SWEET)`; patch regenerated and passes git apply --check.
+- Run 44839923404 for 850fca0 was cancelled mid-build by GitHub infrastructure after 24 min; re-queued
+  2026-11-21 00:28 UTC and still queued at 00:40 (macos-15-intel runner availability). Next: wait for the run,
+  check for a `kernel.development.sweet` artifact. If it links, download and `fastboot boot` it on hotdog —
+  expect either the framebuffer console or the same early breadcrumbs; either way it is the first SWEET-port
+  xnu-12377 kernel built from this repo. Then decide whether to attempt the 52 `xnu/ios27/*.diff` changes.
+- NOTE: even a linked kernel is not iOS 27 userland: the incremental iOS 27 diffs and the root image are absent.
+
 # Handoff — SWEET port down to ~20 errors; near-clean compile (2026-11-20, OpenCode)
 - CI iterations 4-7 (runs 44815736652 → 44828277471): staged BearSSL/HFS/libpthread sources directly in the
   patch (the staging `.sh` scripts are gated to macOS 13.5 and never ran in the xnu-12377 CI), fixed header
