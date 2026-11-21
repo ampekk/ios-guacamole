@@ -23,6 +23,10 @@
   `sweet_early_bootpc()` traces every pre-bootstrap waiter (guard `waitq_boot_done` set in
   `waitq_bootstrap`); instrumentation commit pushed, **CI run 44943936654 in progress**.
 
+- The waiter trace on `waitq_assert_wait64_locked` produced NO output before the panic — the outer
+  wrappers (`waitq_assert_wait64` / `_leeway` / `waitq_wakeup64_*`) run `__waitq_validate` FIRST and panic
+  there. Trace moved into `__waitq_validate` (covers all five entry points); CI run 44947882506 in progress.
+
 # Handoff — iOS 27: QEMU iteration loop established; waitq panic found (2026-11-21, OpenCode)
 - USER PUSHBACK ("we are doing something wrong — dev showcased iOS 27 on the 7 Pro"): correct. Reading
   panics off the phone's tiny garbled console was the wrong workflow. **QEMU iteration is now set up on this
