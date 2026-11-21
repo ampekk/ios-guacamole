@@ -3,6 +3,30 @@
   above gc_initialize; regenerated the patch (git apply --check OK); commit pushed to sweet-port;
   **CI run 44932533469 in progress**.
 
+# Handoff — iOS 27: QEMU iteration loop established; waitq panic found (2026-11-21, OpenCode)
+- USER PUSHBACK ("we are doing something wrong — dev showcased iOS 27 on the 7 Pro"): correct. Reading
+  panics off the phone's tiny garbled console was the wrong workflow. **QEMU iteration is now set up on this
+  Linux box** (docs/QEMU_TESTING.md + `tools/qemu-sweet.py`, qemu-system-aarch64 installed): the kernel boots
+  in QEMU and the full console lands in `fb.png`/`fb.txt` — no phone round-trip, no garbled OCR.
+- QEMU run of the fix3 kernel (payload with `mkadt.py --qemu` + `mkpayload.py`, 90 s): kernel booted PAST
+  kernel_bootstrap (Darwin 25.5.0 version line, pe_arm_init_interrupts, SWEET GIC INTID 27) and panicked:
+  **`Invalid waitq ... @waitq.c:1191` + "handshake structure not initialized"** — a third init-order bug in the
+  fused patch set (same class: vc_progress_lock, the FB bzero). On the phone the same panic was the garbled
+  "unaligned data abort / nested panic" the user read.
+- Upstream note: the dev is ALSO fixing boot panics one at a time on their private tree (origin/ios27 tip
+  eae4e59, 2026-11-20: `xnu/macos27/0002-physmap-end-block-room.patch` fixes a physmap_end boot panic "the
+  kernel now reaches the root mount"; plus tools/mkmacos27root-mac.sh). The dev's iOS 27 pipeline needs the
+  git-ignored `research/ios27.2` lowered userland tars; the arm64e→arm64 lowering procedure itself is
+  documented in docs/arm64e-lowering.md.
+- Console-geometry fix (commit on sweet-port, **CI run 44938703281 in progress**): `sweet_early.c` had
+  hardcoded guacamole geometry (1440/stride 5760/3x) and SPILLED across QEMU's 1080-wide framebuffer,
+  garbling every console read. It now initializes from `boot_args->Video` (set by the shim on the phone and
+  by the QEMU stub: 1080x2400/4320, scale 2) via `sweet_early_geometry_init()` called at the top of arm_init.
+- iOS 27.2 IPSW (24B119, iPhone15,2) downloading in the background to /home/ampekk/ios27-work/ for the root
+  image pipeline (mkiosroot.sh-style HFS+ root + the documented lowering pass).
+- NEXT: CI kernel → verify in QEMU (clean decode) → fix the waitq init-order panic in QEMU loop → then the
+  iOS 27 root build.
+
 # Handoff — iOS 27: panic-log fix worked; now uninitialized vc_progress_lock (2026-11-21, OpenCode)
 - The DC-ZVA fix (CI 44927243392, kernel SHA `404428a0b13015fa068a7bd615031c36f70a4693ccc728ed9a7a5d3cdaa128b3`,
   image `out/hotdog-s27-fix2.img`) WORKED: boot reached `EARLY 21 before PE_create_console` and the color
