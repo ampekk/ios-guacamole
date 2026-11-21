@@ -1,3 +1,25 @@
+# Handoff — SWEET-port kernel reaches kprintf, then translation fault writing framebuffer (2026-11-21, OpenCode)
+- HARDWARE TEST of `out/hotdog-sweetport-xnu12377.img` (SHA-256
+  `424924e46a9982b45e9a34e5a06b85034e22c9fb5136733a79c39b0f58c5e168`) on HD1911: boot menu appears;
+  selecting iOS 16 (payload 0) now prints **20 `SWEET EARLY` breadcrumbs** on the framebuffer and reaches
+  `kprintf startup complete` — far beyond the plain xnu-12377 kernel (which died at SCTLR with no console).
+  Then it panics and the phone drops to Qualcomm CrashDump Mode (kernel reboot writes XPU-protected PS_HOLD).
+- Register dump read by user (some digits misread by OCR): `x0=0x9c000000` (FB base), `x8=0x9c0b4840`,
+  `pc=0xfffffe0007c53f94`, `lr=0xfffffe0007c54a28`, `sp=0xfffffe0808487e28`,
+  `far=0x000000009c0b4808`, `esr=0x000000096000045`, `cpsr=0x884083c4`.
+  ESR decode: EC=0x25 (data abort, no EL change), WnR=1 (WRITE), DFSC=0x05 (translation fault, level 1).
+  So: a **write to the physical framebuffer address 0x9c0b4808 with no VA mapping** — exactly the issue
+  RubenSavytskyi's patch 0017 fixed differently ("boot_args->Video points at 0x9c000000 but XNU treats it as
+  virtual"; their fix sets the booter's "this is physical" bit in PE_create_console, then kPETextScreen).
+- Breadcrumbs observed: arm_init entered (MMU on) → PE_init_platform done → ml_parse_cpu_topology done →
+  cpu_bootstrap done → kernel_startup_bootstrap done → cpu_init done → entering arm_vm_init → leaving bootstrap
+  TTBRO → kernel framebuffer VA live → TTBRO off/TLB flushed → physmap table pointers rebound →
+  pmap_bootstrap → done → early 1/0 page tables ready → arm_vm_init returned → serial_init → fbcon config read /
+  mapping returned → serial_init returned → kprintf startup complete. The console then faults on its first draw.
+- Next fix: make the SWEET framebuffer console write through a mapped VA (identity-map 0x9c000000 or use the
+  existing mapped VA); check whether Ruben's 0017 changes survived the merge with patch 0003 (both edit
+  PE_create_console/initialize_screen). `pc` is in `__TEXT_EXEC+0x8dff94`.
+
 # Handoff — SWEET-port xnu-12377 kernel BUILT SUCCESSFULLY (2026-11-21, OpenCode)
 - MILESTONE: CI run 44851494395 on fork `ampekk/ios-guacamole-hotdog` (branch `sweet-port`, commit 0528bb0)
   built a real kernel. `kernel.development.sweet`: **26,181,808 B**, SHA-256
