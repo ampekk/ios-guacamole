@@ -3,6 +3,18 @@
   above gc_initialize; regenerated the patch (git apply --check OK); commit pushed to sweet-port;
   **CI run 44932533469 in progress**.
 
+- CONSOLE DECODE NOW CLEAN (CI 44938703281 kernel, QEMU run): the geometry fix worked — fb.txt decodes
+  the whole boot: EARLY 22 "PE_create_console done" through 33 "before vm_mem_bootstrap", then
+  **`SWEET EARLY PANIC: Invalid waitq: 0xfffffe0008406898 @waitq.c:1913`** during vm_mem_bootstrap.
+  waitq.c:1913 = `__waitq_invalid_panic`. The invalid waitq is **`g_boot_waitq`** (waitq.c:373,
+  `__startup_data`; `global_waitqs` points at it before `waitq_bootstrap` runs at STARTUP(MACH_IPC)) —
+  something WAITS on the global waitq during vm_mem_bootstrap (STARTUP_SUB_KMEM) before waitq_bootstrap.
+- qemu-sweet.py extended with `--pmemsave ADDR SIZE FILE` (native QMP dump after stop) so the kernel
+  console ring (msgbufp = VA 0xfffffe0007d6a480 → PA 0xb1d6a480 with the QEMU VA→PA delta) can be dumped
+  for the panic caller. Workflow: edit ci-sweet → diff → CI → QEMU → symbolicate → fix.
+- NEXT: dump msgbuf → symbolicate the panic caller → fix the early waitq use → continue the QEMU loop
+  toward the root mount (the dev's milestone).
+
 # Handoff — iOS 27: QEMU iteration loop established; waitq panic found (2026-11-21, OpenCode)
 - USER PUSHBACK ("we are doing something wrong — dev showcased iOS 27 on the 7 Pro"): correct. Reading
   panics off the phone's tiny garbled console was the wrong workflow. **QEMU iteration is now set up on this
