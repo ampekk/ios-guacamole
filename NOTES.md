@@ -1,3 +1,16 @@
+# Handoff — iOS 16 ROOT IMAGE BUILT locally (2026-11-21, OpenCode)
+- MILESTONE: `/home/ampekk/ios16-work/ios16-root-20H392.img` — 16 GiB, SHA-256
+  `b27e6b81a5b51124e18ffa5aeec61acbf0f366e5587e4d2af054c124a39a6e0a`, case-sensitive journaled HFS+,
+  label `iOSRoot`, ~12 GB used, `fsck.hfsplus` OK. Built with `tools/mkiosroot.sh` from the three
+  20H392 DMGs. Two first attempts failed: (1) output on `/tmp` (7.7 GB tmpfs) hit ENOSPC; (2) temp work dir
+  on tmpfs made apfs-fuse EIO. Fixed by putting both the output image and `TMPDIR` on the real disk
+  (`/home/ampekk/ios16-work/`). Log: `/home/ampekk/ios16-work/mkroot.log`.
+- DMGs kept at `/home/ampekk/ios16-work/ipsw/` (OS 087-86698-044, SystemOS 087-86593-047, AppOS
+  087-86715-047). Do NOT add these or the root image to git.
+- NEXT: apply `tools/sweet-root-tweaks.py` to the image, build an iOS 16 boot image with `ufsroot=userdata`
+  (hotdog root goes in `userdata` per AGENTS.md, no GPT changes) and full root boot-args, then test
+  non-destructively. Flashing the root to userdata is DESTRUCTIVE (destroys Android data) — ask the user first.
+
 # Handoff — iOS 16 path: root image being built locally on Linux (2026-11-21, OpenCode)
 - USER DIRECTION: pivot to iOS 16 ("it may be ready to go"). Research (subagent) confirmed: iOS 16 kernel +
   shim work on hotdog (boot to "waiting for root device"), guacamole fully booted iOS 16.7.16, but **no root
