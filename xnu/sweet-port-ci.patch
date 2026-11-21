@@ -161198,7 +161198,7 @@ diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
  
 diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 --- a/osfmk/vm/vm_resident.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/vm/vm_resident.c	2026-11-22 00:08:40.980084909 +0100
++++ b/osfmk/vm/vm_resident.c	2026-11-22 00:30:22.840371015 +0100
 @@ -80,6 +80,7 @@
  #include <kern/ledger.h>
  #include <kern/ecc.h>
@@ -161207,7 +161207,20 @@ diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
  #include <vm/vm_init_xnu.h>
  #include <vm/vm_map_internal.h>
  #include <vm/vm_page_internal.h>
-@@ -5495,6 +5496,14 @@
+@@ -5260,6 +5261,12 @@
+ __mockable vm_page_t
+ vm_page_grab_options(vm_grab_options_t options)
+ {
++	/* SWEET: who grabs a page before waitq_bootstrap? (boot only) */
++	{
++		if (!sweet_waitq_boot_done()) {
++			sweet_early_bootpc("vm_page_grab_options", (uintptr_t)__builtin_return_address(0));
++		}
++	}
+ 	vm_page_pcpu_t      vmp_pcpu = NULL;
+ 	vm_page_t          *zf_page  = NULL;
+ 	vm_page_t          *cpu_list = NULL;
+@@ -5495,6 +5502,14 @@
  boolean_t
  vm_page_wait(int interruptible)
  {
