@@ -160856,7 +160856,7 @@ diff -ruN ci-base/osfmk/kern/startup.c ci-sweet/osfmk/kern/startup.c
  #if XNU_TARGET_OS_OSX
 diff -ruN ci-base/osfmk/kern/waitq.c ci-sweet/osfmk/kern/waitq.c
 --- a/osfmk/kern/waitq.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/kern/waitq.c	2026-11-21 21:00:13.783882290 +0100
++++ b/osfmk/kern/waitq.c	2026-11-21 21:44:30.248601397 +0100
 @@ -55,6 +55,7 @@
   */
  
@@ -160882,17 +160882,17 @@ diff -ruN ci-base/osfmk/kern/waitq.c ci-sweet/osfmk/kern/waitq.c
  	const uint32_t qsz = sizeof(struct waitq);
  	vm_offset_t whsize;
  	int cpu = 0;
-@@ -1324,6 +1328,10 @@
-     uint64_t leeway,
-     thread_t thread)
+@@ -1916,6 +1920,10 @@
+ static void
+ __waitq_validate(waitq_t waitq)
  {
-+	/* SWEET: who waits before waitq_bootstrap? (boot only) */
++	/* SWEET: who touches a waitq before waitq_bootstrap? (boot only) */
 +	if (!waitq_boot_done) {
-+		sweet_early_bootpc("waitq_assert_wait64_locked", (uintptr_t)__builtin_return_address(0));
++		sweet_early_bootpc("waitq_validate", (uintptr_t)__builtin_return_address(0));
 +	}
- 	wait_result_t wait_result;
- 	struct waitq *safeq;
- 	uintptr_t eventmask;
+ 	if (!waitq_valid(waitq)) {
+ 		__waitq_invalid_panic(waitq);
+ 	}
 diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
 --- a/osfmk/prng/entropy.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/osfmk/prng/entropy.c	2026-11-21 17:00:39.023117778 +0100
