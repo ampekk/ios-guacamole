@@ -160128,8 +160128,8 @@ diff -ruN ci-base/osfmk/arm64/start.s ci-sweet/osfmk/arm64/start.s
  	// Unmask external IRQs if we're restarting from non-retention WFI
 diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 --- a/osfmk/arm64/sweet_early.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.c	2026-11-21 20:59:56.279622861 +0100
-@@ -0,0 +1,187 @@
++++ b/osfmk/arm64/sweet_early.c	2026-11-21 21:21:28.279682310 +0100
+@@ -0,0 +1,189 @@
 +/*
 + * Redmi Note 10 Pro bootstrap console. No allocation, locks, ADT parsing or
 + * per-CPU state: panic() can reach this before a current thread exists.
@@ -160196,6 +160196,8 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 +	early_stride = stride / 4;
 +	early_scale = (width > 1200) ? 3 : 2;
 +}
++
++static void sweet_early_string(const char *s);
 +
 +void
 +sweet_early_bootpc(const char *what, uintptr_t pc)
