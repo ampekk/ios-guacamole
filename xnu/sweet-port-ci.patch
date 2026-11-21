@@ -161149,9 +161149,57 @@ diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
  	#endif
  
  	/*
+diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
+--- a/osfmk/vm/vm_init.c	2026-06-18 01:28:50.000000000 +0200
++++ b/osfmk/vm/vm_init.c	2026-11-21 23:21:19.818177093 +0100
+@@ -72,6 +72,7 @@
+ #include <vm/vm_object_internal.h>
+ #include <vm/vm_map_internal.h>
+ #include <vm/vm_page_internal.h>
++#include <arm64/sweet_early.h>
+ #include <vm/vm_kern.h>
+ #include <vm/memory_object.h>
+ #include <vm/vm_fault_xnu.h>
+@@ -114,6 +115,13 @@
+ 	 */
+ 	vm_mem_bootstrap_log("vm_page_bootstrap");
+ 	vm_page_bootstrap(&start, &end);
++	{
++		extern scalable_counter_t vm_page_free_count;
++		sweet_early_bootpc("vm_page_bootstrap: avail_start", start);
++		sweet_early_bootpc("vm_page_bootstrap: avail_end", end);
++		sweet_early_bootpc("vm_page_bootstrap: free_count",
++		    (uintptr_t)os_atomic_load(&vm_page_free_count, relaxed));
++	}
+ 
+ 	/*
+ 	 *	Initialize other VM packages
+@@ -121,17 +129,22 @@
+ 
+ 	vm_mem_bootstrap_log("zone_bootstrap");
+ 	zone_bootstrap();
++	sweet_early_mark(34, "zone_bootstrap done");
+ 
+ 	vm_mem_bootstrap_log("vm_object_bootstrap");
+ 	vm_object_bootstrap();
++	sweet_early_mark(35, "vm_object_bootstrap done");
+ 
+ 	vm_retire_boot_pages();
++	sweet_early_mark(36, "vm_retire_boot_pages done");
+ 
+ 	vm_mem_bootstrap_log("vm_map_init");
+ 	vm_map_init();
++	sweet_early_mark(37, "vm_map_init done");
+ 
+ 	vm_mem_bootstrap_log("kmem_init");
+ 	kmem_init(start, end);
++	sweet_early_mark(38, "kmem_init done");
+ 
+ 	kernel_startup_initialize_upto(STARTUP_SUB_KMEM);
+ 
 diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 --- a/osfmk/vm/vm_resident.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/vm/vm_resident.c	2026-11-21 22:59:21.587415358 +0100
++++ b/osfmk/vm/vm_resident.c	2026-11-21 23:21:19.818177093 +0100
 @@ -80,6 +80,7 @@
  #include <kern/ledger.h>
  #include <kern/ecc.h>
@@ -161160,7 +161208,7 @@ diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
  #include <vm/vm_init_xnu.h>
  #include <vm/vm_map_internal.h>
  #include <vm/vm_page_internal.h>
-@@ -5495,6 +5496,13 @@
+@@ -5495,6 +5496,15 @@
  boolean_t
  vm_page_wait(int interruptible)
  {
@@ -161169,6 +161217,8 @@ diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 +		extern int sweet_waitq_boot_done(void);
 +		if (!sweet_waitq_boot_done()) {
 +			sweet_early_bootpc("vm_page_wait", (uintptr_t)__builtin_return_address(0));
++			sweet_early_bootpc("vm_page_free_count",
++			    (uintptr_t)os_atomic_load(&vm_page_free_count, relaxed));
 +		}
 +	}
  	/*
