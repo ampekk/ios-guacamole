@@ -160062,8 +160062,8 @@ diff -ruN ci-base/osfmk/arm64/start.s ci-sweet/osfmk/arm64/start.s
  	// Unmask external IRQs if we're restarting from non-retention WFI
 diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 --- a/osfmk/arm64/sweet_early.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.c	2026-11-20 20:53:28.575094229 +0100
-@@ -0,0 +1,144 @@
++++ b/osfmk/arm64/sweet_early.c	2026-11-21 07:24:25.914403746 +0100
+@@ -0,0 +1,147 @@
 +/*
 + * Redmi Note 10 Pro bootstrap console. No allocation, locks, ADT parsing or
 + * per-CPU state: panic() can reach this before a current thread exists.
@@ -160197,6 +160197,9 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 +{
 +	sweet_early_mark(8, "leaving bootstrap TTBR0");
 +	early_fb = (volatile uint32_t *)(uintptr_t)base;
++	/* The VM is now up: sweet_fb_mark() must map the FB, not poke its PA. */
++	extern int sweet_fb_vm_ready;
++	sweet_fb_vm_ready = 1;
 +	__asm__ volatile("dsb sy" ::: "memory");
 +	sweet_early_mark(9, "kernel framebuffer VA live");
 +}
