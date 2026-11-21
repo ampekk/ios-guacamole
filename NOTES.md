@@ -1,3 +1,18 @@
+# Handoff — macOS VM requested for local kernel iteration (2026-11-21, OpenCode)
+- USER WILL PROVIDE a macOS VM with SSH so we can iterate on the kernel locally (GitHub Actions costs 20-50 min
+  per run). The VM needs macOS 26.x (Tahoe), Xcode 26.x, KDK 26.5 (25F71), 8+ CPU / 16+ GB RAM / 120+ GB disk.
+- Prepared scripts (committed on `sweet-port`, pushed to both forks):
+  - `tools/macos-vm-setup.sh`: verifies Xcode/SDK, installs Homebrew deps, stubs xcodes, clones
+    `ampekk/ios-guacamole-hotdog` branch `sweet-port`, enables SSH (`systemsetup -setremotelogin on`), downloads
+    the pinned `darwin-xnu-build` driver (SHA 6639065), prints the SSH address.
+  - `tools/build-local.sh`: copies `xnu/sweet-port-ci.patch` into `dxb/patches/26.0/zz9-sweet-port-ci.patch`,
+    applies the arm64 build.sh fixes, runs `bash build.sh` with `MAKEFLAGS=-k`, reports kernel path + SHA256.
+    Subcommands: `clean`, `patch`, or a source file path for a single-file rebuild hint.
+- NEXT: wait for the user to provide SSH host/user/auth, then run the build locally, instrument the
+  `dc zva` fault (`pc 0xfffffe0007d200e4`, `far 0xfffffe000c600040`, `esr 0x96000061`, in a 64-byte-stride
+  zeroing loop that then trips `sleh_invalid_stack`), and rebuild/test on hotdog via `fastboot boot`.
+- NOTE: the iOS 27 root image still needs `research/ios27.2` tars + macOS `hdiutil`; a VM alone is not enough.
+
 # Handoff — root cause of FB fault found: sweet_fb_vm_ready never set (2026-11-21, OpenCode)
 - ROOT CAUSE of the crashdump write fault: `sweet_fb_mark()` in `pexpert/arm/pe_init.c` (Ruben's patch 0018)
   initializes `vm_offset_t base = SWEET_FB_PHYS` (0x9c000000) and only switches to a mapped VA when the
