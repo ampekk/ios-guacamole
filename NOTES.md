@@ -1,3 +1,17 @@
+# Handoff — root cause of FB fault found: sweet_fb_vm_ready never set (2026-11-21, OpenCode)
+- ROOT CAUSE of the crashdump write fault: `sweet_fb_mark()` in `pexpert/arm/pe_init.c` (Ruben's patch 0018)
+  initializes `vm_offset_t base = SWEET_FB_PHYS` (0x9c000000) and only switches to a mapped VA when the
+  global `sweet_fb_vm_ready` is set. **That global was declared but never assigned anywhere in the tree.**
+  So every `sweet_fb_mark()` after the VM was up — starting with the first call in `PE_create_console()` —
+  wrote to the raw physical address 0x9c000000, which is unmapped in the kernel page tables → data abort
+  (ESR EC=0x25, WnR=1, DFSC=translation fault L1). The fault FAR 0x9c0b4808 matches exactly the block for
+  `sweet_fb_mark(4, 2, ...)`: row 2 * 64 * stride(5760) + slot 4 * pitch(128) * 4 = 0xb4800, +8 for x=2.
+- FIX (commit a566a80 on `sweet-port`, CI run 44875415839 in progress): set `sweet_fb_vm_ready = 1` in
+  `sweet_early_relocate()` (`osfmk/arm64/sweet_early.c`), which runs after arm_vm_init installs the final
+  TTBR1, so the mark routine uses `ml_io_map_wcomb()` instead of poking the physical address.
+- The 20 EARLY breadcrumbs before the fault all came from the *other* console (`sweet_early_mark()` in
+  osfmk/arm64/sweet_early.c), which correctly uses the relocated VA alias — that is why they worked.
+
 # Handoff — SWEET-port kernel reaches kprintf, then translation fault writing framebuffer (2026-11-21, OpenCode)
 - HARDWARE TEST of `out/hotdog-sweetport-xnu12377.img` (SHA-256
   `424924e46a9982b45e9a34e5a06b85034e22c9fb5136733a79c39b0f58c5e168`) on HD1911: boot menu appears;
