@@ -1,3 +1,28 @@
+# Handoff — iOS 27: back on the xnu-12377 SWEET kernel; bzero fault analysis (2026-11-21, OpenCode)
+- GOAL SET: "get ios 27 running make no mistake". Pivoted back from the iOS 16 detour (which reached
+  userland: root mounted, launchd exec'ing daemons — see the handoff below).
+- WHERE THE xnu-12377 SWEET KERNEL STOPS ON HOTDOG: after EARLY 20 ("kprintf startup complete") it panics:
+  `SWEET EARLY PANIC: Invalid kernel stack pointer (probable corruption or early boot)` at
+  `pc 0xfffffe0007d200e4`, `lr 0xfffffe0007c54b44`, `far 0xfffffe000c600040`, `esr 0x96000061`.
+  No `kernel_bootstrap:` lines even with `startup_debug=1` (tested with `out/hotdog-s27-diag.img`) and no
+  "Serial mode specified" kprintf — so the fault is in arm_init's tail between EARLY 20 and machine_startup.
+- ROOT-CAUSE DECODE: `far` = VM_MIN+0xc600040 (VM_MIN_KERNEL_ADDRESS=0xfffffe0000000000 = -2 TiB,
+  ARM_LARGE_MEMORY=1; kernel __TEXT at VM_MIN+0x7004000). `esr` EC=0x25 data abort, WnR=1 write.
+  **Symbolication from the CI link archive (`kernel.development.sweet.a`, 1209 objects): the faulting
+  instruction `0xd50b7423` = `dc zva, x3` exists ONLY in `bzero.o`** (`__HIB,__text`, renamed to
+  `__TEXT_EXEC,__hib_text`). Disassembly confirmed the pc is inside bzero's aligned DC-ZVA loop; the loop
+  arithmetic gives `bzero(start=VM_MIN+0xc600000, len≈0xfff00 ≈ 1 MB)` on an unmapped region.
+  bzero is called from a ~1 MB zeroing in arm_init's tail — candidates: PE_create_console path
+  (io_map-stolen VA for the 2nd FB mapping), PE_init_platform(TRUE), cpu_timebase_init, early_random.
+- Instrumentation run (CI run 44922273146 on sweet-port): sweet_early stage limit raised 20→45, boot-arg
+  `sweetearly=1` keeps the early console alive past kprintf startup, breadcrumbs 21-30 added in arm_init's
+  tail (before/after PE_create_console, PE_init_printf, ml_map_cpu_pio, cpu_timebase_init, PE_init_cpu,
+  fiq_context_init, early_random) and 31-34 in kernel_bootstrap. The workflow now also uploads the
+  **unstripped kernel** (`kernel.development.sweet.unstripped.noctf`) so device panic pc/lr can be
+  symbolicated offline exactly.
+- NEXT: boot the new kernel with `sweetearly=1`, read the last breadcrumb → symbolicate the caller with
+  the unstripped kernel → fix the fault.
+
 # Handoff — iOS 16 USERLAND RUNNING on hotdog (2026-11-21, OpenCode)
 - MILESTONE: `fastboot boot out/hotdog-ios16-root.img` (SHA `24a7da78...`) with the HFS+ root flashed to
   userdata → selected iOS 16 → **past "waiting for root device"**, iOS userland boots. First run was flooded
