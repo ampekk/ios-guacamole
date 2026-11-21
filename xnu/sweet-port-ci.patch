@@ -161150,7 +161150,7 @@ diff -ruN ci-base/pexpert/arm/pe_fiq.c ci-sweet/pexpert/arm/pe_fiq.c
  void
 diff -ruN ci-base/pexpert/arm/pe_init.c ci-sweet/pexpert/arm/pe_init.c
 --- a/pexpert/arm/pe_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/pexpert/arm/pe_init.c	2026-11-21 17:00:39.023117778 +0100
++++ b/pexpert/arm/pe_init.c	2026-11-21 17:55:36.967974394 +0100
 @@ -29,6 +29,54 @@
  /* extern references */
  extern void     pe_identify_machine(boot_args *bootArgs);
@@ -161206,7 +161206,33 @@ diff -ruN ci-base/pexpert/arm/pe_init.c ci-sweet/pexpert/arm/pe_init.c
  /* static references */
  static void     pe_prepare_images(void);
  
-@@ -546,6 +594,9 @@
+@@ -210,9 +258,24 @@
+ 		printf("iBoot didn't extract panic log from previous session crash, this is bad\n");
+ 	}
+ 
+-	/* Clear panic region */
++	/* Clear panic region.
++	 * SWEET: gPanicBase is mapped WCOMB (Normal non-cacheable). bzero's
++	 * DC ZVA is UNPREDICTABLE on non-cacheable memory and faulted on
++	 * SM8150 (data abort at the first cache line after the head stores).
++	 * Wipe with plain stores, which the compiler will not turn into DC ZVA. */
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++	{
++		volatile uint32_t *wp = (volatile uint32_t *)(uintptr_t)gPanicBase;
++		vm_size_t words = gPanicSize / sizeof(uint32_t);
++		for (vm_size_t i = 0; i < words; i++) {
++			wp[i] = 0;
++		}
++		__asm__ volatile("dsb st" ::: "memory");
++	}
++#else
+ 	CleanPoC_DcacheRegion_Force(gPanicBase, gPanicSize);
+ 	bzero((void *)gPanicBase, gPanicSize);
++#endif
+ }
+ 
+ int
+@@ -546,6 +609,9 @@
  void
  PE_create_console(void)
  {
@@ -161216,7 +161242,7 @@ diff -ruN ci-base/pexpert/arm/pe_init.c ci-sweet/pexpert/arm/pe_init.c
  	/*
  	 * Check the head of VRAM for a panic log saved on last panic.
  	 * Do this before the VRAM is trashed.
-@@ -553,7 +604,24 @@
+@@ -553,7 +619,24 @@
  	check_for_panic_log();
  
  	if (PE_state.video.v_display) {
