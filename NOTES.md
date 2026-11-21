@@ -1,3 +1,20 @@
+# Handoff — iOS 16 USERLAND RUNNING on hotdog (2026-11-21, OpenCode)
+- MILESTONE: `fastboot boot out/hotdog-ios16-root.img` (SHA `24a7da78...`) with the HFS+ root flashed to
+  userdata → selected iOS 16 → **past "waiting for root device"**, iOS userland boots. First run was flooded
+  by SWEET KEYS slider messages; rebuilt with `sweetslider=0` (`out/hotdog-ios16-root2.img`, SHA
+  `6ea114a2f6fb6ee9bf2eb81cc3eae0f6c3e9a87b1cee1dbee29a00050b15c767`) and booted again.
+- OBSERVED (user read from framebuffer): launchd is alive and exec'ing many daemons — `KonaSynthesizer`,
+  `MacinTalkAUSP`, `SiriTTSSynthesizerAU`, `FPSpotlightIndex`, `bluetoothd`, `medialibraryd`,
+  `diagnosticextensionsd`, `xpcproxy`. `SWEET AKS: ReportCrash sel 17 ...` lines show the kernel's
+  AppleKeyStore stand-in is being called by ReportCrash. Many daemons SIGABRT (sig 6) at the SAME pc
+  `0x1e5907198` (lr `0x1f4e965f8`, far `0x202162e28`) — a common library/entitlement issue, not random.
+- This is the first iOS 16 userland execution on hotdog. No flash beyond the approved userdata root write;
+  boot images were `fastboot boot` only. Android userdata was erased as approved.
+- NEXT: diagnose the common SIGABRT at pc 0x1e5907198 (likely a dyld cache / code-signing / entitlement
+  mismatch for TTS/Spotlight daemons — may be benign bring-up noise); the SWEET userland binaries
+  (sweet-autorun, sweet-bbd) are still absent (need macOS VM, user said hold off) so no GUI is expected.
+  If those crash loops drown the console, add boot-arg to disable their jobs or patch launchd.plist.
+
 # Handoff — iOS 16 HFS+ root FLASHED to hotdog userdata (2026-11-21, OpenCode)
 - USER APPROVED flashing now (2026-11-21) and said hold off on the macOS VM.
 - Created sparse image `/home/ampekk/ios16-work/ios16-root-20H392.simg` (12 GB) with `img2simg` and flashed
