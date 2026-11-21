@@ -1,3 +1,19 @@
+# Handoff — SWEET-port xnu-12377 kernel BUILT SUCCESSFULLY (2026-11-21, OpenCode)
+- MILESTONE: CI run 44851494395 on fork `ampekk/ios-guacamole-hotdog` (branch `sweet-port`, commit 0528bb0)
+  built a real kernel. `kernel.development.sweet`: **26,181,808 B**, SHA-256
+  `f008482770664b3b6fbabf528b6e65f3a1027f3f42a8b5f192f6322103f82f5e`, Mach-O 64-bit arm64,
+  `Darwin Kernel Version 25.5.0 ... xnu-12377.121.6`. Contains the SWEET platform drivers (strings: `AppleCLCD`,
+  `SweetPlatformExpert`, `SweetGPU`, `SWEET UFS`, `SweetBattery`, `SweetVibrator`, `sweetkeys`, `sweettouch`).
+  This is xnu-12377 + the full xnu-8796 SWEET port, built from this repo's consolidated patch
+  (`xnu/sweet-port-ci.patch`, 326 files / 5.5 MB) — NOT the original private Mac build.
+- Final fixes needed for the clean build: enable `pid_hibernate` for SWEET in kern_proc.c (final link error),
+  and remove a duplicate `pmap_pending_preemption` definition in pmap_misc.c.
+- CI note: `ampekk/ios-guacamole` has Actions disabled and a stuck queued re-run; the working builds are on
+  `ampekk/ios-guacamole-hotdog` branch `sweet-port` with `runs-on: macos-26`. Workflow: `sweet-port.yml`.
+- NOT IN THIS KERNEL: the 52 incremental `xnu/ios27/*.diff` changes (WiFi, display pageflip, passcode, cellular,
+  timebase, etc.) and the iOS 27 root image. This kernel boots the SWEET platform but is not a complete iOS 27 port.
+- Next: build a hotdog boot image with this kernel and `fastboot boot` it to see how far it gets on hardware.
+
 # Handoff — SWEET port: 0 COMPILER ERRORS, one link error fixed, awaiting clean CI run (2026-11-21, OpenCode)
 - CI iteration 9 (run 44836831694): **0 compiler errors**, 1 undefined link symbol `_pid_hibernate`
   (syscalls.master enabled syscall 435 for SWEET but its implementation in `bsd/kern/kern_proc.c` stayed under
