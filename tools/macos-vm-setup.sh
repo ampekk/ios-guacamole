@@ -32,9 +32,11 @@ esac
 # ---------------------------------------------------------------------------
 say "Checking Xcode"
 XC=""
-for CAND in /Applications/Xcode_26.6.app /Applications/Xcode_26.5.app \
-            /Applications/Xcode_26.5.0.app /Applications/Xcode_26.4.1.app \
-            /Applications/Xcode_26.3.0.app /Applications/Xcode_26.3.app \
+# Xcode 26.5 is the exact version that produced the working kernel in CI
+# (run 44875415839). Prefer it; other 26.x are fallbacks. Avoid beta/RC.
+for CAND in /Applications/Xcode_26.5.app /Applications/Xcode_26.5.0.app \
+            /Applications/Xcode_26.4.1.app /Applications/Xcode_26.3.0.app \
+            /Applications/Xcode_26.3.app /Applications/Xcode_26.6.app \
             /Applications/Xcode_26.2.app /Applications/Xcode.app; do
   [ -d "$CAND" ] && XC="$CAND" && break
 done
