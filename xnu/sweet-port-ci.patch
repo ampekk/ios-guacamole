@@ -160321,8 +160321,8 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.c ci-sweet/osfmk/arm64/sweet_early.c
 +#endif /* SWEET */
 diff -ruN ci-base/osfmk/arm64/sweet_early.h ci-sweet/osfmk/arm64/sweet_early.h
 --- a/osfmk/arm64/sweet_early.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/osfmk/arm64/sweet_early.h	2026-11-21 20:59:56.279622861 +0100
-@@ -0,0 +1,35 @@
++++ b/osfmk/arm64/sweet_early.h	2026-11-22 00:54:29.232537811 +0100
+@@ -0,0 +1,36 @@
 +/* Screen diagnostics through bootstrap TTBR0 and the final kernel TTBR1. */
 +#ifndef _ARM64_SWEET_EARLY_H_
 +#define _ARM64_SWEET_EARLY_H_
@@ -160334,6 +160334,7 @@ diff -ruN ci-base/osfmk/arm64/sweet_early.h ci-sweet/osfmk/arm64/sweet_early.h
 +#if defined(SWEET)
 +void sweet_early_geometry_init(unsigned int width, unsigned int height, unsigned int stride);
 +void sweet_early_bootpc(const char *what, uintptr_t pc);
++int sweet_waitq_boot_done(void);
 +void sweet_early_mark(unsigned int stage, const char *label);
 +void sweet_early_putc(char c);
 +void sweet_early_panic(const char *fmt, va_list *args);
