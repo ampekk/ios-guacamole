@@ -1,3 +1,23 @@
+# Handoff — iOS 27: bzero fault ROOT-CAUSED = DC ZVA on WCOMB panic-log mapping (2026-11-21, OpenCode)
+- FOUND IT. Instrumented boot (CI 44922273146, `out/hotdog-s27-diag2.img`, `sweetearly=1`) printed
+  **EARLY 21 "before PE_create_console"** then panicked — the fault is inside `PE_create_console()`.
+  The workflow now uploads the **unstripped kernel**, so symbolication is exact:
+  `pc 0xfffffe0007d201a4 = _bzero+0x44` (the DC-ZVA loop) and
+  `lr 0xfffffe0007c54b44 = _PE_create_console+0x14c`. Disassembling that call site showed:
+  `ldr x0,[x19,#0x2e8]` (=gPanicBase) / `ldr w1,[x20,#0x510]` (=gPanicSize) / `bl _CleanPoC_DcacheRegion_Force`
+  / `bl _bzero` — the **panic-log region clear** that the SWEET port added to `check_for_panic_log()`.
+- WHY IT FAULTS: `check_for_panic_log()` maps the DTB `pram` panic region with `ml_io_map_wcomb`
+  (Normal non-cacheable). The reads of `panic_info->eph_magic` succeeded, bzero's head `stp` stores
+  (first 0x40 bytes) succeeded, and the **first `dc zva` faulted** — DC ZVA is UNPREDICTABLE on
+  non-cacheable memory. `bzero` covers exactly `gPanicSize` = 1 MiB (loop arithmetic: end = far+0x40+x2).
+- FIX (commit on sweet-port, **CI run 44927243392 in progress**): on SWEET the panic-region clear now
+  uses a plain volatile 32-bit store loop (compiler cannot turn it into DC ZVA) + `dsb st`; the Apple
+  path keeps CleanPoC+bzero. `check_for_panic_log` is the only WCOMM bzero (verified: the other
+  ml_io_map_wcomb users — sweet_fb_mark, fbcon_probe — write with plain stores only).
+- NEXT: boot the fixed kernel; the console should now get past PE_create_console and print
+  kernel_bootstrap lines (with startup_debug=1). Then continue driving the xnu-12377 SWEET kernel
+  towards iOS 27 userland.
+
 # Handoff — iOS 27: back on the xnu-12377 SWEET kernel; bzero fault analysis (2026-11-21, OpenCode)
 - GOAL SET: "get ios 27 running make no mistake". Pivoted back from the iOS 16 detour (which reached
   userland: root mounted, launchd exec'ing daemons — see the handoff below).
