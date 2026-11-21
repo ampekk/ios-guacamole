@@ -161151,7 +161151,7 @@ diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
  	/*
 diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
 --- a/osfmk/vm/vm_init.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/vm/vm_init.c	2026-11-21 23:21:19.818177093 +0100
++++ b/osfmk/vm/vm_init.c	2026-11-21 23:44:57.845873648 +0100
 @@ -72,6 +72,7 @@
  #include <vm/vm_object_internal.h>
  #include <vm/vm_map_internal.h>
@@ -161169,7 +161169,7 @@ diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
 +		sweet_early_bootpc("vm_page_bootstrap: avail_start", start);
 +		sweet_early_bootpc("vm_page_bootstrap: avail_end", end);
 +		sweet_early_bootpc("vm_page_bootstrap: free_count",
-+		    (uintptr_t)os_atomic_load(&vm_page_free_count, relaxed));
++		    os_atomic_load(vm_page_free_count, relaxed));
 +	}
  
  	/*
@@ -161199,7 +161199,7 @@ diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
  
 diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 --- a/osfmk/vm/vm_resident.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/vm/vm_resident.c	2026-11-21 23:21:19.818177093 +0100
++++ b/osfmk/vm/vm_resident.c	2026-11-21 23:44:57.845873648 +0100
 @@ -80,6 +80,7 @@
  #include <kern/ledger.h>
  #include <kern/ecc.h>
@@ -161218,7 +161218,7 @@ diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 +		if (!sweet_waitq_boot_done()) {
 +			sweet_early_bootpc("vm_page_wait", (uintptr_t)__builtin_return_address(0));
 +			sweet_early_bootpc("vm_page_free_count",
-+			    (uintptr_t)os_atomic_load(&vm_page_free_count, relaxed));
++			    os_atomic_load(vm_page_free_count, relaxed));
 +		}
 +	}
  	/*
