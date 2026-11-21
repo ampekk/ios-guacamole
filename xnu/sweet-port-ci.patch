@@ -161148,6 +161148,31 @@ diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
  	#endif
  
  	/*
+diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
+--- a/osfmk/vm/vm_resident.c	2026-06-18 01:28:50.000000000 +0200
++++ b/osfmk/vm/vm_resident.c	2026-11-21 22:08:35.770350926 +0100
+@@ -80,6 +80,7 @@
+ #include <kern/ledger.h>
+ #include <kern/ecc.h>
+ #include <vm/pmap.h>
++#include <arm64/sweet_early.h>
+ #include <vm/vm_init_xnu.h>
+ #include <vm/vm_map_internal.h>
+ #include <vm/vm_page_internal.h>
+@@ -5495,6 +5496,13 @@
+ boolean_t
+ vm_page_wait(int interruptible)
+ {
++	/* SWEET: who waits for a page before waitq_bootstrap? (boot only) */
++	{
++		extern int waitq_boot_done;
++		if (!waitq_boot_done) {
++			sweet_early_bootpc("vm_page_wait", (uintptr_t)__builtin_return_address(0));
++		}
++	}
+ 	/*
+ 	 *	We can't use vm_page_free_reserved to make this
+ 	 *	determination.  Consider: some thread might
 diff -ruN ci-base/pexpert/arm/pe_fiq.c ci-sweet/pexpert/arm/pe_fiq.c
 --- a/pexpert/arm/pe_fiq.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/pexpert/arm/pe_fiq.c	2026-11-21 17:00:39.023117778 +0100
