@@ -1,3 +1,8 @@
+- ITERATION FIX: CI 44930586911 failed to COMPILE — `vc_progress_lock_initialized` was declared after its
+  first use in gc_initialize (undeclared-identifier errors in video_console.c:488/490). Moved the declaration
+  above gc_initialize; regenerated the patch (git apply --check OK); commit pushed to sweet-port;
+  **CI run 44932533469 in progress**.
+
 # Handoff — iOS 27: panic-log fix worked; now uninitialized vc_progress_lock (2026-11-21, OpenCode)
 - The DC-ZVA fix (CI 44927243392, kernel SHA `404428a0b13015fa068a7bd615031c36f70a4693ccc728ed9a7a5d3cdaa128b3`,
   image `out/hotdog-s27-fix2.img`) WORKED: boot reached `EARLY 21 before PE_create_console` and the color
