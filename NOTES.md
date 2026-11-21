@@ -1,3 +1,13 @@
+# Handoff — iOS 16 HFS+ root FLASHED to hotdog userdata (2026-11-21, OpenCode)
+- USER APPROVED flashing now (2026-11-21) and said hold off on the macOS VM.
+- Created sparse image `/home/ampekk/ios16-work/ios16-root-20H392.simg` (12 GB) with `img2simg` and flashed
+  `fastboot flash userdata ios16-root-20H392.simg` (16 chunks, ~7 min, exit 0). Android userdata is destroyed;
+  bootloaders, recovery, modem, persist, boot_a/boot_b and the backups in `/home/ampekk/hdd/recovery/` untouched.
+  Note: fastboot warned about an odd image size (140 TB) but all 16 sparse chunks wrote OK. Partition is 216.4 GiB;
+  the 16 GiB HFS+ volume occupies the start, the rest is unused.
+- Booted `fastboot boot out/hotdog-ios16-root.img` (iOS 16 kernel + full root args, `ufsroot=userdata`).
+  Awaiting user report of what appears on screen — this is the first real test of the UFS root path on hotdog.
+
 # Handoff — iOS 16 root tweaks applied + boot image with root args (2026-11-21, OpenCode)
 - ROOT TWEAKS: mounted `/home/ampekk/ios16-work/ios16-root-20H392.img` HFS+ RW and ran
   `tools/sweet-root-tweaks.py` — launchd.plist (7 _PanicOnCrash renamed, CommCenter + fairplayd.H2 removed,
