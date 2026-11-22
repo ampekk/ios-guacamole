@@ -159301,7 +159301,7 @@ diff -ruN ci-base/osfmk/arm/machine_routines_common.c ci-sweet/osfmk/arm/machine
 +#endif /* !defined(APPLE_ARM64_ARCH_FAMILY) */
 diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
 --- a/osfmk/arm/pmap/pmap.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/pmap/pmap.c	2026-11-22 01:47:50.131598489 +0100
++++ b/osfmk/arm/pmap/pmap.c	2026-11-22 02:10:50.795738336 +0100
 @@ -26,6 +26,7 @@
   * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
   */
@@ -159366,7 +159366,22 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  	__unused const pt_attr_t * const pt_attr = pmap_get_pt_attr(pmap);
  
  	if (__improbable((v < pmap->min) || (v >= pmap->max))) {
-@@ -7235,7 +7258,18 @@
+@@ -7115,6 +7138,14 @@
+ 
+ 		if (pmap_ttne(pmap, ttlevel + 1, v) == PT_ENTRY_NULL) {
+ 			pmap_unlock(pmap, PMAP_LOCK_SHARED);
++			{
++				extern int sweet_waitq_boot_done(void);
++				if (!sweet_waitq_boot_done()) {
++					sweet_early_bootpc("pmap_expand missing lvl", (uintptr_t)ttlevel);
++					sweet_early_bootpc("pmap_expand parent tte",
++					    (uintptr_t)*pmap_ttne(pmap, ttlevel, v));
++				}
++			}
+ 			kern_return_t ret;
+ 			while ((ret = pmap_tt_allocate(pmap, &tt_p, ttlevel + 1, ((options & PMAP_TT_ALLOCATE_NOWAIT)? PMAP_PAGES_ALLOCATE_NOWAIT : 0))) != KERN_SUCCESS) {
+ 				if (options & PMAP_OPTIONS_NOWAIT) {
+@@ -7235,7 +7266,18 @@
  pmap_sync_page_attributes_phys(
  	ppnum_t pp)
  {
@@ -159385,7 +159400,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  }
  
  #if CONFIG_COREDUMP
-@@ -12243,7 +12277,8 @@
+@@ -12243,7 +12285,8 @@
  #if XNU_MONITOR
  	pmap_ppl_lockdown_pages(kva, size, PVH_FLAG_LOCKDOWN_CS, ppl_writable);
  #else
@@ -159395,7 +159410,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  #endif
  }
  
-@@ -12253,7 +12288,7 @@
+@@ -12253,7 +12296,7 @@
  #if XNU_MONITOR
  	pmap_ppl_unlockdown_pages(kva, size, PVH_FLAG_LOCKDOWN_CS, ppl_writable);
  #else
@@ -159404,7 +159419,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  #endif
  }
  
-@@ -15271,3 +15306,13 @@
+@@ -15271,3 +15314,13 @@
  	return KERN_SUCCESS;
  }
  #endif /* DEVELOPMENT || DEBUG */
