@@ -161236,6 +161236,87 @@ diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
  
  	kernel_startup_initialize_upto(STARTUP_SUB_KMEM);
  
+diff -ruN ci-base/osfmk/vm/vm_map_store.c ci-sweet/osfmk/vm/vm_map_store.c
+--- a/osfmk/vm/vm_map_store.c	2026-06-18 01:28:50.000000000 +0200
++++ b/osfmk/vm/vm_map_store.c	2026-11-22 03:07:56.052889514 +0100
+@@ -28,6 +28,7 @@
+ 
+ #define VM_MAP_STORE_PRIVATE 1
+ #include <kern/backtrace.h>
++#include <arm64/sweet_early.h>
+ #include <mach/sdt.h>
+ #include <vm/vm_map_internal.h>
+ #include <vm/vm_pageout.h> /* for vm_debug_events */
+@@ -707,6 +708,27 @@
+ 
+ #pragma mark vm map store creation/destruction
+ 
++#if defined(SWEET)
++/*
++ * No corecrypto kext is loaded on SWEET, so the g_crypto_funcs table the
++ * crypto_random_* dispatch stubs read is never populated. Use the same
++ * non-cryptographic SplitMix64 per-CPU generators as kmem (0013), seeded
++ * from XNU's built-in early HMAC-SHA256 DRBG.
++ */
++struct sweet_vms_rng {
++	uint64_t state;
++};
++
++static uint64_t
++sweet_vms_random64(struct sweet_vms_rng *rng)
++{
++	uint64_t value = (rng->state += 0x9e3779b97f4a7c15ULL);
++	value = (value ^ (value >> 30)) * 0xbf58476d1ce4e5b9ULL;
++	value = (value ^ (value >> 27)) * 0x94d049bb133111ebULL;
++	return value ^ (value >> 31);
++}
++#endif /* SWEET */
++
+ /*
+  * This is done during EARLY_BOOT as it needs the corecrypto module to be
+  * set up.
+@@ -715,12 +737,21 @@
+ static void
+ vm_map_store_crypto_init(void)
+ {
++#if defined(SWEET)
++	vm_size_t ctx_size = sizeof(struct sweet_vms_rng);
++
++	ks_rng_ctx = zalloc_percpu_permanent(ctx_size, ZALIGN_PTR);
++	zpercpu_foreach(ctx, ks_rng_ctx) {
++		((struct sweet_vms_rng *)ctx)->state = early_random();
++	}
++#else
+ 	vm_size_t ctx_size = crypto_random_kmem_ctx_size();
+ 
+ 	ks_rng_ctx = zalloc_percpu_permanent(ctx_size, ZALIGN_PTR);
+ 	zpercpu_foreach(ctx, ks_rng_ctx) {
+ 		crypto_random_kmem_init(ctx);
+ 	}
++#endif
+ }
+ STARTUP(EARLY_BOOT, STARTUP_RANK_MIDDLE, vm_map_store_crypto_init);
+ 
+@@ -1115,7 +1146,19 @@
+ 		n = kmem_get_random16((uint16_t)free - 1);
+ 	} else {
+ 		disable_preemption();
++#if defined(SWEET)
++		{
++			uint64_t bound = free;
++			uint64_t value;
++			const uint64_t threshold = -bound % bound;
++			do {
++				value = sweet_vms_random64(zpercpu_get(ks_rng_ctx));
++			} while (value < threshold);
++			n = (uint32_t)(value % bound);
++		}
++#else
+ 		crypto_random_uniform(zpercpu_get(ks_rng_ctx), free, &n);
++#endif
+ 		enable_preemption();
+ 	}
+ 
 diff -ruN ci-base/osfmk/vm/vm_resident.c ci-sweet/osfmk/vm/vm_resident.c
 --- a/osfmk/vm/vm_resident.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/osfmk/vm/vm_resident.c	2026-11-22 02:35:40.540555924 +0100
