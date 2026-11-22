@@ -161047,7 +161047,7 @@ diff -ruN ci-base/osfmk/prng/entropy.c ci-sweet/osfmk/prng/entropy.c
  	lck_mtx_unlock(&entropy_data.mutex);
 diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
 --- a/osfmk/prng/prng_random.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/prng/prng_random.c	2026-11-21 17:00:39.023117778 +0100
++++ b/osfmk/prng/prng_random.c	2026-11-22 03:32:32.455057737 +0100
 @@ -145,6 +145,140 @@
  	// efiboot can only provide 64 bytes of entropy, so fill the rest of the buffer with zero.
  	// We compensate for this by sampling from RDRAND/RDSEED in bootseed_init_native.
@@ -161189,6 +161189,23 @@ diff -ruN ci-base/osfmk/prng/prng_random.c ci-sweet/osfmk/prng/prng_random.c
  	#endif
  
  	/*
+@@ -370,6 +504,16 @@
+ __mockable void
+ read_random(void * buffer, u_int numbytes)
+ {
++#if defined(SWEET)
++	/* The SWEET HMAC-SHA256 PRNG registers at STARTUP(EARLY_BOOT, RANK_FIRST);
++	 * if anything reads randomness before that (e.g. an earlier rank), fall
++	 * back to the built-in early DRBG instead of calling the NULL refresh
++	 * pointer. */
++	if (!prng_ready) {
++		read_erandom(buffer, numbytes);
++		return;
++	}
++#endif
+ 	prng_funcs.refresh(prng_ctx);
+ 	read_random_generate(buffer, numbytes);
+ }
 diff -ruN ci-base/osfmk/vm/vm_init.c ci-sweet/osfmk/vm/vm_init.c
 --- a/osfmk/vm/vm_init.c	2026-06-18 01:28:50.000000000 +0200
 +++ b/osfmk/vm/vm_init.c	2026-11-22 00:08:40.976084848 +0100
