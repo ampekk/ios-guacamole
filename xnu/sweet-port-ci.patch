@@ -159301,8 +159301,16 @@ diff -ruN ci-base/osfmk/arm/machine_routines_common.c ci-sweet/osfmk/arm/machine
 +#endif /* !defined(APPLE_ARM64_ARCH_FAMILY) */
 diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
 --- a/osfmk/arm/pmap/pmap.c	2026-06-18 01:28:50.000000000 +0200
-+++ b/osfmk/arm/pmap/pmap.c	2026-11-22 01:18:24.437799033 +0100
-@@ -84,8 +84,16 @@
++++ b/osfmk/arm/pmap/pmap.c	2026-11-22 01:47:50.131598489 +0100
+@@ -26,6 +26,7 @@
+  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+  */
+ #include <string.h>
++#include <arm64/sweet_early.h>
+ #include <stdlib.h>
+ #include <mach_assert.h>
+ #include <mach_ldebug.h>
+@@ -84,8 +85,16 @@
  
  #include <arm64/proc_reg.h>
  #include <pexpert/arm64/boot.h>
@@ -159319,7 +159327,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  
  #if defined(KERNEL_INTEGRITY_KTRR) || defined(KERNEL_INTEGRITY_CTRR) || defined(KERNEL_INTEGRITY_PV_CTRR)
  #include <arm64/amcc_rorgn.h>
-@@ -4952,8 +4960,9 @@
+@@ -4952,8 +4961,9 @@
  			}
  #endif
  			if (remove && (options & PMAP_OPTIONS_COMPRESSOR)) {
@@ -159331,7 +159339,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  			}
  			goto protect_skip_pve_pass1;
  		}
-@@ -6180,6 +6189,11 @@
+@@ -6180,6 +6190,11 @@
  	return pte;
  }
  
@@ -159343,7 +159351,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  MARK_AS_PMAP_TEXT kern_return_t
  pmap_enter_options_internal(
  	pmap_t pmap,
-@@ -7095,6 +7109,14 @@
+@@ -7095,6 +7110,14 @@
  	unsigned int options,
  	unsigned int level)
  {
@@ -159358,7 +159366,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  	__unused const pt_attr_t * const pt_attr = pmap_get_pt_attr(pmap);
  
  	if (__improbable((v < pmap->min) || (v >= pmap->max))) {
-@@ -7235,7 +7257,18 @@
+@@ -7235,7 +7258,18 @@
  pmap_sync_page_attributes_phys(
  	ppnum_t pp)
  {
@@ -159377,7 +159385,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  }
  
  #if CONFIG_COREDUMP
-@@ -12243,7 +12276,8 @@
+@@ -12243,7 +12277,8 @@
  #if XNU_MONITOR
  	pmap_ppl_lockdown_pages(kva, size, PVH_FLAG_LOCKDOWN_CS, ppl_writable);
  #else
@@ -159387,7 +159395,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  #endif
  }
  
-@@ -12253,7 +12287,7 @@
+@@ -12253,7 +12288,7 @@
  #if XNU_MONITOR
  	pmap_ppl_unlockdown_pages(kva, size, PVH_FLAG_LOCKDOWN_CS, ppl_writable);
  #else
@@ -159396,7 +159404,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
  #endif
  }
  
-@@ -15271,3 +15305,13 @@
+@@ -15271,3 +15306,13 @@
  	return KERN_SUCCESS;
  }
  #endif /* DEVELOPMENT || DEBUG */
@@ -159408,7 +159416,7 @@ diff -ruN ci-base/osfmk/arm/pmap/pmap.c ci-sweet/osfmk/arm/pmap/pmap.c
 +{
 +	return _pmap_pending_preemption_real();
 +}
-+#endif /* SCHED_HYGIENE_DEBUG && (DEBUG || DEVELOPMENT) */#include <arm64/sweet_early.h>
++#endif /* SCHED_HYGIENE_DEBUG && (DEBUG || DEVELOPMENT) */
 +
 diff -ruN ci-base/osfmk/arm/pmap/pmap.h ci-sweet/osfmk/arm/pmap/pmap.h
 --- a/osfmk/arm/pmap/pmap.h	2026-06-18 01:28:50.000000000 +0200
