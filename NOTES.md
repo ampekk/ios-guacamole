@@ -54,6 +54,22 @@
   are started during registration) and keep the initCPU()/SGI1 wait.
 - IOKit registration appearing means: kmem/zalloc up, IOPlatformExpert matching, IOKit start — deep into boot.
 
+# Handoff — MILESTONE: xnu-12377 SWEET kernel boots to "Waiting for root device" (QEMU, 2026-11-22, OpenCode)
+- With `sweetfb90=0 sweetfblock=0 sweetgpu=0 sweettouch=0 sweetkeys=0 sweetusb=0 wdt=-1` (skipping phone-panel
+  register access, which in QEMU is unassigned MMIO → SError; sweetfb90/sweetfblock are existing 0199/0198
+  boot-args), the kernel boots ALL the way: vm_mem_bootstrap done (EARLY 34) → 5/5 CPUs init+SGI1 verified →
+  `vm_page_bootstrap: avail_start 0xfffffe000e8e0000 avail_end 0xfffffecffffffc0000 free_count 0x3e337` →
+  IOPMrootDomain/AppleKeyStore/Hibernate/CPUPowerManagement → SWEET VIBRATOR/AUDIO/IOAudio2Device registered →
+  `AppleCLCD 1080x2400 stride 4320 at 0x9c000000, presented as 1125x2436` → IOMFBDisplayRefresh 60.000 Hz →
+  AMFI + Sandbox policies loaded → **DLIL self-tests PASSED (sk_copy4_8...sk_zero_128)** → bsd_autoconf →
+  kinit → **"Waiting for root device"** with the driver matcher probing AppleHFS. This is the dev's own
+  milestone for xnu-12377 on SM8150, reached in QEMU.
+- All phone-hardware accesses must be gated for QEMU (framebuffer panel/measure paths panic as SError on
+  unassigned MMIO); on the real phone the defaults are correct.
+- NEXT: (1) boot this kernel on the PHONE via fastboot with the hotdog ADT (no qemu tweaks; expect the same
+  boot with panel code active); (2) build the iOS 27 root image (lowered userland per docs/arm64e-lowering.md)
+  — the last big missing piece for iOS 27 actually running.
+
 # Handoff — iOS 27: BREAKTHROUGH — kernel boots past vm_mem_bootstrap with highmem QEMU config (2026-11-22, OpenCode)
 - The waitq/bzero/lock panics were all in the LOW-memory QEMU config the dev never ran. Tracing
   (`pmap_expand v/lvl/missing-lvl/parent-tte`, `vm_page_grab_options`, `vm_page_wait`, `vm_page_free_count`)
