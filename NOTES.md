@@ -27,6 +27,17 @@
   wrappers (`waitq_assert_wait64` / `_leeway` / `waitq_wakeup64_*`) run `__waitq_validate` FIRST and panic
   there. Trace moved into `__waitq_validate` (covers all five entry points); CI run 44947882506 in progress.
 
+- Second boot panic root-caused and FIXED (commit on sweet-port, **CI 44974654013 in progress**): the
+  panic log dump (`--pmemsave 0x1fcb00000 0x100000` = the ADT panic-log carve-out) gave the exact abort:
+  `Kernel data abort at pc _crypto_random_kmem_ctx_size+0xc, lr __vm_map_store_clip_out_of_bounds_entry_panic+0x24,
+  far 0x150` — the crypto_random_* dispatch stubs read `[[g_crypto_funcs]+0x150]` and **g_crypto_funcs is NULL**
+  (no corecrypto kext on SWEET). `vm_map_store_crypto_init` (vm_map_store.c, NEW in xnu-12377; STARTUP(EARLY_BOOT))
+  calls crypto_random_kmem_ctx_size — patch 0013 covered only the kmem allocator's use. Fixed the same way as 0013:
+  SplitMix64 per-CPU generators seeded from early_random for the vm_map store (ctx init + the
+  vmgo_chunk_select_random_slot uniform call). The panic happened with Zones UP — deep into startup.
+- QEMU panic-log dumping now works end-to-end (`--pmemsave` the ADT panic carve-out; ADT places it at
+  phys_base+mem_size-0x100000 = 0x1fcb00000 for --highmem).
+
 # Handoff — iOS 27: BREAKTHROUGH — kernel boots past vm_mem_bootstrap with highmem QEMU config (2026-11-22, OpenCode)
 - The waitq/bzero/lock panics were all in the LOW-memory QEMU config the dev never ran. Tracing
   (`pmap_expand v/lvl/missing-lvl/parent-tte`, `vm_page_grab_options`, `vm_page_wait`, `vm_page_free_count`)
