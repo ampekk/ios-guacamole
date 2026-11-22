@@ -45,6 +45,15 @@
 - Iteration pattern working: CI kernel → QEMU --highmem → panic → dump the ADT panic-log carve-out
   (0x1fcb00000, 1 MB) with `--pmemsave` → exact pc/lr → symbolicate with the matching unstripped kernel → fix.
 
+- Fourth panic FIXED (commit on sweet-port, **CI 44978359199 in progress**): the console (now readable at
+  QEMU 3x) shows IOKit fully registering — IOAudio2Device, IOWatchdog, IOButtons, IOCoreSurfaceRoot,
+  AppleMobileFileIntegrity, backlight/vibrator — then `SWEET CPU: cpu=0 processor_start failed: 5
+  @SweetCPU.cpp:155`. Cause: xnu-12377's `processor_start_from_kext()` is a documented no-op returning
+  KERN_FAILURE ("ml_processor_register now boots CPUs on ARM; xnu ignores processor_start calls from kexts"),
+  while the 8796-era SweetCPU driver still called `processor_start()`. Fix: skip the call in this tree (CPUs
+  are started during registration) and keep the initCPU()/SGI1 wait.
+- IOKit registration appearing means: kmem/zalloc up, IOPlatformExpert matching, IOKit start — deep into boot.
+
 # Handoff — iOS 27: BREAKTHROUGH — kernel boots past vm_mem_bootstrap with highmem QEMU config (2026-11-22, OpenCode)
 - The waitq/bzero/lock panics were all in the LOW-memory QEMU config the dev never ran. Tracing
   (`pmap_expand v/lvl/missing-lvl/parent-tte`, `vm_page_grab_options`, `vm_page_wait`, `vm_page_free_count`)
