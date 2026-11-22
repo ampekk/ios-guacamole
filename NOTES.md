@@ -27,6 +27,22 @@
   wrappers (`waitq_assert_wait64` / `_leeway` / `waitq_wakeup64_*`) run `__waitq_validate` FIRST and panic
   there. Trace moved into `__waitq_validate` (covers all five entry points); CI run 44947882506 in progress.
 
+# Handoff — iOS 27: BREAKTHROUGH — kernel boots past vm_mem_bootstrap with highmem QEMU config (2026-11-22, OpenCode)
+- The waitq/bzero/lock panics were all in the LOW-memory QEMU config the dev never ran. Tracing
+  (`pmap_expand v/lvl/missing-lvl/parent-tte`, `vm_page_grab_options`, `vm_page_wait`, `vm_page_free_count`)
+  showed: the FIRST stolen VA (VM_MIN+0xe000000, from pmap_steal_memory during vm_page_bootstrap) has an
+  EMPTY L2 TTE in the low-window physmap → pmap_expand → VM_PAGE_WAIT → g_boot_waitq panic.
+- **QEMU with the phone's memory config (`mkadt.py --qemu --highmem`, phys 0x100000000 + 0xfcb00000, -m 7G)
+  boots PAST vm_mem_bootstrap**: no panic, kernel runs through zone_bootstrap/kmem_init into
+  `zone_expand_locked`/`vm_page_alloc_list` grabbing pages (the "flooding" was my own per-grab trace, now
+  removed — CI run 44972195798 rebuilding without it).
+- Fix trace commits on sweet-port: pmap_expand/parent-TTE traces (44970229785), include ordering fix for
+  pmap.c (44968374477), per-grab trace removal (44972195798). The `sweet_early_bootpc()` console trace and
+  `sweet_waitq_boot_done()` accessor remain for future use.
+- NEXT: clean kernel → QEMU --highmem run → see how far startup goes (expect waitq_bootstrap at
+  STARTUP(MACH_IPC) → SCHED → ... → root wait). Then the same kernel on the PHONE (the phone boots with
+  --highmem values from mkadt --guacamole/--hotdog --highmem, matching this config) → iOS 27 root pipeline.
+
 # Handoff — iOS 27: QEMU iteration loop established; waitq panic found (2026-11-21, OpenCode)
 - USER PUSHBACK ("we are doing something wrong — dev showcased iOS 27 on the 7 Pro"): correct. Reading
   panics off the phone's tiny garbled console was the wrong workflow. **QEMU iteration is now set up on this
