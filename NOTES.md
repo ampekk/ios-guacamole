@@ -38,6 +38,13 @@
 - QEMU panic-log dumping now works end-to-end (`--pmemsave` the ADT panic carve-out; ADT places it at
   phys_base+mem_size-0x100000 = 0x1fcb00000 for --highmem).
 
+- Third boot panic FIXED (commit on sweet-port, **CI 44976602489 in progress**): `Kernel instruction fetch
+  abort at pc 0, lr read_random+0x34` — `read_random` called `prng_funcs.refresh` (NULL). x19 = exe_boothash_salt:
+  `exe_boothash_salt_generate` (STARTUP EARLY_BOOT RANK_MIDDLE) ran before the SWEET HMAC PRNG had registered.
+  Fix: `read_random` on SWEET falls back to the built-in early DRBG (`read_erandom`) while `!prng_ready`.
+- Iteration pattern working: CI kernel → QEMU --highmem → panic → dump the ADT panic-log carve-out
+  (0x1fcb00000, 1 MB) with `--pmemsave` → exact pc/lr → symbolicate with the matching unstripped kernel → fix.
+
 # Handoff — iOS 27: BREAKTHROUGH — kernel boots past vm_mem_bootstrap with highmem QEMU config (2026-11-22, OpenCode)
 - The waitq/bzero/lock panics were all in the LOW-memory QEMU config the dev never ran. Tracing
   (`pmap_expand v/lvl/missing-lvl/parent-tte`, `vm_page_grab_options`, `vm_page_wait`, `vm_page_free_count`)
