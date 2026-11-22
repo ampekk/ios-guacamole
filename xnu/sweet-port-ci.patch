@@ -111823,8 +111823,8 @@ diff -ruN ci-base/iokit/Kernel/arm/SweetBattery.cpp ci-sweet/iokit/Kernel/arm/Sw
 +#endif /* ARM64_BOARD_CONFIG_SWEET */
 diff -ruN ci-base/iokit/Kernel/arm/SweetCPU.cpp ci-sweet/iokit/Kernel/arm/SweetCPU.cpp
 --- a/iokit/Kernel/arm/SweetCPU.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ b/iokit/Kernel/arm/SweetCPU.cpp	2026-11-21 17:00:39.007117542 +0100
-@@ -0,0 +1,271 @@
++++ b/iokit/Kernel/arm/SweetCPU.cpp	2026-11-22 03:56:31.708487731 +0100
+@@ -0,0 +1,276 @@
 +/*
 + * A55 SMP bring-up for sweet using XNU's legacy IOCPU interface and PSCI.
 + * The architected timer and SGI1 already enter through pe_fiq/sleh_irq.
@@ -111977,11 +111977,16 @@ diff -ruN ci-base/iokit/Kernel/arm/SweetCPU.cpp ci-sweet/iokit/Kernel/arm/SweetC
 +	}
 +	for (unsigned int i = 0; i < topology->num_cpus; i++) {
 +		SweetCPU *cpu = __atomic_load_n(&sweet_cpus[i], __ATOMIC_ACQUIRE);
++#if 0
++		/* xnu-12377 boots the CPUs itself during ml_processor_register()
++		 * (processor_start_from_kext() is a no-op returning KERN_FAILURE),
++		 * so the 8796-era processor_start() call would fail here. */
 +		kern_return_t kr = processor_start(cpu->machProcessor);
 +		if (kr != KERN_SUCCESS) {
 +			panic("SWEET CPU: cpu=%u processor_start failed: %d", i, kr);
 +		}
-+		/* processor_start() is asynchronous for secondaries in this XNU. */
++#endif
++		/* CPU startup (if any) is asynchronous; wait for initCPU() + SGI1. */
 +		nanoseconds_to_deadline(5 * NSEC_PER_SEC, &deadline);
 +		while (__atomic_load_n(&cpu->initialized, __ATOMIC_ACQUIRE) == 0 ||
 +		    !sweet_cpu_signal_is_enabled(i)) {
